@@ -1,0 +1,19 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Idea specific ones
+out/
+build/
+sdk/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+target/
+project/target/
+.DS_Store
