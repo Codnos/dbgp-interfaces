@@ -40,10 +40,6 @@ public abstract class DBGPCommandHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    protected abstract boolean canHandle(String msg);
-
-    protected abstract void handle(ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) throws Exception;
-
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
@@ -61,4 +57,8 @@ public abstract class DBGPCommandHandler extends ChannelInboundHandlerAdapter {
             e.printStackTrace();
         }
     }
+
+    protected abstract boolean canHandle(String msg);
+
+    protected abstract void handle(ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) throws Exception;
 }
