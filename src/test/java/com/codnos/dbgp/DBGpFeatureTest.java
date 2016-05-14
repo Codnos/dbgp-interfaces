@@ -68,11 +68,8 @@ public class DBGpFeatureTest {
 
         try {
             ide.breakpointSet(new Breakpoint("file", 123));
-            await().atMost(FIVE_SECONDS).until(new Runnable() {
-                @Override
-                public void run() {
-                    verify(debuggerEngine).breakpointSet(any(Breakpoint.class));
-                }
+            await().atMost(FIVE_SECONDS).until(() -> {
+                verify(debuggerEngine).breakpointSet(any(Breakpoint.class));
             });
         } finally {
             engine.disconnect();
@@ -81,12 +78,7 @@ public class DBGpFeatureTest {
     }
 
     private Callable<InitMessage> initMessage() {
-        return new Callable<InitMessage>() {
-            @Override
-            public InitMessage call() throws Exception {
-                return debuggerIde.getInitMessage();
-            }
-        };
+        return () -> debuggerIde.getInitMessage();
     }
 
     private class FakeInitDebuggerIde extends StubDebuggerIde {
