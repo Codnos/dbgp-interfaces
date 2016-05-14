@@ -17,10 +17,10 @@
 package com.codnos.dbgp;
 
 import com.codnos.dbgp.commands.status.StatusValue;
-import com.codnos.dbgp.messages.Init;
+import com.codnos.dbgp.messages.InitMessage;
 
 public interface DebuggerIde {
-    void onConnected(Init message) throws InterruptedException;
+    void onConnected(InitMessage message) throws InterruptedException;
 
     void onStatus(StatusValue status);
 }

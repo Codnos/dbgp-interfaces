@@ -17,11 +17,11 @@
 package com.codnos.dbgp;
 
 import com.codnos.dbgp.commands.status.StatusValue;
-import com.codnos.dbgp.messages.Init;
+import com.codnos.dbgp.messages.InitMessage;
 
 public class StubDebuggerIde implements DebuggerIde {
     @Override
-    public void onConnected(Init message) throws InterruptedException {
+    public void onConnected(InitMessage message) throws InterruptedException {
 
     }
 

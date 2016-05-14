@@ -22,19 +22,19 @@ import static com.codnos.dbgp.xml.XmlUtil.parseMessage;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class InitTest {
+public class InitMessageTest {
 
     @Test
     public void shouldExtractAllTheDataFromTheMessage() {
         String message = "<init xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" appid=\"app-id-value\" idekey=\"ide-key-value\" session=\"session-id-value\" language=\"language-value\" protocol_version=\"1.0\" fileuri=\"file:/home/user/module.xq\"/>";
 
-        Init init = new Init(parseMessage(message));
+        InitMessage initMessage = new InitMessage(parseMessage(message));
 
-        assertThat(init.getAppId(), equalTo("app-id-value"));
-        assertThat(init.getIdeKey(), equalTo("ide-key-value"));
-        assertThat(init.getSession(), equalTo("session-id-value"));
-        assertThat(init.getLanguage(), equalTo("language-value"));
-        assertThat(init.getProtocolVersion(), equalTo("1.0"));
-        assertThat(init.getFileUri(), equalTo("file:/home/user/module.xq"));
+        assertThat(initMessage.getAppId(), equalTo("app-id-value"));
+        assertThat(initMessage.getIdeKey(), equalTo("ide-key-value"));
+        assertThat(initMessage.getSession(), equalTo("session-id-value"));
+        assertThat(initMessage.getLanguage(), equalTo("language-value"));
+        assertThat(initMessage.getProtocolVersion(), equalTo("1.0"));
+        assertThat(initMessage.getFileUri(), equalTo("file:/home/user/module.xq"));
     }
 }

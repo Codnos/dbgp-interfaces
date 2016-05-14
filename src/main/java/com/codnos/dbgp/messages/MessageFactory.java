@@ -33,7 +33,7 @@ import static java.util.Arrays.asList;
 
 public class MessageFactory {
 
-    private static final List<Class<? extends XmlMessage>> messageResponseClasses = asList(Init.class,
+    private static final List<Class<? extends XmlMessage>> messageResponseClasses = asList(InitMessage.class,
             BreakpointSet.Response.class,
             Status.Response.class,
             StackDepth.Response.class,

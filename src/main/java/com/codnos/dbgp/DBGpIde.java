@@ -29,7 +29,7 @@ import com.codnos.dbgp.commands.stack.StackGet;
 import com.codnos.dbgp.commands.status.Status;
 import com.codnos.dbgp.commands.step.StepOver;
 import com.codnos.dbgp.handlers.DBGpCommandEncoder;
-import com.codnos.dbgp.messages.Init;
+import com.codnos.dbgp.messages.InitMessage;
 import com.codnos.dbgp.handlers.DBGpResponseHandler;
 import com.codnos.dbgp.handlers.DBGpServerToClientConnectionHandler;
 import com.codnos.dbgp.handlers.MessageHandler;
@@ -179,7 +179,7 @@ public class DBGpIde {
             public void handle(Message message) {
                 try {
                     commandQueueProcessor.start();
-                    debuggerIde.onConnected((Init) message);
+                    debuggerIde.onConnected((InitMessage) message);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

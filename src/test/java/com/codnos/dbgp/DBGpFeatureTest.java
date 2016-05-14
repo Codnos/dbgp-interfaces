@@ -17,7 +17,7 @@
 package com.codnos.dbgp;
 
 import com.codnos.dbgp.commands.breakpoint.Breakpoint;
-import com.codnos.dbgp.messages.Init;
+import com.codnos.dbgp.messages.InitMessage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -80,24 +80,24 @@ public class DBGpFeatureTest {
         }
     }
 
-    private Callable<Init> initMessage() {
-        return new Callable<Init>() {
+    private Callable<InitMessage> initMessage() {
+        return new Callable<InitMessage>() {
             @Override
-            public Init call() throws Exception {
+            public InitMessage call() throws Exception {
                 return debuggerIde.getInitMessage();
             }
         };
     }
 
     private class FakeInitDebuggerIde extends StubDebuggerIde {
-        private Init message;
+        private InitMessage message;
 
-        public Init getInitMessage() {
+        public InitMessage getInitMessage() {
             return message;
         }
 
         @Override
-        public void onConnected(Init message) {
+        public void onConnected(InitMessage message) {
             this.message = message;
         }
     }

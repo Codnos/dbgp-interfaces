@@ -19,12 +19,12 @@ package com.codnos.dbgp.messages;
 import com.codnos.dbgp.xml.XmlUtil;
 import org.w3c.dom.Document;
 
-public class Init extends XmlMessage {
+public class InitMessage extends XmlMessage {
     public static boolean canBuildFrom(Document document) {
         return XmlUtil.boolForXPath(document, "boolean(/dbgp:init)");
     }
 
-    public Init(Document message) {
+    public InitMessage(Document message) {
         super(message);
     }
 
