@@ -16,19 +16,17 @@
 
 package com.codnos.dbgp.commands
 
-import com.codnos.dbgp.DebuggerEngine
+import com.codnos.dbgp.{DebuggerEngine, UnitSpec}
 import io.netty.channel.{ChannelFuture, ChannelHandlerContext}
 import org.mockito.ArgumentCaptor
 import org.mockito.BDDMockito._
 import org.mockito.Matchers._
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
-import org.scalatest.{FlatSpec, Matchers}
 import org.xmlunit.builder.{DiffBuilder, Input}
 
 import scala.xml.{Elem, XML}
 
-abstract class CommandSpec extends FlatSpec with Matchers with MockitoSugar {
+abstract class CommandSpec extends UnitSpec {
   val ctx = mock[ChannelHandlerContext]
   val channelFuture = mock[ChannelFuture]
   val engine = mock[DebuggerEngine]
