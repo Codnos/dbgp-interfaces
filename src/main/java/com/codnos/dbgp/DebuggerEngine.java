@@ -19,7 +19,7 @@ package com.codnos.dbgp;
 import com.codnos.dbgp.commands.property.PropertyValue;
 import com.codnos.dbgp.commands.breakpoint.Breakpoint;
 import com.codnos.dbgp.commands.stack.StackFrame;
-import com.codnos.dbgp.commands.status.StatusChangeHandler;
+import com.codnos.dbgp.commands.status.StateChangeHandler;
 
 import java.util.Collection;
 
@@ -42,11 +42,11 @@ public interface DebuggerEngine {
 
     Breakpoint breakpointSet(Breakpoint breakpoint);
 
-    void registerStateChangeHandler(StatusChangeHandler statusChangeHandler);
+    void registerStateChangeHandler(StateChangeHandler stateChangeHandler);
 
     int getStackDepth();
 
     StackFrame getFrame(int depth);
 
-    Collection<PropertyValue> getVariables(int i);
+    Collection<PropertyValue> getVariables(int depth);
 }

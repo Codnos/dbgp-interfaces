@@ -17,10 +17,10 @@
 package com.codnos.dbgp.commands;
 
 import com.codnos.dbgp.commands.status.State;
-import com.codnos.dbgp.commands.status.StatusChangeHandler;
+import com.codnos.dbgp.commands.status.StateChangeHandler;
 import io.netty.channel.ChannelHandlerContext;
 
-public class StateChangedHandler implements StatusChangeHandler {
+public class StateChangedHandler implements StateChangeHandler {
     private final String transactionId;
     private final ChannelHandlerContext ctx;
 
@@ -30,9 +30,9 @@ public class StateChangedHandler implements StatusChangeHandler {
     }
 
     @Override
-    public void stateChanged(String previousStatus, String newStatus) {
+    public void stateChanged(State previousState, State currentState) {
         String message = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\"  command=\"status\"\n" +
-                "          status=\"" + newStatus + "\"\n" +
+                "          status=\"" + currentState.nameForSending() + "\"\n" +
                 "          reason=\"ok\"\n" +
                 "          transaction_id=\"" + transactionId + "\">\n" +
                 "</response>";

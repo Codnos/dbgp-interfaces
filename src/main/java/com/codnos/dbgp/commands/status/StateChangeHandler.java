@@ -16,8 +16,20 @@
 
 package com.codnos.dbgp.commands.status;
 
-public interface StatusChangeHandler {
-    void stateChanged(String previousStatus, String newStatus);
+public interface StateChangeHandler {
+    /**
+     * Method that should handle (or just be called) whenever the state changes
+     * and this handler's applicableFor method retrurned true.
+     * @param previousState
+     * @param currentState
+     */
+    void stateChanged(State previousState, State currentState);
 
+    /**
+     * Should this handler's stateChanged method be called for given combination of previous and new statuses.
+     * @param previous previous state
+     * @param current current (new) state
+     * @return true if should be called, false otherwise
+     */
     boolean applicableFor(State previous, State current);
 }
