@@ -38,8 +38,12 @@ abstract class CommandSpec extends UnitSpec {
     val captor = ArgumentCaptor.forClass(classOf[String])
     verify(ctx).writeAndFlush(captor.capture())
     val response = XML.loadString(captor.getValue)
-    val comparison = DiffBuilder.compare(Input.from(expectedResponse.toString()))
-      .withTest(Input.fromString(response.toString()))
+    assertXmlElementsAreEqual(expectedResponse, response)
+  }
+
+  def assertXmlElementsAreEqual(expectedXml: Elem, actualXml: Elem): Unit = {
+    val comparison = DiffBuilder.compare(Input.from(expectedXml.toString()))
+      .withTest(Input.fromString(actualXml.toString()))
       .normalizeWhitespace()
       .build()
     assert(!comparison.hasDifferences, comparison.toString)
