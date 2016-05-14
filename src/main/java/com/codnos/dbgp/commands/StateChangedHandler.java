@@ -30,9 +30,9 @@ public class StateChangedHandler implements StateChangeHandler {
     }
 
     @Override
-    public void stateChanged(State previousState, State currentState) {
+    public void stateChanged(State previous, State current) {
         String message = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\"  command=\"status\"\n" +
-                "          status=\"" + currentState.nameForSending() + "\"\n" +
+                "          status=\"" + current.nameForSending() + "\"\n" +
                 "          reason=\"ok\"\n" +
                 "          transaction_id=\"" + transactionId + "\">\n" +
                 "</response>";
