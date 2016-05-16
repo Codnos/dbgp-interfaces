@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp;
+package com.codnos.dbgp
 
-import com.codnos.dbgp.commands.status.StatusValue;
-import com.codnos.dbgp.messages.InitMessage;
+import java.util.concurrent.Callable
 
-public class StubDebuggerIde implements DebuggerIde {
-    @Override
-    public void onConnected(InitMessage message) throws InterruptedException {
-
+trait AwaitilitySupport {
+  implicit def byNameFunctionToCallableOfType[T](function: => T): Callable[T] = {
+    new Callable[T] {
+      def call(): T = function
     }
-
-    @Override
-    public void onStatus(StatusValue status) {
-
+  }
+  implicit def byNameFunctionToRunnable[T](function: => T): Runnable = {
+    new Runnable {
+      def run(): Unit = function
     }
+  }
 }
