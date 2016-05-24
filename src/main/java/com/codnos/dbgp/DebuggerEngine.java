@@ -16,9 +16,10 @@
 
 package com.codnos.dbgp;
 
-import com.codnos.dbgp.commands.property.PropertyValue;
 import com.codnos.dbgp.commands.breakpoint.Breakpoint;
+import com.codnos.dbgp.commands.property.PropertyValue;
 import com.codnos.dbgp.commands.stack.StackFrame;
+import com.codnos.dbgp.commands.status.State;
 import com.codnos.dbgp.commands.status.StateChangeHandler;
 
 import java.util.Collection;
@@ -49,4 +50,6 @@ public interface DebuggerEngine {
     StackFrame getFrame(int depth);
 
     Collection<PropertyValue> getVariables(int depth);
+
+    State getState();
 }
