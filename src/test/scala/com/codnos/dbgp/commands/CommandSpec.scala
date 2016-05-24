@@ -27,6 +27,13 @@ import org.xmlunit.builder.{DiffBuilder, Input}
 import scala.xml.{Elem, XML}
 
 abstract class CommandSpec extends UnitSpec {
+  val MadeUpCommandResponse =
+      <response xmlns="urn:debugger_protocol_v1"
+                xmlns:xdebug="http://xdebug.org/dbgp/xdebug"
+                command="random_command"
+                param_id="param_id"
+                transaction_id="transaction_id"/>
+
   val ctx = mock[ChannelHandlerContext]
   val channelFuture = mock[ChannelFuture]
   val engine = mock[DebuggerEngine]

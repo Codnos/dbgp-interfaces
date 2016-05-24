@@ -43,12 +43,15 @@ class ContextGetSpec extends CommandSpec {
       encoding="none">...encoded Value Data...</property>
     </response>
 
-  val ResponseForOtherCommand =
-      <response xmlns="urn:debugger_protocol_v1"
-                xmlns:xdebug="http://xdebug.org/dbgp/xdebug"
-                command="context_list"
-                context="context_id"
-                transaction_id="transaction_id"/>
+  "Command" should "have message constructed from the parameters" in {
+    val command = new ContextGet("432", 6)
+
+    command should have (
+      'name ("context_get"),
+      'message ("context_get -i 432 -d 6"),
+      'handlerKey ("context_get:432")
+    )
+  }
 
   "Response" should "correctly expose all important attributes given xml" in {
     val response = new ContextGet.Response(parseMessage(ValidResponse.toString))
@@ -70,7 +73,7 @@ class ContextGetSpec extends CommandSpec {
   }
 
   it should "not allow building it from xml for different command" in {
-    assert(!ContextGet.Response.canBuildFrom(parseMessage(ResponseForOtherCommand.toString)))
+    assert(!ContextGet.Response.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {
