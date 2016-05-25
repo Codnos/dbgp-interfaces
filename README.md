@@ -3,7 +3,7 @@ TODO:
  - [x] Rewrite feature test to ScalaTest
  - [ ] Refactor existing API for consumers so that it's not quirky to construct and doesn't violate a lot of conditions
  - [ ] Introduce sync and async API for IDE
- - [ ] Add unit tests for already existing commands/messages
+ - [x] Add unit tests for already existing commands/messages
  - [ ] Add unit tests for main building blocks
  - [ ] Add feature test scenarios for existing functionality
  - [ ] Refactor commands into separate separate response/handler classes
