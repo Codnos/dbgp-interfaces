@@ -112,7 +112,7 @@ public class DBGpIde {
     public void run() {
         String transactionId = nextTransaction();
         Run command = new Run(transactionId);
-        eventsHandler.registerMessageHandler("status", transactionId,
+        eventsHandler.registerMessageHandler(command,
                 new MessageHandler() {
                     public void handle(Message message) {
                         Status.Response response = (Status.Response) message;
@@ -126,7 +126,7 @@ public class DBGpIde {
     public void stepOver() {
         String transactionId = nextTransaction();
         StepOver command = new StepOver(transactionId);
-        eventsHandler.registerMessageHandler("status", transactionId,
+        eventsHandler.registerMessageHandler(command,
                 new MessageHandler() {
                     public void handle(Message message) {
                         Status.Response response = (Status.Response) message;

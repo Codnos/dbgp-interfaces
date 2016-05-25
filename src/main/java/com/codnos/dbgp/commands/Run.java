@@ -39,7 +39,7 @@ public class Run implements ContinuationCommand<Void> {
 
     @Override
     public String getHandlerKey() {
-        return null;
+        return "status:" + transactionId;
     }
 
     public static final class CommandHandler extends DBGPCommandHandler {

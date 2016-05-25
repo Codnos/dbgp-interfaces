@@ -44,6 +44,10 @@ public class DBGpEventsHandler {
         }
     }
 
+    public void registerMessageHandler(Command command, MessageHandler messageHandler) {
+        responseHandlers.put(command.getHandlerKey(), messageHandler);
+    }
+
     public void registerMessageHandler(String name, String transactionId, MessageHandler messageHandler) {
         responseHandlers.put(name + ":" + transactionId, messageHandler);
     }
