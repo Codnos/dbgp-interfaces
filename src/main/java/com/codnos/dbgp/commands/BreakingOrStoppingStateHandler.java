@@ -20,11 +20,11 @@ import com.codnos.dbgp.commands.status.State;
 import com.codnos.dbgp.commands.status.StateChangeHandler;
 import io.netty.channel.ChannelHandlerContext;
 
-public class StateChangedHandler implements StateChangeHandler {
+public class BreakingOrStoppingStateHandler implements StateChangeHandler {
     private final String transactionId;
     private final ChannelHandlerContext ctx;
 
-    public StateChangedHandler(String transactionId, ChannelHandlerContext ctx) {
+    public BreakingOrStoppingStateHandler(String transactionId, ChannelHandlerContext ctx) {
         this.transactionId = transactionId;
         this.ctx = ctx;
     }

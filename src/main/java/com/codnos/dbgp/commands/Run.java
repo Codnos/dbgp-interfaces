@@ -57,7 +57,7 @@ public class Run implements ContinuationCommand<Void> {
         protected void handle(final ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) throws Exception {
             String[] commandParts = msg.split(" ");
             final String transactionId = commandParts[2];
-            debuggerEngine.registerStateChangeHandler(new StateChangedHandler(transactionId, ctx));
+            debuggerEngine.registerStateChangeHandler(new BreakingOrStoppingStateHandler(transactionId, ctx));
             debuggerEngine.run();
         }
     }

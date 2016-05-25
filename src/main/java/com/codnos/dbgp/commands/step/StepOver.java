@@ -18,7 +18,7 @@ package com.codnos.dbgp.commands.step;
 
 import com.codnos.dbgp.DebuggerEngine;
 import com.codnos.dbgp.commands.ContinuationCommand;
-import com.codnos.dbgp.commands.StateChangedHandler;
+import com.codnos.dbgp.commands.BreakingOrStoppingStateHandler;
 import com.codnos.dbgp.handlers.DBGPCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -60,7 +60,7 @@ public class StepOver implements ContinuationCommand<Void> {
         protected void handle(final ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) throws Exception {
             String[] commandParts = msg.split(" ");
             final String transactionId = commandParts[2];
-            debuggerEngine.registerStateChangeHandler(new StateChangedHandler(transactionId, ctx));
+            debuggerEngine.registerStateChangeHandler(new BreakingOrStoppingStateHandler(transactionId, ctx));
             debuggerEngine.stepOver();
         }
     }
