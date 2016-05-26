@@ -21,11 +21,11 @@ import com.codnos.dbgp.commands.status.StatusValue
 import com.codnos.dbgp.messages.InitMessage
 import com.jayway.awaitility.Awaitility._
 import org.hamcrest.Matchers._
-import org.mockito.Matchers
+import org.mockito.{BDDMockito, Matchers}
 import org.mockito.Mockito._
 import org.scalatest.{FeatureSpec, GivenWhenThen}
 
-class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupport {
+class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupport with org.scalatest.Matchers {
   private val Port: Int = 9000
   private val debuggerIde: FakeDebuggerIde = new FakeDebuggerIde
   private val debuggerEngine: DebuggerEngine = mock(classOf[DebuggerEngine])
@@ -45,13 +45,22 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
   feature("setting breakpoints") {
     scenario("when breakpoint is set the debugger engine will receive the breakpoint") {
       Given("the engine and the IDE are connected")
+      val breakpoint = new Breakpoint("file", 123)
+      val breakpointAfterSetting = new Breakpoint(breakpoint, "id", "enabled")
+      BDDMockito.given(debuggerEngine.breakpointSet(Matchers.any(classOf[Breakpoint]))).willReturn(breakpointAfterSetting)
+
       withinASession {
         ctx =>
           When("the breakpoint is set int the IDE")
-          ctx.ide.breakpointSet(new Breakpoint("file", 123))
+          val result = ctx.ide.breakpointSet(breakpoint)
 
           Then("the engine receives the breakpoint")
           await until (() => verify(debuggerEngine).breakpointSet(Matchers.any(classOf[Breakpoint])))
+
+          And("the breakpoint has correct attributes which engine has sent")
+          result.getFileURL shouldBe breakpointAfterSetting.getFileURL
+          result.getLineNumber shouldBe breakpointAfterSetting.getLineNumber
+          result.getState shouldBe breakpointAfterSetting.getState
       }
     }
   }
