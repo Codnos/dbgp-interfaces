@@ -17,12 +17,12 @@
 package com.codnos.dbgp
 
 import com.codnos.dbgp.commands.breakpoint.Breakpoint
-import com.codnos.dbgp.commands.status.StatusValue
+import com.codnos.dbgp.commands.status.{StateChangeHandler, StatusValue}
 import com.codnos.dbgp.messages.InitMessage
 import com.jayway.awaitility.Awaitility._
 import org.hamcrest.Matchers._
-import org.mockito.{BDDMockito, Matchers}
 import org.mockito.Mockito._
+import org.mockito.{BDDMockito, Matchers}
 import org.scalatest.{FeatureSpec, GivenWhenThen}
 
 class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupport with org.scalatest.Matchers {
@@ -43,7 +43,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
   }
 
   feature("setting breakpoints") {
-    scenario("when breakpoint is set the debugger engine will receive the breakpoint") {
+    scenario("when breakpoint is set the debugger engine will receive the breakpoint and respond with details") {
       Given("the engine and the IDE are connected")
       val breakpoint = new Breakpoint("file", 123)
       val breakpointAfterSetting = new Breakpoint(breakpoint, "id", "enabled")
@@ -61,6 +61,21 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
           result.getFileURL shouldBe breakpointAfterSetting.getFileURL
           result.getLineNumber shouldBe breakpointAfterSetting.getLineNumber
           result.getState shouldBe breakpointAfterSetting.getState
+      }
+    }
+  }
+
+  feature("running the code") {
+    scenario("after initiating the session the code can be run") {
+      Given("the engine and the IDE are connected")
+      withinASession {
+        ctx =>
+          When("the run command is sent")
+          ctx.ide.run()
+          Then("the debugger engine will get notified about any state changes")
+          await until (() => verify(debuggerEngine).registerStateChangeHandler(Matchers.any(classOf[StateChangeHandler])))
+          And("the debugger engine receives the run command")
+          await until (() => verify(debuggerEngine).run())
       }
     }
   }
@@ -94,4 +109,5 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
   }
 
   private case class DebuggingContext(ide: DBGpIde, engine: DBGpEngine)
+
 }
