@@ -17,6 +17,7 @@
 package com.codnos.dbgp;
 
 import com.codnos.dbgp.commands.breakpoint.BreakpointSet;
+import com.codnos.dbgp.commands.status.StatusValue;
 import com.codnos.dbgp.handlers.DBGpResponseDecoder;
 import com.codnos.dbgp.commands.Command;
 import com.codnos.dbgp.commands.Run;
@@ -159,6 +160,14 @@ public class DBGpIde {
         sendCommand(command);
         StackGet.Response response = eventsHandler.getResponse(command);
         return new StackFrame(response.getFileUrl(), response.getLineNumber(), response.getWhere());
+    }
+
+    public StatusValue status() {
+        String transactionId = nextTransaction();
+        Status command = new Status(transactionId);
+        sendCommand(command);
+        Status.Response response = eventsHandler.getResponse(command);
+        return response.getStatus();
     }
 
     private String nextTransaction() {

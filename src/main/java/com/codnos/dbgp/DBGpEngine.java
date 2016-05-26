@@ -17,14 +17,15 @@
 package com.codnos.dbgp;
 
 import com.codnos.dbgp.commands.Init;
-import com.codnos.dbgp.commands.breakpoint.BreakpointSet;
-import com.codnos.dbgp.handlers.DBGpCommandDecoder;
 import com.codnos.dbgp.commands.Run;
+import com.codnos.dbgp.commands.breakpoint.BreakpointSet;
 import com.codnos.dbgp.commands.context.ContextGet;
 import com.codnos.dbgp.commands.stack.StackDepth;
 import com.codnos.dbgp.commands.stack.StackGet;
+import com.codnos.dbgp.commands.status.Status;
 import com.codnos.dbgp.commands.step.StepOver;
 import com.codnos.dbgp.handlers.DBGPInitHandler;
+import com.codnos.dbgp.handlers.DBGpCommandDecoder;
 import com.codnos.dbgp.handlers.DBGpResponseEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -66,7 +67,8 @@ public class DBGpEngine {
                         new Run.CommandHandler(debuggerEngine),
                         new StepOver.CommandHandler(debuggerEngine),
                         new StackGet.CommandHandler(debuggerEngine),
-                        new ContextGet.CommandHandler(debuggerEngine)
+                        new ContextGet.CommandHandler(debuggerEngine),
+                        new Status.CommandHandler(debuggerEngine)
                 );
             }
         });

@@ -17,7 +17,7 @@
 package com.codnos.dbgp
 
 import com.codnos.dbgp.commands.breakpoint.Breakpoint
-import com.codnos.dbgp.commands.status.{StateChangeHandler, StatusValue}
+import com.codnos.dbgp.commands.status.{State, StateChangeHandler, StatusValue}
 import com.codnos.dbgp.messages.InitMessage
 import com.jayway.awaitility.Awaitility._
 import org.hamcrest.Matchers._
@@ -80,6 +80,23 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
     }
   }
 
+  feature("checking current status") {
+    scenario("after initiating the session the status can be checked") {
+      Given("the engine and the IDE are connected")
+      val expectedStatus = State.RUNNING
+      BDDMockito.given(debuggerEngine.getState).willReturn(expectedStatus)
+      withinASession {
+        ctx =>
+          When("the status command is sent")
+          val status = ctx.ide.status()
+          Then("the debugger engine receives the status command")
+          await until (() => verify(debuggerEngine).getState)
+          And("status is the same as returned by the engine")
+          status.getState shouldBe expectedStatus.nameForSending()
+      }
+    }
+  }
+
   private class FakeDebuggerIde extends DebuggerIde {
     private var message: InitMessage = null
 
@@ -103,6 +120,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
     try {
       f(DebuggingContext(ide, engine))
     } finally {
+      eventsHandler.clearHandlers()
       engine.disconnect()
       ide.stopListening()
     }

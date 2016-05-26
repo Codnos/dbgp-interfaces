@@ -24,7 +24,7 @@ import com.codnos.dbgp.commands.Command;
 import io.netty.channel.ChannelHandlerContext;
 import org.w3c.dom.Document;
 
-public class Status implements Command {
+public class Status implements Command<Status.Response> {
 
     private String transactionId;
 
