@@ -16,7 +16,7 @@
 
 package com.codnos.dbgp.commands
 
-import com.codnos.dbgp.commands.status.StateChangeHandler
+import com.codnos.dbgp.commands.status.{StateChangeHandler, StateChangeHandlerFactory}
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 
@@ -33,7 +33,7 @@ class RunSpec extends CommandSpec {
   }
 
   "CommandHandler" should "register state change handler and step over" in {
-    val handler = new Run.CommandHandler(engine)
+    val handler = new Run.CommandHandler(engine, new StateChangeHandlerFactory)
 
     handler.channelRead(ctx, "run -i 456")
 

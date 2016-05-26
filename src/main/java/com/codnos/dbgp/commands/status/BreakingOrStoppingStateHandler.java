@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.commands;
+package com.codnos.dbgp.commands.status;
 
-import com.codnos.dbgp.commands.status.State;
-import com.codnos.dbgp.commands.status.StateChangeHandler;
 import io.netty.channel.ChannelHandlerContext;
 
 public class BreakingOrStoppingStateHandler implements StateChangeHandler {

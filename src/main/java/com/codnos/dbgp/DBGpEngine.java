@@ -22,6 +22,7 @@ import com.codnos.dbgp.commands.breakpoint.BreakpointSet;
 import com.codnos.dbgp.commands.context.ContextGet;
 import com.codnos.dbgp.commands.stack.StackDepth;
 import com.codnos.dbgp.commands.stack.StackGet;
+import com.codnos.dbgp.commands.status.StateChangeHandlerFactory;
 import com.codnos.dbgp.commands.status.Status;
 import com.codnos.dbgp.commands.step.StepOver;
 import com.codnos.dbgp.handlers.DBGPInitHandler;
@@ -38,11 +39,13 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 public class DBGpEngine {
     private final int port;
     private final DebuggerEngine debuggerEngine;
+    private final StateChangeHandlerFactory stateChangeHandlerFactory;
     private EventLoopGroup workerGroup;
 
-    public DBGpEngine(int port, DebuggerEngine debuggerEngine) {
+    public DBGpEngine(int port, DebuggerEngine debuggerEngine, StateChangeHandlerFactory stateChangeHandlerFactory) {
         this.port = port;
         this.debuggerEngine = debuggerEngine;
+        this.stateChangeHandlerFactory = stateChangeHandlerFactory;
     }
 
     public void connect() throws InterruptedException {
@@ -64,8 +67,8 @@ public class DBGpEngine {
                         new DBGpResponseEncoder(),
                         new BreakpointSet.CommandHandler(debuggerEngine),
                         new StackDepth.CommandHandler(debuggerEngine),
-                        new Run.CommandHandler(debuggerEngine),
-                        new StepOver.CommandHandler(debuggerEngine),
+                        new Run.CommandHandler(debuggerEngine, stateChangeHandlerFactory),
+                        new StepOver.CommandHandler(debuggerEngine, stateChangeHandlerFactory),
                         new StackGet.CommandHandler(debuggerEngine),
                         new ContextGet.CommandHandler(debuggerEngine),
                         new Status.CommandHandler(debuggerEngine)

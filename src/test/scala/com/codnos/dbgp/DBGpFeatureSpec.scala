@@ -21,16 +21,17 @@ import java.util
 import com.codnos.dbgp.commands.breakpoint.Breakpoint
 import com.codnos.dbgp.commands.property.PropertyValue
 import com.codnos.dbgp.commands.stack.StackFrame
-import com.codnos.dbgp.commands.status.{State, StateChangeHandler, StatusValue}
+import com.codnos.dbgp.commands.status.{State, StateChangeHandler, StateChangeHandlerFactory, StatusValue}
 import com.codnos.dbgp.messages.InitMessage
 import com.jayway.awaitility.Awaitility._
+import io.netty.channel.ChannelHandlerContext
 import org.hamcrest.Matchers._
 import org.mockito.Mockito._
 import org.mockito.{BDDMockito, Matchers}
 import org.scalatest.{FeatureSpec, GivenWhenThen}
-import scala.collection.JavaConverters._
 
 class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupport with org.scalatest.Matchers {
+  private val stateChangeHandlerFactory: StateChangeHandlerFactory = new SpyingStateChangeHandlerFactory()
   private val Port: Int = 9000
   private val debuggerIde: FakeDebuggerIde = new FakeDebuggerIde
   private val debuggerEngine: DebuggerEngine = mock(classOf[DebuggerEngine])
@@ -194,7 +195,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
 
   private def withinASession(f: DebuggingContext => Unit) {
     val ide = new DBGpIde(Port, eventsHandler)
-    val engine = new DBGpEngine(Port, debuggerEngine)
+    val engine = new DBGpEngine(Port, debuggerEngine, stateChangeHandlerFactory)
     ide.registerIde(debuggerIde)
     ide.startListening()
     engine.connect()
@@ -208,5 +209,14 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
   }
 
   private case class DebuggingContext(ide: DBGpIde, engine: DBGpEngine)
+
+  class SpyingStateChangeHandlerFactory() extends StateChangeHandlerFactory {
+    var lastStateChangeHandler: StateChangeHandler = null
+
+    override def getInstance(transactionId: String, ctx: ChannelHandlerContext): StateChangeHandler = {
+      lastStateChangeHandler = super.getInstance(transactionId, ctx)
+      lastStateChangeHandler
+    }
+  }
 
 }

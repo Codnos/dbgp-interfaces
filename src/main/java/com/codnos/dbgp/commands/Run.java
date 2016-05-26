@@ -17,6 +17,8 @@
 package com.codnos.dbgp.commands;
 
 import com.codnos.dbgp.DebuggerEngine;
+import com.codnos.dbgp.commands.status.BreakingOrStoppingStateHandler;
+import com.codnos.dbgp.commands.status.StateChangeHandlerFactory;
 import com.codnos.dbgp.handlers.DBGPCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -44,8 +46,11 @@ public class Run implements ContinuationCommand<Void> {
 
     public static final class CommandHandler extends DBGPCommandHandler {
 
-        public CommandHandler(DebuggerEngine debuggerEngine) {
+        private final StateChangeHandlerFactory stateChangeHandlerFactory;
+
+        public CommandHandler(DebuggerEngine debuggerEngine, StateChangeHandlerFactory stateChangeHandlerFactory) {
             super(debuggerEngine);
+            this.stateChangeHandlerFactory = stateChangeHandlerFactory;
         }
 
         @Override
@@ -57,7 +62,7 @@ public class Run implements ContinuationCommand<Void> {
         protected void handle(final ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) throws Exception {
             String[] commandParts = msg.split(" ");
             final String transactionId = commandParts[2];
-            debuggerEngine.registerStateChangeHandler(new BreakingOrStoppingStateHandler(transactionId, ctx));
+            debuggerEngine.registerStateChangeHandler(stateChangeHandlerFactory.getInstance(transactionId, ctx));
             debuggerEngine.run();
         }
     }
