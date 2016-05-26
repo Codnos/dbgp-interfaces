@@ -97,6 +97,23 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
     }
   }
 
+  feature("checking stack depth") {
+    scenario("after initiating the session the stack depth can be checked") {
+      Given("the engine and the IDE are connected")
+      BDDMockito.given(debuggerEngine.getStackDepth).willReturn(7)
+      withinASession {
+        ctx =>
+          When("the stackDepth command is sent")
+          val stackDepth = ctx.ide.stackDepth()
+          Then("the debugger engine receives the stack depth command")
+          await until (() => verify(debuggerEngine).getStackDepth)
+          And("stack depth is the same as returned by the engine")
+          stackDepth shouldBe 7
+      }
+    }
+  }
+
+
   private class FakeDebuggerIde extends DebuggerIde {
     private var message: InitMessage = null
 
