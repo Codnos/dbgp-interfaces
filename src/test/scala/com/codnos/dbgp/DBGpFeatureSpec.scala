@@ -162,6 +162,21 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
     }
   }
 
+  feature("stepping over the code") {
+    scenario("after initiating the session the code can be stepped over") {
+      Given("the engine and the IDE are connected")
+      withinASession {
+        ctx =>
+          When("the run command is sent")
+          ctx.ide.stepOver()
+          Then("the debugger engine will get notified about any state changes")
+          await until (() => verify(debuggerEngine).registerStateChangeHandler(Matchers.any(classOf[StateChangeHandler])))
+          And("the debugger engine receives the step over command")
+          await until (() => verify(debuggerEngine).stepOver())
+      }
+    }
+  }
+
 
   private class FakeDebuggerIde extends DebuggerIde {
     private var message: InitMessage = null
