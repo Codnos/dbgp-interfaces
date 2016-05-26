@@ -16,7 +16,11 @@
 
 package com.codnos.dbgp
 
+import java.util
+
 import com.codnos.dbgp.commands.breakpoint.Breakpoint
+import com.codnos.dbgp.commands.property.PropertyValue
+import com.codnos.dbgp.commands.stack.StackFrame
 import com.codnos.dbgp.commands.status.{State, StateChangeHandler, StatusValue}
 import com.codnos.dbgp.messages.InitMessage
 import com.jayway.awaitility.Awaitility._
@@ -24,6 +28,7 @@ import org.hamcrest.Matchers._
 import org.mockito.Mockito._
 import org.mockito.{BDDMockito, Matchers}
 import org.scalatest.{FeatureSpec, GivenWhenThen}
+import scala.collection.JavaConverters._
 
 class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupport with org.scalatest.Matchers {
   private val Port: Int = 9000
@@ -103,12 +108,56 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
       BDDMockito.given(debuggerEngine.getStackDepth).willReturn(7)
       withinASession {
         ctx =>
-          When("the stackDepth command is sent")
+          When("the stack depth command is sent")
           val stackDepth = ctx.ide.stackDepth()
           Then("the debugger engine receives the stack depth command")
           await until (() => verify(debuggerEngine).getStackDepth)
           And("stack depth is the same as returned by the engine")
           stackDepth shouldBe 7
+      }
+    }
+  }
+
+  feature("checking stack frame") {
+    scenario("after initiating the session the stack frame can be checked") {
+      Given("the engine and the IDE are connected")
+      val frame = new StackFrame("uri", 88, "method")
+      BDDMockito.given(debuggerEngine.getFrame(7)).willReturn(frame)
+      withinASession {
+        ctx =>
+          When("the stack get command is sent")
+          val result = ctx.ide.stackGet(7)
+          Then("the debugger engine receives the stack get command")
+          await until (() => verify(debuggerEngine).getFrame(7))
+          And("stack frame is the same as returned by the engine")
+          result should have(
+            'fileURL ("uri"),
+            'lineNumber (88),
+            'where ("method")
+          )
+      }
+    }
+  }
+
+  feature("checking context") {
+    scenario("after initiating the session the context can be checked") {
+      Given("the engine and the IDE are connected")
+      val variables = util.Arrays.asList(new PropertyValue("abc", "int", "989"))
+      BDDMockito.given(debuggerEngine.getVariables(7)).willReturn(variables)
+      withinASession {
+        ctx =>
+          When("the stackDepth command is sent")
+          val result = ctx.ide.contextGet(7)
+          Then("the debugger engine receives the context get command")
+          await until (() => verify(debuggerEngine).getVariables(7))
+          And("stack frame is the same as returned by the engine")
+          val variablesFound = result.getVariables.toArray()
+          variablesFound should have size 1
+          variablesFound(0) should have(
+            'name ("abc"),
+            'type ("int"),
+            'value ("989")
+          )
       }
     }
   }
