@@ -5,7 +5,7 @@ TODO:
  - [ ] Introduce sync and async API for IDE
  - [x] Add unit tests for already existing commands/messages
  - [ ] Add unit tests for main building blocks
- - [ ] Add feature test scenarios for existing functionality
+ - [x] Add feature test scenarios for existing functionality
  - [ ] Refactor commands into separate separate response/handler classes
  - [ ] Better handling of command parameter parsing
  - [ ] Better/systematic handling of xml construction
