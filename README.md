@@ -12,3 +12,5 @@ TODO:
  - [ ] Proper configuration/parameter negotiation
  - [ ] Add missing argument/attribute handling for existing commands/responses
  - [ ] Add additional protocol elements
+ - [ ] Introduce separate API package (or move all internal to internal)
+ - [ ] Add proper JavaDoc and examples
