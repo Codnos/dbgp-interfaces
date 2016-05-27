@@ -52,11 +52,11 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
 
   feature("setting breakpoints") {
     scenario("when breakpoint is set the debugger engine will receive the breakpoint and respond with details") {
-      Given("the engine and the IDE are connected")
       val breakpoint = new Breakpoint("file", 123)
       val breakpointAfterSetting = new Breakpoint(breakpoint, "id", "enabled")
       BDDMockito.given(debuggerEngine.breakpointSet(Matchers.any(classOf[Breakpoint]))).willReturn(breakpointAfterSetting)
 
+      Given("the engine and the IDE are connected")
       withinASession {
         ctx =>
           When("the breakpoint is set int the IDE")
@@ -92,6 +92,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
           stateChangeHandlerFactory.lastStateChangeHandler.stateChanged(State.RUNNING, State.BREAK)
         }
       })
+
       Given("the engine and the IDE are connected")
       withinASession {
         ctx =>
@@ -105,9 +106,10 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
 
   feature("checking current status") {
     scenario("after initiating the session the status can be checked") {
-      Given("the engine and the IDE are connected")
       val expectedStatus = State.RUNNING
       BDDMockito.given(debuggerEngine.getState).willReturn(expectedStatus)
+
+      Given("the engine and the IDE are connected")
       withinASession {
         ctx =>
           When("the status command is sent")
@@ -122,8 +124,9 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
 
   feature("checking stack depth") {
     scenario("after initiating the session the stack depth can be checked") {
-      Given("the engine and the IDE are connected")
       BDDMockito.given(debuggerEngine.getStackDepth).willReturn(7)
+
+      Given("the engine and the IDE are connected")
       withinASession {
         ctx =>
           When("the stack depth command is sent")
@@ -138,9 +141,10 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
 
   feature("checking stack frame") {
     scenario("after initiating the session the stack frame can be checked") {
-      Given("the engine and the IDE are connected")
       val frame = new StackFrame("uri", 88, "method")
       BDDMockito.given(debuggerEngine.getFrame(7)).willReturn(frame)
+
+      Given("the engine and the IDE are connected")
       withinASession {
         ctx =>
           When("the stack get command is sent")
@@ -159,9 +163,10 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
 
   feature("checking context") {
     scenario("after initiating the session the context can be checked") {
-      Given("the engine and the IDE are connected")
       val variables = util.Arrays.asList(new PropertyValue("abc", "int", "989"))
       BDDMockito.given(debuggerEngine.getVariables(7)).willReturn(variables)
+
+      Given("the engine and the IDE are connected")
       withinASession {
         ctx =>
           When("the stackDepth command is sent")
@@ -199,6 +204,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
           stateChangeHandlerFactory.lastStateChangeHandler.stateChanged(State.RUNNING, State.BREAK)
         }
       })
+
       Given("the engine and the IDE are connected")
       withinASession {
         ctx =>
@@ -209,7 +215,6 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
       }
     }
   }
-
 
   private class FakeDebuggerIde extends DebuggerIde {
     private var message: InitMessage = null
