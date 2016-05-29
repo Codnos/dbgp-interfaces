@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.commands;
+package com.codnos.dbgp.commands.run;
 
 import com.codnos.dbgp.api.DebuggerEngine;
+import com.codnos.dbgp.commands.ContinuationCommand;
 import com.codnos.dbgp.commands.status.StateChangeHandlerFactory;
 import com.codnos.dbgp.handlers.DBGPCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -43,26 +44,4 @@ public class RunCommand implements ContinuationCommand<Void> {
         return "status:" + transactionId;
     }
 
-    public static final class RunCommandHanlder extends DBGPCommandHandler {
-
-        private final StateChangeHandlerFactory stateChangeHandlerFactory;
-
-        public RunCommandHanlder(DebuggerEngine debuggerEngine, StateChangeHandlerFactory stateChangeHandlerFactory) {
-            super(debuggerEngine);
-            this.stateChangeHandlerFactory = stateChangeHandlerFactory;
-        }
-
-        @Override
-        protected boolean canHandle(String msg) {
-            return msg.contains("run");
-        }
-
-        @Override
-        protected void handle(final ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) throws Exception {
-            String[] commandParts = msg.split(" ");
-            final String transactionId = commandParts[2];
-            debuggerEngine.registerStateChangeHandler(stateChangeHandlerFactory.getInstance(transactionId, ctx));
-            debuggerEngine.run();
-        }
-    }
 }

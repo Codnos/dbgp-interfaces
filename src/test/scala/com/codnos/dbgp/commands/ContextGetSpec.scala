@@ -19,8 +19,7 @@ package com.codnos.dbgp.commands
 import java.util.Arrays.asList
 
 import com.codnos.dbgp.api.PropertyValue
-import com.codnos.dbgp.commands.context.ContextGetCommand
-import com.codnos.dbgp.commands.context.ContextGetCommand.{ContextGetCommandHandler, ContextGetResponse}
+import com.codnos.dbgp.commands.context.{ContextGetCommand, ContextGetCommandHandler, ContextGetResponse}
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito.given
 
@@ -70,11 +69,11 @@ class ContextGetSpec extends CommandSpec {
   }
 
   it should "allow building it from valid xml" in {
-    assert(ContextGetCommand.ContextGetResponse.canBuildFrom(parseMessage(ValidResponse.toString)))
+    assert(context.ContextGetResponse.canBuildFrom(parseMessage(ValidResponse.toString)))
   }
 
   it should "not allow building it from xml for different command" in {
-    assert(!ContextGetCommand.ContextGetResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
+    assert(!context.ContextGetResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {

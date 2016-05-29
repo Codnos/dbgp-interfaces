@@ -18,14 +18,14 @@ package com.codnos.dbgp;
 
 import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.commands.Init;
-import com.codnos.dbgp.commands.RunCommand;
-import com.codnos.dbgp.commands.breakpoint.BreakpointSetCommand;
-import com.codnos.dbgp.commands.context.ContextGetCommand;
-import com.codnos.dbgp.commands.stack.StackDepthCommand;
-import com.codnos.dbgp.commands.stack.StackGetCommand;
+import com.codnos.dbgp.commands.run.RunCommandHandler;
+import com.codnos.dbgp.commands.breakpoint.BreakpointSetCommandHandler;
+import com.codnos.dbgp.commands.context.ContextGetCommandHandler;
+import com.codnos.dbgp.commands.stack.StackDepthCommandHandler;
+import com.codnos.dbgp.commands.stack.StackGetCommandHandler;
 import com.codnos.dbgp.commands.status.StateChangeHandlerFactory;
-import com.codnos.dbgp.commands.status.StatusCommand;
-import com.codnos.dbgp.commands.step.StepOverCommand;
+import com.codnos.dbgp.commands.status.StatusCommandHandler;
+import com.codnos.dbgp.commands.step.StepOverCommandHandler;
 import com.codnos.dbgp.handlers.DBGPInitHandler;
 import com.codnos.dbgp.handlers.DBGpCommandDecoder;
 import com.codnos.dbgp.handlers.DBGpResponseEncoder;
@@ -66,13 +66,13 @@ public class DBGpEngine {
                         new DBGPInitHandler(new Init(debuggerEngine)),
                         new DBGpCommandDecoder(),
                         new DBGpResponseEncoder(),
-                        new BreakpointSetCommand.BreakpointSetCommandHandler(debuggerEngine),
-                        new StackDepthCommand.StackDepthCommandHandler(debuggerEngine),
-                        new RunCommand.RunCommandHanlder(debuggerEngine, stateChangeHandlerFactory),
-                        new StepOverCommand.StepOverCommandHandler(debuggerEngine, stateChangeHandlerFactory),
-                        new StackGetCommand.StackGetCommandHandler(debuggerEngine),
-                        new ContextGetCommand.ContextGetCommandHandler(debuggerEngine),
-                        new StatusCommand.StatusCommandHandler(debuggerEngine)
+                        new BreakpointSetCommandHandler(debuggerEngine),
+                        new StackDepthCommandHandler(debuggerEngine),
+                        new RunCommandHandler(debuggerEngine, stateChangeHandlerFactory),
+                        new StepOverCommandHandler(debuggerEngine, stateChangeHandlerFactory),
+                        new StackGetCommandHandler(debuggerEngine),
+                        new ContextGetCommandHandler(debuggerEngine),
+                        new StatusCommandHandler(debuggerEngine)
                 );
             }
         });

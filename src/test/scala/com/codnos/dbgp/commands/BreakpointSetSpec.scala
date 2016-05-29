@@ -17,8 +17,7 @@
 package com.codnos.dbgp.commands
 
 import com.codnos.dbgp.api.Breakpoint
-import com.codnos.dbgp.commands.breakpoint.BreakpointSetCommand
-import com.codnos.dbgp.commands.breakpoint.BreakpointSetCommand.{BreakpointSetCommandHandler, BreakpointSetResponse}
+import com.codnos.dbgp.commands.breakpoint.{BreakpointSetCommand, BreakpointSetCommandHandler, BreakpointSetResponse}
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito._
 import org.mockito.Matchers.any
@@ -57,11 +56,11 @@ class BreakpointSetSpec extends CommandSpec {
   }
 
   it should "allow building it from valid xml" in {
-    assert(BreakpointSetCommand.BreakpointSetResponse.canBuildFrom(parseMessage(ValidResponse.toString)))
+    assert(breakpoint.BreakpointSetResponse.canBuildFrom(parseMessage(ValidResponse.toString)))
   }
 
   it should "not allow building it from xml for different command" in {
-    assert(!BreakpointSetCommand.BreakpointSetResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
+    assert(!breakpoint.BreakpointSetResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {

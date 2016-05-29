@@ -16,11 +16,11 @@
 
 package com.codnos.dbgp.messages;
 
-import com.codnos.dbgp.commands.breakpoint.BreakpointSetCommand;
-import com.codnos.dbgp.commands.context.ContextGetCommand;
-import com.codnos.dbgp.commands.stack.StackDepthCommand;
-import com.codnos.dbgp.commands.stack.StackGetCommand;
-import com.codnos.dbgp.commands.status.StatusCommand;
+import com.codnos.dbgp.commands.breakpoint.BreakpointSetResponse;
+import com.codnos.dbgp.commands.context.ContextGetResponse;
+import com.codnos.dbgp.commands.stack.StackDepthResponse;
+import com.codnos.dbgp.commands.stack.StackGetResponse;
+import com.codnos.dbgp.commands.status.StatusResponse;
 import org.w3c.dom.Document;
 
 import java.lang.reflect.Constructor;
@@ -34,11 +34,11 @@ import static java.util.Arrays.asList;
 public class MessageFactory {
 
     private static final List<Class<? extends XmlMessage>> messageResponseClasses = asList(InitMessage.class,
-            BreakpointSetCommand.BreakpointSetResponse.class,
-            StatusCommand.StatusCommandResponse.class,
-            StackDepthCommand.StackDepthResponse.class,
-            StackGetCommand.StackGetResponse.class,
-            ContextGetCommand.ContextGetResponse.class);
+            BreakpointSetResponse.class,
+            StatusResponse.class,
+            StackDepthResponse.class,
+            StackGetResponse.class,
+            ContextGetResponse.class);
 
     public static Message getMessage(String message) {
         Document parsedMessage = parseMessage(message);

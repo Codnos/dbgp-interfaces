@@ -18,12 +18,17 @@ package com.codnos.dbgp;
 
 import com.codnos.dbgp.api.*;
 import com.codnos.dbgp.commands.Command;
-import com.codnos.dbgp.commands.RunCommand;
+import com.codnos.dbgp.commands.run.RunCommand;
 import com.codnos.dbgp.commands.breakpoint.BreakpointSetCommand;
+import com.codnos.dbgp.commands.breakpoint.BreakpointSetResponse;
 import com.codnos.dbgp.commands.context.ContextGetCommand;
+import com.codnos.dbgp.commands.context.ContextGetResponse;
 import com.codnos.dbgp.commands.stack.StackDepthCommand;
+import com.codnos.dbgp.commands.stack.StackDepthResponse;
 import com.codnos.dbgp.commands.stack.StackGetCommand;
+import com.codnos.dbgp.commands.stack.StackGetResponse;
 import com.codnos.dbgp.commands.status.StatusCommand;
+import com.codnos.dbgp.commands.status.StatusResponse;
 import com.codnos.dbgp.commands.step.StepOverCommand;
 import com.codnos.dbgp.handlers.*;
 import com.codnos.dbgp.messages.InitMessage;
@@ -99,7 +104,7 @@ public class DBGpIde {
         String transactionId = nextTransaction();
         BreakpointSetCommand command = new BreakpointSetCommand(transactionId, breakpoint);
         sendCommand(command);
-        BreakpointSetCommand.BreakpointSetResponse response = eventsHandler.getResponse(command);
+        BreakpointSetResponse response = eventsHandler.getResponse(command);
         return new Breakpoint(breakpoint, response.getBreakpointId(), response.getState());
     }
 
@@ -109,7 +114,7 @@ public class DBGpIde {
         eventsHandler.registerMessageHandler(command,
                 new MessageHandler() {
                     public void handle(Message message) {
-                        StatusCommand.StatusCommandResponse response = (StatusCommand.StatusCommandResponse) message;
+                        StatusResponse response = (StatusResponse) message;
                         debuggerIde.onStatus(response.getStatus());
                     }
                 }
@@ -123,7 +128,7 @@ public class DBGpIde {
         eventsHandler.registerMessageHandler(command,
                 new MessageHandler() {
                     public void handle(Message message) {
-                        StatusCommand.StatusCommandResponse response = (StatusCommand.StatusCommandResponse) message;
+                        StatusResponse response = (StatusResponse) message;
                         debuggerIde.onStatus(response.getStatus());
                     }
                 }
@@ -135,7 +140,7 @@ public class DBGpIde {
         String transactionId = nextTransaction();
         StackDepthCommand command = new StackDepthCommand(transactionId);
         sendCommand(command);
-        StackDepthCommand.StackDepthResponse response = eventsHandler.getResponse(command);
+        StackDepthResponse response = eventsHandler.getResponse(command);
         return response.getDepth();
     }
 
@@ -143,7 +148,7 @@ public class DBGpIde {
         String transactionId = nextTransaction();
         ContextGetCommand command = new ContextGetCommand(transactionId, stackDepth);
         sendCommand(command);
-        ContextGetCommand.ContextGetResponse response = eventsHandler.getResponse(command);
+        ContextGetResponse response = eventsHandler.getResponse(command);
         return new Context(response.getVariables());
     }
 
@@ -151,7 +156,7 @@ public class DBGpIde {
         String transactionId = nextTransaction();
         StackGetCommand command = new StackGetCommand(transactionId, depth);
         sendCommand(command);
-        StackGetCommand.StackGetResponse response = eventsHandler.getResponse(command);
+        StackGetResponse response = eventsHandler.getResponse(command);
         return new StackFrame(response.getFileUrl(), response.getLineNumber(), response.getWhere());
     }
 
@@ -159,7 +164,7 @@ public class DBGpIde {
         String transactionId = nextTransaction();
         StatusCommand command = new StatusCommand(transactionId);
         sendCommand(command);
-        StatusCommand.StatusCommandResponse response = eventsHandler.getResponse(command);
+        StatusResponse response = eventsHandler.getResponse(command);
         return response.getStatus();
     }
 

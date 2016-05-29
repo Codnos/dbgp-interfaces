@@ -16,30 +16,24 @@
 
 package com.codnos.dbgp.commands.stack;
 
-import com.codnos.dbgp.commands.Command;
+import com.codnos.dbgp.messages.CommandResponse;
+import com.codnos.dbgp.xml.XmlUtil;
+import org.w3c.dom.Document;
 
-public class StackGetCommand implements Command<StackGetResponse> {
-    private final String transactionId;
-    private final int depth;
-
-    public StackGetCommand(String transactionId, int depth) {
-        this.transactionId = transactionId;
-        this.depth = depth;
+public class StackDepthResponse extends CommandResponse {
+    public static boolean canBuildFrom(Document document) {
+        return XmlUtil.boolForXPath(document, "string(/dbgp:response/@command)='stack_depth'");
+    }
+    public StackDepthResponse(Document message) {
+        super(message);
     }
 
-    @Override
-    public String getName() {
-        return "stack_get";
-    }
-
-    @Override
-    public String getMessage() {
-        return "stack_get -i " + transactionId + " -d " + depth;
+    public Integer getDepth() {
+        return intXpath("/dbgp:response/@depth");
     }
 
     @Override
     public String getHandlerKey() {
-        return getName() + ":" + transactionId;
+        return getName() + ":" + getTransactionId();
     }
-
 }

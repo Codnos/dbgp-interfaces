@@ -20,13 +20,9 @@ import com.codnos.dbgp.api.Breakpoint;
 import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.commands.Command;
 import com.codnos.dbgp.handlers.DBGPCommandHandler;
-import com.codnos.dbgp.messages.CommandResponse;
 import io.netty.channel.ChannelHandlerContext;
-import org.w3c.dom.Document;
 
-import static com.codnos.dbgp.xml.XmlUtil.boolForXPath;
-
-public class BreakpointSetCommand implements Command<BreakpointSetCommand.BreakpointSetResponse> {
+public class BreakpointSetCommand implements Command<BreakpointSetResponse> {
     private final String transactionId;
     private final Breakpoint breakpoint;
 
@@ -50,54 +46,4 @@ public class BreakpointSetCommand implements Command<BreakpointSetCommand.Breakp
         return getName() + ":" + transactionId;
     }
 
-    public static class BreakpointSetResponse extends CommandResponse {
-
-        public static boolean canBuildFrom(Document document) {
-            return boolForXPath(document, "string(/dbgp:response/@command)='breakpoint_set'");
-        }
-
-        public BreakpointSetResponse(Document message) {
-            super(message);
-        }
-
-        public String getBreakpointId() {
-            return xpath("/dbgp:response/@id");
-        }
-
-        public String getState() {
-            return xpath("/dbgp:response/@state");
-        }
-
-        @Override
-        public String getHandlerKey() {
-            return getName() + ":" + getTransactionId();
-        }
-    }
-
-    public static class BreakpointSetCommandHandler extends DBGPCommandHandler {
-
-        public BreakpointSetCommandHandler(DebuggerEngine debuggerEngine) {
-            super(debuggerEngine);
-        }
-
-        @Override
-        protected boolean canHandle(String msg) {
-            return msg.contains("breakpoint_set");
-        }
-
-        @Override
-        protected void handle(ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) {
-            String[] commandParts = msg.split(" ");
-            String transactionId = commandParts[2];
-            String file = commandParts[6];
-            String line = commandParts[8];
-            String breakPointId = file + "@" + line;
-            debuggerEngine.breakpointSet(new Breakpoint(file, Integer.valueOf(line)));
-            String responseString = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" command=\"breakpoint_set\"\n" +
-                    "          transaction_id=\"" + transactionId + "\"\n" +
-                    "          state=\"enabled\"\n" +
-                    "          id=\"" + breakPointId + "\"/>";
-           sendBackResponse(ctx, responseString);
-        }
-    }
 }

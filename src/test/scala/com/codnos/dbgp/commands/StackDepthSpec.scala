@@ -16,8 +16,7 @@
 
 package com.codnos.dbgp.commands
 
-import com.codnos.dbgp.commands.stack.StackDepthCommand
-import com.codnos.dbgp.commands.stack.StackDepthCommand.{StackDepthCommandHandler, StackDepthResponse}
+import com.codnos.dbgp.commands.stack.{StackDepthCommand, StackDepthCommandHandler, StackDepthResponse}
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito._
 
@@ -50,11 +49,11 @@ class StackDepthSpec extends CommandSpec {
   }
 
   it should "allow building it from valid xml" in {
-    assert(StackDepthCommand.StackDepthResponse.canBuildFrom(parseMessage(ValidResponse.toString)))
+    assert(stack.StackDepthResponse.canBuildFrom(parseMessage(ValidResponse.toString)))
   }
 
   it should "not allow building it from xml for different command" in {
-    assert(!StackDepthCommand.StackDepthResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
+    assert(!stack.StackDepthResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {

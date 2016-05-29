@@ -17,8 +17,7 @@
 package com.codnos.dbgp.commands
 
 import com.codnos.dbgp.api.State
-import com.codnos.dbgp.commands.status.StatusCommand
-import com.codnos.dbgp.commands.status.StatusCommand.{StatusCommandHandler, StatusCommandResponse}
+import com.codnos.dbgp.commands.status.{StatusCommand, StatusCommandHandler, StatusResponse}
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito.given
 
@@ -45,7 +44,7 @@ class StatusSpec extends CommandSpec {
   }
 
   "Response" should "correctly expose all important attributes given xml" in {
-    val response = new StatusCommandResponse(parseMessage(ValidResponse.toString))
+    val response = new StatusResponse(parseMessage(ValidResponse.toString))
 
     response should have(
       'name ("status"),
@@ -56,11 +55,11 @@ class StatusSpec extends CommandSpec {
   }
 
   it should "allow building it from valid xml" in {
-    assert(StatusCommand.StatusCommandResponse.canBuildFrom(parseMessage(ValidResponse.toString)))
+    assert(status.StatusResponse.canBuildFrom(parseMessage(ValidResponse.toString)))
   }
 
   it should "not allow building it from xml for different command" in {
-    assert(!StatusCommand.StatusCommandResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
+    assert(!status.StatusResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {
