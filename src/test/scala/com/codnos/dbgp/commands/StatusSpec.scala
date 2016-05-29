@@ -17,7 +17,8 @@
 package com.codnos.dbgp.commands
 
 import com.codnos.dbgp.api.State
-import com.codnos.dbgp.commands.status.Status
+import com.codnos.dbgp.commands.status.StatusCommand
+import com.codnos.dbgp.commands.status.StatusCommand.{StatusCommandHandler, StatusCommandResponse}
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito.given
 
@@ -34,7 +35,7 @@ class StatusSpec extends CommandSpec {
     </response>
 
   "Command" should "have message constructed from the parameters" in {
-    val command = new Status("432")
+    val command = new StatusCommand("432")
 
     command should have (
       'name ("status"),
@@ -44,7 +45,7 @@ class StatusSpec extends CommandSpec {
   }
 
   "Response" should "correctly expose all important attributes given xml" in {
-    val response = new Status.Response(parseMessage(ValidResponse.toString))
+    val response = new StatusCommandResponse(parseMessage(ValidResponse.toString))
 
     response should have(
       'name ("status"),
@@ -55,15 +56,15 @@ class StatusSpec extends CommandSpec {
   }
 
   it should "allow building it from valid xml" in {
-    assert(Status.Response.canBuildFrom(parseMessage(ValidResponse.toString)))
+    assert(StatusCommand.StatusCommandResponse.canBuildFrom(parseMessage(ValidResponse.toString)))
   }
 
   it should "not allow building it from xml for different command" in {
-    assert(!Status.Response.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
+    assert(!StatusCommand.StatusCommandResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {
-    val handler = new Status.CommandHandler(engine)
+    val handler = new StatusCommandHandler(engine)
     given(engine.getState).willReturn(State.RUNNING)
 
     handler.channelRead(ctx, "status -i 123")

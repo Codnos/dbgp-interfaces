@@ -19,7 +19,8 @@ package com.codnos.dbgp.commands
 import java.util.Arrays.asList
 
 import com.codnos.dbgp.api.PropertyValue
-import com.codnos.dbgp.commands.context.ContextGet
+import com.codnos.dbgp.commands.context.ContextGetCommand
+import com.codnos.dbgp.commands.context.ContextGetCommand.{ContextGetCommandHandler, ContextGetResponse}
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito.given
 
@@ -44,7 +45,7 @@ class ContextGetSpec extends CommandSpec {
     </response>
 
   "Command" should "have message constructed from the parameters" in {
-    val command = new ContextGet("432", 6)
+    val command = new ContextGetCommand("432", 6)
 
     command should have (
       'name ("context_get"),
@@ -54,7 +55,7 @@ class ContextGetSpec extends CommandSpec {
   }
 
   "Response" should "correctly expose all important attributes given xml" in {
-    val response = new ContextGet.Response(parseMessage(ValidResponse.toString))
+    val response = new ContextGetResponse(parseMessage(ValidResponse.toString))
 
     response should have(
       'name ("context_get"),
@@ -69,15 +70,15 @@ class ContextGetSpec extends CommandSpec {
   }
 
   it should "allow building it from valid xml" in {
-    assert(ContextGet.Response.canBuildFrom(parseMessage(ValidResponse.toString)))
+    assert(ContextGetCommand.ContextGetResponse.canBuildFrom(parseMessage(ValidResponse.toString)))
   }
 
   it should "not allow building it from xml for different command" in {
-    assert(!ContextGet.Response.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
+    assert(!ContextGetCommand.ContextGetResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {
-    val handler = new ContextGet.CommandHandler(engine)
+    val handler = new ContextGetCommandHandler(engine)
     val variables = asList(new PropertyValue("name", "xs:double", "1.0"))
     given(engine.getVariables(2)).willReturn(variables)
 

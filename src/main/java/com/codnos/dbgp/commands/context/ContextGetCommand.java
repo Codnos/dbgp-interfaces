@@ -30,11 +30,11 @@ import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class ContextGet implements Command<ContextGet.Response> {
+public class ContextGetCommand implements Command<ContextGetCommand.ContextGetResponse> {
     private final String transactionId;
     private final int stackDepth;
 
-    public ContextGet(String transactionId, int stackDepth) {
+    public ContextGetCommand(String transactionId, int stackDepth) {
         this.transactionId = transactionId;
         this.stackDepth = stackDepth;
     }
@@ -55,12 +55,12 @@ public class ContextGet implements Command<ContextGet.Response> {
     }
 
 
-    public static class Response  extends CommandResponse {
+    public static class ContextGetResponse extends CommandResponse {
         public static boolean canBuildFrom(Document document) {
             return XmlUtil.boolForXPath(document, "string(/dbgp:response/@command)='context_get'");
         }
 
-        public Response(Document message) {
+        public ContextGetResponse(Document message) {
             super(message);
         }
 
@@ -84,9 +84,9 @@ public class ContextGet implements Command<ContextGet.Response> {
         }
     }
 
-    public static class CommandHandler extends DBGPCommandHandler {
+    public static class ContextGetCommandHandler extends DBGPCommandHandler {
 
-        public CommandHandler(DebuggerEngine debuggerEngine) {
+        public ContextGetCommandHandler(DebuggerEngine debuggerEngine) {
             super(debuggerEngine);
         }
 

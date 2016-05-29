@@ -17,7 +17,8 @@
 package com.codnos.dbgp.commands
 
 import com.codnos.dbgp.api.StackFrame
-import com.codnos.dbgp.commands.stack.{StackDepth, StackGet}
+import com.codnos.dbgp.commands.stack.StackGetCommand.{StackGetCommandHandler, StackGetResponse}
+import com.codnos.dbgp.commands.stack.{StackDepthCommand, StackGetCommand}
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito._
 
@@ -37,7 +38,7 @@ class StackGetSpec extends CommandSpec {
   </response>
 
   "Command" should "have message constructed from the parameters" in {
-    val command = new StackGet("456", 345)
+    val command = new StackGetCommand("456", 345)
 
     command should have(
       'name ("stack_get"),
@@ -47,7 +48,7 @@ class StackGetSpec extends CommandSpec {
   }
 
   "Response" should "correctly expose all important attributes given xml" in {
-    val response = new StackGet.Response(parseMessage(ValidResponse.toString))
+    val response = new StackGetResponse(parseMessage(ValidResponse.toString))
 
     response should have(
       'transactionId ("transaction_id"),
@@ -59,15 +60,15 @@ class StackGetSpec extends CommandSpec {
   }
 
   it should "allow building it from valid xml" in {
-    assert(StackGet.Response.canBuildFrom(parseMessage(ValidResponse.toString)))
+    assert(StackGetCommand.StackGetResponse.canBuildFrom(parseMessage(ValidResponse.toString)))
   }
 
   it should "not allow building it from xml for different command" in {
-    assert(!StackGet.Response.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
+    assert(!StackGetCommand.StackGetResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {
-    val handler = new StackGet.CommandHandler(engine)
+    val handler = new StackGetCommandHandler(engine)
     val frame = new StackFrame("file:///home/user/file.xq", 45, "local:functionName()")
     given(engine.getFrame(555)).willReturn(frame)
 

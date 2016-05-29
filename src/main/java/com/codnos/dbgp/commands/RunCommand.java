@@ -21,10 +21,10 @@ import com.codnos.dbgp.commands.status.StateChangeHandlerFactory;
 import com.codnos.dbgp.handlers.DBGPCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
-public class Run implements ContinuationCommand<Void> {
+public class RunCommand implements ContinuationCommand<Void> {
     private final String transactionId;
 
-    public Run(String transactionId) {
+    public RunCommand(String transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -43,11 +43,11 @@ public class Run implements ContinuationCommand<Void> {
         return "status:" + transactionId;
     }
 
-    public static final class CommandHandler extends DBGPCommandHandler {
+    public static final class RunCommandHanlder extends DBGPCommandHandler {
 
         private final StateChangeHandlerFactory stateChangeHandlerFactory;
 
-        public CommandHandler(DebuggerEngine debuggerEngine, StateChangeHandlerFactory stateChangeHandlerFactory) {
+        public RunCommandHanlder(DebuggerEngine debuggerEngine, StateChangeHandlerFactory stateChangeHandlerFactory) {
             super(debuggerEngine);
             this.stateChangeHandlerFactory = stateChangeHandlerFactory;
         }

@@ -22,10 +22,10 @@ import com.codnos.dbgp.commands.status.StateChangeHandlerFactory;
 import com.codnos.dbgp.handlers.DBGPCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
-public class StepOver implements ContinuationCommand<Void> {
+public class StepOverCommand implements ContinuationCommand<Void> {
     private final String transactionId;
 
-    public StepOver(String transactionId) {
+    public StepOverCommand(String transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -44,11 +44,11 @@ public class StepOver implements ContinuationCommand<Void> {
         return "status:" + transactionId;
     }
 
-    public static final class CommandHandler extends DBGPCommandHandler {
+    public static final class StepOverCommandHandler extends DBGPCommandHandler {
 
         private final StateChangeHandlerFactory stateChangeHandlerFactory;
 
-        public CommandHandler(DebuggerEngine debuggerEngine, StateChangeHandlerFactory stateChangeHandlerFactory) {
+        public StepOverCommandHandler(DebuggerEngine debuggerEngine, StateChangeHandlerFactory stateChangeHandlerFactory) {
             super(debuggerEngine);
             this.stateChangeHandlerFactory = stateChangeHandlerFactory;
         }

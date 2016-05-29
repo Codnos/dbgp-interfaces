@@ -14,35 +14,31 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.commands.breakpoint;
+package com.codnos.dbgp.commands.stack;
 
-import com.codnos.dbgp.api.Breakpoint;
 import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.commands.Command;
-import com.codnos.dbgp.handlers.DBGPCommandHandler;
 import com.codnos.dbgp.messages.CommandResponse;
+import com.codnos.dbgp.xml.XmlUtil;
+import com.codnos.dbgp.handlers.DBGPCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.w3c.dom.Document;
 
-import static com.codnos.dbgp.xml.XmlUtil.boolForXPath;
-
-public class BreakpointSet implements Command<BreakpointSet.Response> {
+public class StackDepthCommand implements Command<StackDepthCommand.StackDepthResponse> {
     private final String transactionId;
-    private final Breakpoint breakpoint;
 
-    public BreakpointSet(String transactionId, Breakpoint breakpoint) {
+    public StackDepthCommand(String transactionId) {
         this.transactionId = transactionId;
-        this.breakpoint = breakpoint;
     }
 
     @Override
     public String getName() {
-        return "breakpoint_set";
+        return "stack_depth";
     }
 
     @Override
     public String getMessage() {
-        return "breakpoint_set -i " + transactionId + " -t line -f " + breakpoint.getFileURL() + " -n " + breakpoint.getLineNumber();
+        return "stack_depth -i " + transactionId;
     }
 
     @Override
@@ -50,22 +46,16 @@ public class BreakpointSet implements Command<BreakpointSet.Response> {
         return getName() + ":" + transactionId;
     }
 
-    public static class Response extends CommandResponse {
-
+    public static class StackDepthResponse extends CommandResponse {
         public static boolean canBuildFrom(Document document) {
-            return boolForXPath(document, "string(/dbgp:response/@command)='breakpoint_set'");
+            return XmlUtil.boolForXPath(document, "string(/dbgp:response/@command)='stack_depth'");
         }
-
-        public Response(Document message) {
+        public StackDepthResponse(Document message) {
             super(message);
         }
 
-        public String getBreakpointId() {
-            return xpath("/dbgp:response/@id");
-        }
-
-        public String getState() {
-            return xpath("/dbgp:response/@state");
+        public Integer getDepth() {
+            return intXpath("/dbgp:response/@depth");
         }
 
         @Override
@@ -74,30 +64,26 @@ public class BreakpointSet implements Command<BreakpointSet.Response> {
         }
     }
 
-    public static class CommandHandler extends DBGPCommandHandler {
+    public static class StackDepthCommandHandler extends DBGPCommandHandler {
 
-        public CommandHandler(DebuggerEngine debuggerEngine) {
+        public StackDepthCommandHandler(DebuggerEngine debuggerEngine) {
             super(debuggerEngine);
         }
 
         @Override
         protected boolean canHandle(String msg) {
-            return msg.contains("breakpoint_set");
+            return msg.contains("stack_depth");
         }
 
         @Override
         protected void handle(ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) {
             String[] commandParts = msg.split(" ");
             String transactionId = commandParts[2];
-            String file = commandParts[6];
-            String line = commandParts[8];
-            String breakPointId = file + "@" + line;
-            debuggerEngine.breakpointSet(new Breakpoint(file, Integer.valueOf(line)));
-            String responseString = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" command=\"breakpoint_set\"\n" +
+            Integer depth = debuggerEngine.getStackDepth();
+            String responseString = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" command=\"stack_depth\"\n" +
                     "          transaction_id=\"" + transactionId + "\"\n" +
-                    "          state=\"enabled\"\n" +
-                    "          id=\"" + breakPointId + "\"/>";
-           sendBackResponse(ctx, responseString);
+                    "          depth=\"" + depth + "\"/>";
+            sendBackResponse(ctx, responseString);
         }
     }
 }

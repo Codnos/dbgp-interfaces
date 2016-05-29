@@ -17,7 +17,8 @@
 package com.codnos.dbgp.commands
 
 import com.codnos.dbgp.api.Breakpoint
-import com.codnos.dbgp.commands.breakpoint.BreakpointSet
+import com.codnos.dbgp.commands.breakpoint.BreakpointSetCommand
+import com.codnos.dbgp.commands.breakpoint.BreakpointSetCommand.{BreakpointSetCommandHandler, BreakpointSetResponse}
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito._
 import org.mockito.Matchers.any
@@ -35,7 +36,7 @@ class BreakpointSetSpec extends CommandSpec {
   val originalBreakpoint: Breakpoint = new Breakpoint(fileUri, lineNumber)
 
   "Command" should "have message constructed from the parameters" in {
-    val command = new BreakpointSet("432", originalBreakpoint)
+    val command = new BreakpointSetCommand("432", originalBreakpoint)
 
     command should have (
       'name ("breakpoint_set"),
@@ -45,7 +46,7 @@ class BreakpointSetSpec extends CommandSpec {
   }
 
   "Response" should "correctly expose all important attributes given xml" in {
-    val response = new BreakpointSet.Response(parseMessage(ValidResponse.toString))
+    val response = new BreakpointSetResponse(parseMessage(ValidResponse.toString))
 
     response should have(
       'transactionId ("TRANSACTION_ID"),
@@ -56,15 +57,15 @@ class BreakpointSetSpec extends CommandSpec {
   }
 
   it should "allow building it from valid xml" in {
-    assert(BreakpointSet.Response.canBuildFrom(parseMessage(ValidResponse.toString)))
+    assert(BreakpointSetCommand.BreakpointSetResponse.canBuildFrom(parseMessage(ValidResponse.toString)))
   }
 
   it should "not allow building it from xml for different command" in {
-    assert(!BreakpointSet.Response.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
+    assert(!BreakpointSetCommand.BreakpointSetResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {
-    val handler = new BreakpointSet.CommandHandler(engine)
+    val handler = new BreakpointSetCommandHandler(engine)
     val breakpointId = s"${fileUri}@${lineNumber}"
     given(engine.breakpointSet(any())).willReturn(new Breakpoint(originalBreakpoint, breakpointId, "enabled"))
 

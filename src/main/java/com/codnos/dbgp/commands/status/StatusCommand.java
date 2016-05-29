@@ -25,11 +25,11 @@ import com.codnos.dbgp.xml.XmlUtil;
 import io.netty.channel.ChannelHandlerContext;
 import org.w3c.dom.Document;
 
-public class Status implements Command<Status.Response> {
+public class StatusCommand implements Command<StatusCommand.StatusCommandResponse> {
 
     private String transactionId;
 
-    public Status(String transactionId) {
+    public StatusCommand(String transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -48,13 +48,13 @@ public class Status implements Command<Status.Response> {
         return getName() + ":" + transactionId;
     }
 
-    public static final class Response extends CommandResponse {
+    public static final class StatusCommandResponse extends CommandResponse {
 
         public static boolean canBuildFrom(Document document) {
             return XmlUtil.boolForXPath(document, "string(/dbgp:response/@command)='status'");
         }
 
-        public Response(Document message) {
+        public StatusCommandResponse(Document message) {
             super(message);
         }
 
@@ -68,9 +68,9 @@ public class Status implements Command<Status.Response> {
         }
     }
 
-    public static final class CommandHandler extends DBGPCommandHandler {
+    public static final class StatusCommandHandler extends DBGPCommandHandler {
 
-        public CommandHandler(DebuggerEngine debuggerEngine) {
+        public StatusCommandHandler(DebuggerEngine debuggerEngine) {
             super(debuggerEngine);
         }
 

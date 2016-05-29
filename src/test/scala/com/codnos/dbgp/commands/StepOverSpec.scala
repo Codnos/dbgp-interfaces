@@ -18,14 +18,15 @@ package com.codnos.dbgp.commands
 
 import com.codnos.dbgp.api.StateChangeHandler
 import com.codnos.dbgp.commands.status.StateChangeHandlerFactory
-import com.codnos.dbgp.commands.step.StepOver
+import com.codnos.dbgp.commands.step.StepOverCommand
+import com.codnos.dbgp.commands.step.StepOverCommand.StepOverCommandHandler
 import org.mockito.Matchers.any
 import org.mockito.Mockito.verify
 
 class StepOverSpec extends CommandSpec {
 
   "Command" should "have message constructed from the parameters" in {
-    val command = new StepOver("456")
+    val command = new StepOverCommand("456")
 
     command should have(
       'name ("step_over"),
@@ -35,7 +36,7 @@ class StepOverSpec extends CommandSpec {
   }
 
   "CommandHandler" should "register state change handler and step over" in {
-    val handler = new StepOver.CommandHandler(engine, new StateChangeHandlerFactory)
+    val handler = new StepOverCommandHandler(engine, new StateChangeHandlerFactory)
 
     handler.channelRead(ctx, "step_over -i 456")
 

@@ -18,13 +18,13 @@ package com.codnos.dbgp;
 
 import com.codnos.dbgp.api.*;
 import com.codnos.dbgp.commands.Command;
-import com.codnos.dbgp.commands.Run;
-import com.codnos.dbgp.commands.breakpoint.BreakpointSet;
-import com.codnos.dbgp.commands.context.ContextGet;
-import com.codnos.dbgp.commands.stack.StackDepth;
-import com.codnos.dbgp.commands.stack.StackGet;
-import com.codnos.dbgp.commands.status.Status;
-import com.codnos.dbgp.commands.step.StepOver;
+import com.codnos.dbgp.commands.RunCommand;
+import com.codnos.dbgp.commands.breakpoint.BreakpointSetCommand;
+import com.codnos.dbgp.commands.context.ContextGetCommand;
+import com.codnos.dbgp.commands.stack.StackDepthCommand;
+import com.codnos.dbgp.commands.stack.StackGetCommand;
+import com.codnos.dbgp.commands.status.StatusCommand;
+import com.codnos.dbgp.commands.step.StepOverCommand;
 import com.codnos.dbgp.handlers.*;
 import com.codnos.dbgp.messages.InitMessage;
 import com.codnos.dbgp.messages.Message;
@@ -97,19 +97,19 @@ public class DBGpIde {
 
     public Breakpoint breakpointSet(final Breakpoint breakpoint) {
         String transactionId = nextTransaction();
-        BreakpointSet command = new BreakpointSet(transactionId, breakpoint);
+        BreakpointSetCommand command = new BreakpointSetCommand(transactionId, breakpoint);
         sendCommand(command);
-        BreakpointSet.Response response = eventsHandler.getResponse(command);
+        BreakpointSetCommand.BreakpointSetResponse response = eventsHandler.getResponse(command);
         return new Breakpoint(breakpoint, response.getBreakpointId(), response.getState());
     }
 
     public void run() {
         String transactionId = nextTransaction();
-        Run command = new Run(transactionId);
+        RunCommand command = new RunCommand(transactionId);
         eventsHandler.registerMessageHandler(command,
                 new MessageHandler() {
                     public void handle(Message message) {
-                        Status.Response response = (Status.Response) message;
+                        StatusCommand.StatusCommandResponse response = (StatusCommand.StatusCommandResponse) message;
                         debuggerIde.onStatus(response.getStatus());
                     }
                 }
@@ -119,11 +119,11 @@ public class DBGpIde {
 
     public void stepOver() {
         String transactionId = nextTransaction();
-        StepOver command = new StepOver(transactionId);
+        StepOverCommand command = new StepOverCommand(transactionId);
         eventsHandler.registerMessageHandler(command,
                 new MessageHandler() {
                     public void handle(Message message) {
-                        Status.Response response = (Status.Response) message;
+                        StatusCommand.StatusCommandResponse response = (StatusCommand.StatusCommandResponse) message;
                         debuggerIde.onStatus(response.getStatus());
                     }
                 }
@@ -133,33 +133,33 @@ public class DBGpIde {
 
     public int stackDepth() {
         String transactionId = nextTransaction();
-        StackDepth command = new StackDepth(transactionId);
+        StackDepthCommand command = new StackDepthCommand(transactionId);
         sendCommand(command);
-        StackDepth.Response response = eventsHandler.getResponse(command);
+        StackDepthCommand.StackDepthResponse response = eventsHandler.getResponse(command);
         return response.getDepth();
     }
 
     public Context contextGet(int stackDepth) {
         String transactionId = nextTransaction();
-        ContextGet command = new ContextGet(transactionId, stackDepth);
+        ContextGetCommand command = new ContextGetCommand(transactionId, stackDepth);
         sendCommand(command);
-        ContextGet.Response response = eventsHandler.getResponse(command);
+        ContextGetCommand.ContextGetResponse response = eventsHandler.getResponse(command);
         return new Context(response.getVariables());
     }
 
     public StackFrame stackGet(int depth) {
         String transactionId = nextTransaction();
-        StackGet command = new StackGet(transactionId, depth);
+        StackGetCommand command = new StackGetCommand(transactionId, depth);
         sendCommand(command);
-        StackGet.Response response = eventsHandler.getResponse(command);
+        StackGetCommand.StackGetResponse response = eventsHandler.getResponse(command);
         return new StackFrame(response.getFileUrl(), response.getLineNumber(), response.getWhere());
     }
 
     public State status() {
         String transactionId = nextTransaction();
-        Status command = new Status(transactionId);
+        StatusCommand command = new StatusCommand(transactionId);
         sendCommand(command);
-        Status.Response response = eventsHandler.getResponse(command);
+        StatusCommand.StatusCommandResponse response = eventsHandler.getResponse(command);
         return response.getStatus();
     }
 

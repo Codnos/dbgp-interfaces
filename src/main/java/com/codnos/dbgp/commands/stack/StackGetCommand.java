@@ -25,11 +25,11 @@ import com.codnos.dbgp.xml.XmlUtil;
 import io.netty.channel.ChannelHandlerContext;
 import org.w3c.dom.Document;
 
-public class StackGet implements Command<StackGet.Response> {
+public class StackGetCommand implements Command<StackGetCommand.StackGetResponse> {
     private final String transactionId;
     private final int depth;
 
-    public StackGet(String transactionId, int depth) {
+    public StackGetCommand(String transactionId, int depth) {
         this.transactionId = transactionId;
         this.depth = depth;
     }
@@ -49,12 +49,12 @@ public class StackGet implements Command<StackGet.Response> {
         return getName() + ":" + transactionId;
     }
 
-    public static class Response extends CommandResponse {
+    public static class StackGetResponse extends CommandResponse {
         public static boolean canBuildFrom(Document document) {
             return XmlUtil.boolForXPath(document, "string(/dbgp:response/@command)='stack_get'");
         }
 
-        public Response(Document message) {
+        public StackGetResponse(Document message) {
             super(message);
         }
 
@@ -76,9 +76,9 @@ public class StackGet implements Command<StackGet.Response> {
         }
     }
 
-    public static class CommandHandler extends DBGPCommandHandler {
+    public static class StackGetCommandHandler extends DBGPCommandHandler {
 
-        public CommandHandler(DebuggerEngine debuggerEngine) {
+        public StackGetCommandHandler(DebuggerEngine debuggerEngine) {
             super(debuggerEngine);
         }
 
