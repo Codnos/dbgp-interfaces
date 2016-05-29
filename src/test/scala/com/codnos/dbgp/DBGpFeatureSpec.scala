@@ -19,7 +19,7 @@ package com.codnos.dbgp
 import java.util
 
 import com.codnos.dbgp.api._
-import com.codnos.dbgp.commands.status.StateChangeHandlerFactory
+import com.codnos.dbgp.commands.status.StatusChangeHandlerFactory
 import com.jayway.awaitility.Awaitility._
 import io.netty.channel.ChannelHandlerContext
 import org.hamcrest.Matchers._
@@ -30,7 +30,7 @@ import org.mockito.{BDDMockito, Matchers}
 import org.scalatest.{FeatureSpec, GivenWhenThen}
 
 class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupport with org.scalatest.Matchers {
-  private val stateChangeHandlerFactory = new SpyingStateChangeHandlerFactory()
+  private val statusChangeHandlerFactory = new SpyingStatusChangeHandlerFactory()
   private val Port: Int = 9000
   private val debuggerIde: FakeDebuggerIde = new FakeDebuggerIde
   private val debuggerEngine: DebuggerEngine = mock(classOf[DebuggerEngine])
@@ -77,8 +77,8 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
         ctx =>
           When("the run command is sent")
           ctx.ide.run()
-          Then("the debugger engine will get notified about any state changes")
-          await until (() => verify(debuggerEngine).registerStateChangeHandler(Matchers.any(classOf[StateChangeHandler])))
+          Then("the debugger engine will get notified about any status changes")
+          await until (() => verify(debuggerEngine).registerStatusChangeHandler(Matchers.any(classOf[StatusChangeHandler])))
           And("the debugger engine receives the run command")
           await until (() => verify(debuggerEngine).run())
       }
@@ -86,7 +86,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
     scenario("after the code was run when the breakpoint is hit we receive notification of status change") {
       BDDMockito.given(debuggerEngine.run()).will(new Answer[Unit] {
         override def answer(invocation: InvocationOnMock): Unit = {
-          stateChangeHandlerFactory.lastStateChangeHandler.stateChanged(State.RUNNING, State.BREAK)
+          statusChangeHandlerFactory.lastStatusChangeHandler.statusChanged(Status.RUNNING, Status.BREAK)
         }
       })
 
@@ -95,16 +95,16 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
         ctx =>
           When("the run command is sent")
           ctx.ide.run()
-          Then("the IDE engine will get notified about any state changes")
-          await until(() => assert(debuggerIde.getStatus == State.BREAK))
+          Then("the IDE engine will get notified about any status changes")
+          await until(() => assert(debuggerIde.getStatus == Status.BREAK))
       }
     }
   }
 
   feature("checking current status") {
     scenario("after initiating the session the status can be checked") {
-      val expectedStatus = State.RUNNING
-      BDDMockito.given(debuggerEngine.getState).willReturn(expectedStatus)
+      val expectedStatus = Status.RUNNING
+      BDDMockito.given(debuggerEngine.getStatus).willReturn(expectedStatus)
 
       Given("the engine and the IDE are connected")
       withinASession {
@@ -112,7 +112,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
           When("the status command is sent")
           val status = ctx.ide.status()
           Then("the debugger engine receives the status command")
-          await until (() => verify(debuggerEngine).getState)
+          await until (() => verify(debuggerEngine).getStatus)
           And("status is the same as returned by the engine")
           status shouldBe expectedStatus
       }
@@ -189,16 +189,16 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
         ctx =>
           When("the step over command is sent")
           ctx.ide.stepOver()
-          Then("the debugger engine will get notified about any state changes")
-          await until (() => verify(debuggerEngine).registerStateChangeHandler(Matchers.any(classOf[StateChangeHandler])))
+          Then("the debugger engine will get notified about any status changes")
+          await until (() => verify(debuggerEngine).registerStatusChangeHandler(Matchers.any(classOf[StatusChangeHandler])))
           And("the debugger engine receives the step over command")
           await until (() => verify(debuggerEngine).stepOver())
       }
     }
-    scenario("after stepping over the code we get notified about any state changes") {
+    scenario("after stepping over the code we get notified about any status changes") {
       BDDMockito.given(debuggerEngine.stepOver()).will(new Answer[Unit] {
         override def answer(invocation: InvocationOnMock): Unit = {
-          stateChangeHandlerFactory.lastStateChangeHandler.stateChanged(State.RUNNING, State.BREAK)
+          statusChangeHandlerFactory.lastStatusChangeHandler.statusChanged(Status.RUNNING, Status.BREAK)
         }
       })
 
@@ -207,32 +207,32 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
         ctx =>
           When("the step over command is sent")
           ctx.ide.stepOver()
-          Then("the IDE will get notified about any state changes")
-          await until (() => assert(debuggerIde.getStatus == State.BREAK))
+          Then("the IDE will get notified about any status changes")
+          await until (() => assert(debuggerIde.getStatus == Status.BREAK))
       }
     }
   }
 
   private class FakeDebuggerIde extends DebuggerIde {
     private var message: SystemInfo = null
-    private var status: State = null
+    private var status: Status = null
 
     def getInitMessage: SystemInfo = message
 
-    def getStatus: State = status
+    def getStatus: Status = status
 
     override def onConnected(message: SystemInfo) {
       this.message = message
     }
 
-    override def onStatus(status: State) {
+    override def onStatus(status: Status) {
       this.status = status
     }
   }
 
   private def withinASession(f: DebuggingContext => Unit) {
     val ide = new DBGpIde(Port, eventsHandler)
-    val engine = new DBGpEngine(Port, debuggerEngine, stateChangeHandlerFactory)
+    val engine = new DBGpEngine(Port, debuggerEngine, statusChangeHandlerFactory)
     ide.registerIde(debuggerIde)
     ide.startListening()
     engine.connect()
@@ -247,12 +247,12 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
 
   private case class DebuggingContext(ide: DBGpIde, engine: DBGpEngine)
 
-  class SpyingStateChangeHandlerFactory() extends StateChangeHandlerFactory {
-    var lastStateChangeHandler: StateChangeHandler = null
+  class SpyingStatusChangeHandlerFactory() extends StatusChangeHandlerFactory {
+    var lastStatusChangeHandler: StatusChangeHandler = null
 
-    override def getInstance(transactionId: String, ctx: ChannelHandlerContext): StateChangeHandler = {
-      lastStateChangeHandler = super.getInstance(transactionId, ctx)
-      lastStateChangeHandler
+    override def getInstance(transactionId: String, ctx: ChannelHandlerContext): StatusChangeHandler = {
+      lastStatusChangeHandler = super.getInstance(transactionId, ctx)
+      lastStatusChangeHandler
     }
   }
 

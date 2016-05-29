@@ -19,5 +19,5 @@ package com.codnos.dbgp.api;
 public interface DebuggerIde {
     void onConnected(SystemInfo message) throws InterruptedException;
 
-    void onStatus(State status);
+    void onStatus(Status status);
 }

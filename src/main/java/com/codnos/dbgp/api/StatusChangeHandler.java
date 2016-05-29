@@ -16,20 +16,20 @@
 
 package com.codnos.dbgp.api;
 
-public interface StateChangeHandler {
+public interface StatusChangeHandler {
     /**
-     * Method that should handle (or just be called) whenever the state changes
+     * Method that should handle (or just be called) whenever the status changes
      * and this handler's applicableFor method returned true.
      * @param previous
      * @param current
      */
-    void stateChanged(State previous, State current);
+    void statusChanged(Status previous, Status current);
 
     /**
-     * Should this handler's stateChanged method be called for given combination of previous and new statuses.
-     * @param previous previous state
-     * @param current current (new) state
+     * Should this handler's statusChanged method be called for given combination of previous and new statuses.
+     * @param previous previous status
+     * @param current current (new) status
      * @return true if should be called, false otherwise
      */
-    boolean applicableFor(State previous, State current);
+    boolean applicableFor(Status previous, Status current);
 }

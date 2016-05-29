@@ -16,8 +16,8 @@
 
 package com.codnos.dbgp.commands
 
-import com.codnos.dbgp.api.StateChangeHandler
-import com.codnos.dbgp.commands.status.StateChangeHandlerFactory
+import com.codnos.dbgp.api.StatusChangeHandler
+import com.codnos.dbgp.commands.status.StatusChangeHandlerFactory
 import com.codnos.dbgp.commands.step.{StepOverCommand, StepOverCommandHandler}
 import org.mockito.Matchers.any
 import org.mockito.Mockito.verify
@@ -34,12 +34,12 @@ class StepOverSpec extends CommandSpec {
     )
   }
 
-  "CommandHandler" should "register state change handler and step over" in {
-    val handler = new StepOverCommandHandler(engine, new StateChangeHandlerFactory)
+  "CommandHandler" should "register status change handler and step over" in {
+    val handler = new StepOverCommandHandler(engine, new StatusChangeHandlerFactory)
 
     handler.channelRead(ctx, "step_over -i 456")
 
-    verify(engine).registerStateChangeHandler(any(classOf[StateChangeHandler]))
+    verify(engine).registerStatusChangeHandler(any(classOf[StatusChangeHandler]))
     verify(engine).stepOver()
   }
 }

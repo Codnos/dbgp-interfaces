@@ -16,7 +16,7 @@
 
 package com.codnos.dbgp.commands
 
-import com.codnos.dbgp.api.State
+import com.codnos.dbgp.api.Status
 import com.codnos.dbgp.commands.status.{StatusCommand, StatusCommandHandler, StatusResponse}
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito.given
@@ -51,7 +51,7 @@ class StatusSpec extends CommandSpec {
       'transactionId ("transaction_id"),
       'handlerKey ("status:transaction_id")
     )
-    response.getStatus shouldBe State.STARTING
+    response.getStatus shouldBe Status.STARTING
   }
 
   it should "allow building it from valid xml" in {
@@ -64,7 +64,7 @@ class StatusSpec extends CommandSpec {
 
   "CommandHandler" should "respond with variables from given stack depth" in {
     val handler = new StatusCommandHandler(engine)
-    given(engine.getState).willReturn(State.RUNNING)
+    given(engine.getStatus).willReturn(Status.RUNNING)
 
     handler.channelRead(ctx, "status -i 123")
 

@@ -23,7 +23,7 @@ import com.codnos.dbgp.commands.breakpoint.BreakpointSetCommandHandler;
 import com.codnos.dbgp.commands.context.ContextGetCommandHandler;
 import com.codnos.dbgp.commands.stack.StackDepthCommandHandler;
 import com.codnos.dbgp.commands.stack.StackGetCommandHandler;
-import com.codnos.dbgp.commands.status.StateChangeHandlerFactory;
+import com.codnos.dbgp.commands.status.StatusChangeHandlerFactory;
 import com.codnos.dbgp.commands.status.StatusCommandHandler;
 import com.codnos.dbgp.commands.step.StepOverCommandHandler;
 import com.codnos.dbgp.handlers.DBGPInitHandler;
@@ -40,13 +40,13 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 public class DBGpEngine {
     private final int port;
     private final DebuggerEngine debuggerEngine;
-    private final StateChangeHandlerFactory stateChangeHandlerFactory;
+    private final StatusChangeHandlerFactory statusChangeHandlerFactory;
     private EventLoopGroup workerGroup;
 
-    public DBGpEngine(int port, DebuggerEngine debuggerEngine, StateChangeHandlerFactory stateChangeHandlerFactory) {
+    public DBGpEngine(int port, DebuggerEngine debuggerEngine, StatusChangeHandlerFactory statusChangeHandlerFactory) {
         this.port = port;
         this.debuggerEngine = debuggerEngine;
-        this.stateChangeHandlerFactory = stateChangeHandlerFactory;
+        this.statusChangeHandlerFactory = statusChangeHandlerFactory;
     }
 
     public void connect() throws InterruptedException {
@@ -68,8 +68,8 @@ public class DBGpEngine {
                         new DBGpResponseEncoder(),
                         new BreakpointSetCommandHandler(debuggerEngine),
                         new StackDepthCommandHandler(debuggerEngine),
-                        new RunCommandHandler(debuggerEngine, stateChangeHandlerFactory),
-                        new StepOverCommandHandler(debuggerEngine, stateChangeHandlerFactory),
+                        new RunCommandHandler(debuggerEngine, statusChangeHandlerFactory),
+                        new StepOverCommandHandler(debuggerEngine, statusChangeHandlerFactory),
                         new StackGetCommandHandler(debuggerEngine),
                         new ContextGetCommandHandler(debuggerEngine),
                         new StatusCommandHandler(debuggerEngine)

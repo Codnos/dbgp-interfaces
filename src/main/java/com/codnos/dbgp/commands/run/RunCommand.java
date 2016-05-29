@@ -16,11 +16,7 @@
 
 package com.codnos.dbgp.commands.run;
 
-import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.commands.ContinuationCommand;
-import com.codnos.dbgp.commands.status.StateChangeHandlerFactory;
-import com.codnos.dbgp.handlers.DBGPCommandHandler;
-import io.netty.channel.ChannelHandlerContext;
 
 public class RunCommand implements ContinuationCommand<Void> {
     private final String transactionId;

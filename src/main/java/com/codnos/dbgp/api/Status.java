@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.commands.status;
+package com.codnos.dbgp.api;
 
-import com.codnos.dbgp.api.StateChangeHandler;
-import io.netty.channel.ChannelHandlerContext;
+public enum Status {
+    STARTING, RUNNING, BREAK, STOPPING, STOPPED;
 
-public class StateChangeHandlerFactory {
-    public StateChangeHandler getInstance(String transactionId, ChannelHandlerContext ctx) {
-        return new BreakingOrStoppingStateHandler(transactionId, ctx);
+    public String nameForSending() {
+        return name().toLowerCase();
     }
+
+    public static Status fromSentName(String sentName) {
+        return Status.valueOf(sentName.toUpperCase());
+    }
+
 }

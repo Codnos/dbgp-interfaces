@@ -17,7 +17,7 @@
 package com.codnos.dbgp.commands.status;
 
 import com.codnos.dbgp.api.DebuggerEngine;
-import com.codnos.dbgp.api.State;
+import com.codnos.dbgp.api.Status;
 import com.codnos.dbgp.handlers.DBGPCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -36,10 +36,10 @@ public final class StatusCommandHandler extends DBGPCommandHandler {
     protected void handle(ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) {
         String[] commandParts = msg.split(" ");
         String transactionId = commandParts[2];
-        State state = debuggerEngine.getState();
+        Status status = debuggerEngine.getStatus();
         String responseString = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" command=\"status\"\n" +
                 "          transaction_id=\"" + transactionId + "\"\n" +
-                "          status=\"" + state.nameForSending() + "\" reason=\"ok\"/>";
+                "          status=\"" + status.nameForSending() + "\" reason=\"ok\"/>";
         sendBackResponse(ctx, responseString);
     }
 }

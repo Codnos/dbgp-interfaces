@@ -37,7 +37,7 @@ public interface DebuggerEngine {
 
     Breakpoint breakpointSet(Breakpoint breakpoint);
 
-    void registerStateChangeHandler(StateChangeHandler stateChangeHandler);
+    void registerStatusChangeHandler(StatusChangeHandler statusChangeHandler);
 
     int getStackDepth();
 
@@ -45,5 +45,5 @@ public interface DebuggerEngine {
 
     Collection<PropertyValue> getVariables(int depth);
 
-    State getState();
+    Status getStatus();
 }

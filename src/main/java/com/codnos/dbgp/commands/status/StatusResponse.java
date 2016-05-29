@@ -16,7 +16,7 @@
 
 package com.codnos.dbgp.commands.status;
 
-import com.codnos.dbgp.api.State;
+import com.codnos.dbgp.api.Status;
 import com.codnos.dbgp.messages.CommandResponse;
 import com.codnos.dbgp.xml.XmlUtil;
 import org.w3c.dom.Document;
@@ -36,7 +36,7 @@ public final class StatusResponse extends CommandResponse {
         return getName() + ":" + getTransactionId();
     }
 
-    public State getStatus() {
-        return State.fromSentName(xpath("/dbgp:response/@status"));
+    public Status getStatus() {
+        return Status.fromSentName(xpath("/dbgp:response/@status"));
     }
 }

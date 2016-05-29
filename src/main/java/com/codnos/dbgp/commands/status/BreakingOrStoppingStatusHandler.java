@@ -16,34 +16,34 @@
 
 package com.codnos.dbgp.commands.status;
 
-import com.codnos.dbgp.api.State;
-import com.codnos.dbgp.api.StateChangeHandler;
+import com.codnos.dbgp.api.Status;
+import com.codnos.dbgp.api.StatusChangeHandler;
 import io.netty.channel.ChannelHandlerContext;
 
-public class BreakingOrStoppingStateHandler implements StateChangeHandler {
+public class BreakingOrStoppingStatusHandler implements StatusChangeHandler {
     private final String transactionId;
     private final ChannelHandlerContext ctx;
 
-    public BreakingOrStoppingStateHandler(String transactionId, ChannelHandlerContext ctx) {
+    public BreakingOrStoppingStatusHandler(String transactionId, ChannelHandlerContext ctx) {
         this.transactionId = transactionId;
         this.ctx = ctx;
     }
 
     @Override
-    public void stateChanged(State previous, State current) {
+    public void statusChanged(Status previous, Status current) {
         String message = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\"  command=\"status\"\n" +
                 "          status=\"" + current.nameForSending() + "\"\n" +
                 "          reason=\"ok\"\n" +
                 "          transaction_id=\"" + transactionId + "\">\n" +
                 "</response>";
-        System.out.println("sending message after changed state=" + message);
+        System.out.println("sending message after changed status=" + message);
         System.out.println("in ctx = " + ctx);
         ctx.writeAndFlush(message);
     }
 
     @Override
-    public boolean applicableFor(State previous, State current) {
-        return previous == State.RUNNING && current == State.BREAK || previous == State.STOPPING && current == State.STOPPED;
+    public boolean applicableFor(Status previous, Status current) {
+        return previous == Status.RUNNING && current == Status.BREAK || previous == Status.STOPPING && current == Status.STOPPED;
     }
 
 }

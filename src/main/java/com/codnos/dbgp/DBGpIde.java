@@ -160,7 +160,7 @@ public class DBGpIde {
         return new StackFrame(response.getFileUrl(), response.getLineNumber(), response.getWhere());
     }
 
-    public State status() {
+    public Status status() {
         String transactionId = nextTransaction();
         StatusCommand command = new StatusCommand(transactionId);
         sendCommand(command);
