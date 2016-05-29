@@ -16,7 +16,8 @@
 
 package com.codnos.dbgp.commands
 
-import com.codnos.dbgp.commands.status.{State, Status}
+import com.codnos.dbgp.api.State
+import com.codnos.dbgp.commands.status.Status
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito.given
 

@@ -16,7 +16,8 @@
 
 package com.codnos.dbgp.commands
 
-import com.codnos.dbgp.commands.breakpoint.{Breakpoint, BreakpointSet}
+import com.codnos.dbgp.api.Breakpoint
+import com.codnos.dbgp.commands.breakpoint.BreakpointSet
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito._
 import org.mockito.Matchers.any

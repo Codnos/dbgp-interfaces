@@ -18,8 +18,8 @@ package com.codnos.dbgp.commands
 
 import java.util.Arrays.asList
 
+import com.codnos.dbgp.api.PropertyValue
 import com.codnos.dbgp.commands.context.ContextGet
-import com.codnos.dbgp.commands.property.PropertyValue
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito.given
 

@@ -16,7 +16,9 @@
 
 package com.codnos.dbgp.commands.status;
 
-import com.codnos.dbgp.DebuggerEngine;
+import com.codnos.dbgp.api.DebuggerEngine;
+import com.codnos.dbgp.api.State;
+import com.codnos.dbgp.api.StatusValue;
 import com.codnos.dbgp.handlers.DBGPCommandHandler;
 import com.codnos.dbgp.messages.CommandResponse;
 import com.codnos.dbgp.xml.XmlUtil;

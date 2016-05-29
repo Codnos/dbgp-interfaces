@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.commands.status;
+package com.codnos.dbgp.api;
 
-public enum State {
-    STARTING, RUNNING, BREAK, STOPPING, STOPPED;
+import java.util.Collection;
 
-    public String nameForSending() {
-        return name().toLowerCase();
+public class Context {
+    private final Collection<PropertyValue> variables;
+
+    public Context(Collection<PropertyValue> variables) {
+        this.variables = variables;
+    }
+
+    public Collection<PropertyValue> getVariables() {
+        return variables;
     }
 }

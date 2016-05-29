@@ -16,7 +16,8 @@
 
 package com.codnos.dbgp.commands
 
-import com.codnos.dbgp.commands.stack.{StackDepth, StackFrame, StackGet}
+import com.codnos.dbgp.api.StackFrame
+import com.codnos.dbgp.commands.stack.{StackDepth, StackGet}
 import com.codnos.dbgp.xml.XmlUtil._
 import org.mockito.BDDMockito._
 

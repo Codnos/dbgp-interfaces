@@ -16,7 +16,8 @@
 
 package com.codnos.dbgp.commands
 
-import com.codnos.dbgp.{DebuggerEngine, UnitSpec}
+import com.codnos.dbgp.UnitSpec
+import com.codnos.dbgp.api.DebuggerEngine
 import io.netty.channel.{ChannelFuture, ChannelHandlerContext}
 import org.mockito.ArgumentCaptor
 import org.mockito.BDDMockito._

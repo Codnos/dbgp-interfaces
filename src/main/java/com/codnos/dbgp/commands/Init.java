@@ -16,7 +16,7 @@
 
 package com.codnos.dbgp.commands;
 
-import com.codnos.dbgp.DebuggerEngine;
+import com.codnos.dbgp.api.DebuggerEngine;
 
 public class Init {
 

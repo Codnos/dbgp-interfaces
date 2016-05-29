@@ -14,13 +14,36 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp;
+package com.codnos.dbgp.api;
 
-import com.codnos.dbgp.commands.status.StatusValue;
-import com.codnos.dbgp.messages.InitMessage;
+import java.util.Collection;
 
-public interface DebuggerIde {
-    void onConnected(InitMessage message) throws InterruptedException;
+public interface DebuggerEngine {
+    String getAppId();
 
-    void onStatus(StatusValue status);
+    String getSession();
+
+    String getIdeKey();
+
+    String getLanguage();
+
+    String getProtocolVersion();
+
+    String getInitialFileUri();
+
+    void run() throws Exception;
+
+    void stepOver();
+
+    Breakpoint breakpointSet(Breakpoint breakpoint);
+
+    void registerStateChangeHandler(StateChangeHandler stateChangeHandler);
+
+    int getStackDepth();
+
+    StackFrame getFrame(int depth);
+
+    Collection<PropertyValue> getVariables(int depth);
+
+    State getState();
 }

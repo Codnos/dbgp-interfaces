@@ -16,8 +16,8 @@
 
 package com.codnos.dbgp.commands.context;
 
-import com.codnos.dbgp.DebuggerEngine;
-import com.codnos.dbgp.commands.property.PropertyValue;
+import com.codnos.dbgp.api.DebuggerEngine;
+import com.codnos.dbgp.api.PropertyValue;
 import com.codnos.dbgp.messages.CommandResponse;
 import com.codnos.dbgp.xml.XmlUtil;
 import com.codnos.dbgp.commands.Command;

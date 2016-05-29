@@ -14,28 +14,12 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.commands.property;
+package com.codnos.dbgp.api;
 
-public class PropertyValue {
-    private final String name;
-    private final String type;
-    private final String value;
+public enum State {
+    STARTING, RUNNING, BREAK, STOPPING, STOPPED;
 
-    public PropertyValue(String name, String type, String value) {
-        this.name = name;
-        this.type = type;
-        this.value = value;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getValue() {
-        return value;
+    public String nameForSending() {
+        return name().toLowerCase();
     }
 }

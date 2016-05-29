@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.commands.status;
+package com.codnos.dbgp.api;
 
 public interface StateChangeHandler {
     /**

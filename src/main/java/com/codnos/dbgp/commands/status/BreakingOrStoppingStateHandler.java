@@ -16,6 +16,8 @@
 
 package com.codnos.dbgp.commands.status;
 
+import com.codnos.dbgp.api.State;
+import com.codnos.dbgp.api.StateChangeHandler;
 import io.netty.channel.ChannelHandlerContext;
 
 public class BreakingOrStoppingStateHandler implements StateChangeHandler {

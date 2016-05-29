@@ -16,9 +16,8 @@
 
 package com.codnos.dbgp.commands.step;
 
-import com.codnos.dbgp.DebuggerEngine;
+import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.commands.ContinuationCommand;
-import com.codnos.dbgp.commands.status.BreakingOrStoppingStateHandler;
 import com.codnos.dbgp.commands.status.StateChangeHandlerFactory;
 import com.codnos.dbgp.handlers.DBGPCommandHandler;
 import io.netty.channel.ChannelHandlerContext;

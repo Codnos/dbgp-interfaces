@@ -16,7 +16,7 @@
 
 package com.codnos.dbgp.handlers;
 
-import com.codnos.dbgp.DebuggerEngine;
+import com.codnos.dbgp.api.DebuggerEngine;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

@@ -16,7 +16,8 @@
 
 package com.codnos.dbgp.commands.stack;
 
-import com.codnos.dbgp.DebuggerEngine;
+import com.codnos.dbgp.api.DebuggerEngine;
+import com.codnos.dbgp.api.StackFrame;
 import com.codnos.dbgp.commands.Command;
 import com.codnos.dbgp.handlers.DBGPCommandHandler;
 import com.codnos.dbgp.messages.CommandResponse;

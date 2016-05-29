@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.commands.context;
+package com.codnos.dbgp.api;
 
-import com.codnos.dbgp.commands.property.PropertyValue;
+public class StatusValue {
+    private String state;
 
-import java.util.Collection;
-
-public class Context {
-    private final Collection<PropertyValue> variables;
-
-    public Context(Collection<PropertyValue> variables) {
-        this.variables = variables;
+    public StatusValue(String state) {
+        this.state = state;
     }
 
-    public Collection<PropertyValue> getVariables() {
-        return variables;
+    public String getState() {
+        return state;
     }
 }

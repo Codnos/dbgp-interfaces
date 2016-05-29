@@ -16,16 +16,17 @@
 
 package com.codnos.dbgp;
 
+import com.codnos.dbgp.api.DebuggerIde;
 import com.codnos.dbgp.commands.breakpoint.BreakpointSet;
-import com.codnos.dbgp.commands.status.StatusValue;
+import com.codnos.dbgp.api.StatusValue;
 import com.codnos.dbgp.handlers.DBGpResponseDecoder;
 import com.codnos.dbgp.commands.Command;
 import com.codnos.dbgp.commands.Run;
-import com.codnos.dbgp.commands.breakpoint.Breakpoint;
-import com.codnos.dbgp.commands.context.Context;
+import com.codnos.dbgp.api.Breakpoint;
+import com.codnos.dbgp.api.Context;
 import com.codnos.dbgp.commands.context.ContextGet;
 import com.codnos.dbgp.commands.stack.StackDepth;
-import com.codnos.dbgp.commands.stack.StackFrame;
+import com.codnos.dbgp.api.StackFrame;
 import com.codnos.dbgp.commands.stack.StackGet;
 import com.codnos.dbgp.commands.status.Status;
 import com.codnos.dbgp.commands.step.StepOver;

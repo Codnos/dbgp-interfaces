@@ -16,6 +16,7 @@
 
 package com.codnos.dbgp;
 
+import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.commands.Init;
 import com.codnos.dbgp.commands.Run;
 import com.codnos.dbgp.commands.breakpoint.BreakpointSet;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.commands.breakpoint;
+package com.codnos.dbgp.api;
 
 public class Breakpoint {
     private final String fileURL;

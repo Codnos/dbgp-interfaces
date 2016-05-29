@@ -14,13 +14,28 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.commands.status;
+package com.codnos.dbgp.api;
 
-import com.codnos.dbgp.api.StateChangeHandler;
-import io.netty.channel.ChannelHandlerContext;
+public class StackFrame {
+    private final String fileURL;
+    private final int lineNumber;
+    private final String where;
 
-public class StateChangeHandlerFactory {
-    public StateChangeHandler getInstance(String transactionId, ChannelHandlerContext ctx) {
-        return new BreakingOrStoppingStateHandler(transactionId, ctx);
+    public StackFrame(String fileURL, int lineNumber, String where) {
+        this.fileURL = fileURL;
+        this.lineNumber = lineNumber;
+        this.where = where;
+    }
+
+    public String getFileURL() {
+        return fileURL;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    public String getWhere() {
+        return where;
     }
 }

@@ -16,7 +16,8 @@
 
 package com.codnos.dbgp.commands
 
-import com.codnos.dbgp.commands.status.{BreakingOrStoppingStateHandler, State}
+import com.codnos.dbgp.api.State
+import com.codnos.dbgp.commands.status.BreakingOrStoppingStateHandler
 
 class BreakingOrStoppingStateHandlerSpec extends CommandSpec {
 

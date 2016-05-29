@@ -16,7 +16,8 @@
 
 package com.codnos.dbgp.commands
 
-import com.codnos.dbgp.commands.status.{StateChangeHandler, StateChangeHandlerFactory}
+import com.codnos.dbgp.api.StateChangeHandler
+import com.codnos.dbgp.commands.status.StateChangeHandlerFactory
 import com.codnos.dbgp.commands.step.StepOver
 import org.mockito.Matchers.any
 import org.mockito.Mockito.verify

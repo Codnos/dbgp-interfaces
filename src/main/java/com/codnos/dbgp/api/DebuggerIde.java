@@ -14,28 +14,12 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.commands.stack;
+package com.codnos.dbgp.api;
 
-public class StackFrame {
-    private final String fileURL;
-    private final int lineNumber;
-    private final String where;
+import com.codnos.dbgp.messages.InitMessage;
 
-    public StackFrame(String fileURL, int lineNumber, String where) {
-        this.fileURL = fileURL;
-        this.lineNumber = lineNumber;
-        this.where = where;
-    }
+public interface DebuggerIde {
+    void onConnected(InitMessage message) throws InterruptedException;
 
-    public String getFileURL() {
-        return fileURL;
-    }
-
-    public int getLineNumber() {
-        return lineNumber;
-    }
-
-    public String getWhere() {
-        return where;
-    }
+    void onStatus(StatusValue status);
 }

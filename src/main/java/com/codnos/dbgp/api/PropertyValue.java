@@ -14,16 +14,28 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.commands.status;
+package com.codnos.dbgp.api;
 
-public class StatusValue {
-    private String state;
+public class PropertyValue {
+    private final String name;
+    private final String type;
+    private final String value;
 
-    public StatusValue(String state) {
-        this.state = state;
+    public PropertyValue(String name, String type, String value) {
+        this.name = name;
+        this.type = type;
+        this.value = value;
     }
 
-    public String getState() {
-        return state;
+    public String getName() {
+        return name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getValue() {
+        return value;
     }
 }

@@ -18,10 +18,8 @@ package com.codnos.dbgp
 
 import java.util
 
-import com.codnos.dbgp.commands.breakpoint.Breakpoint
-import com.codnos.dbgp.commands.property.PropertyValue
-import com.codnos.dbgp.commands.stack.StackFrame
-import com.codnos.dbgp.commands.status.{State, StateChangeHandler, StateChangeHandlerFactory, StatusValue}
+import com.codnos.dbgp.api._
+import com.codnos.dbgp.commands.status.StateChangeHandlerFactory
 import com.codnos.dbgp.messages.InitMessage
 import com.jayway.awaitility.Awaitility._
 import io.netty.channel.ChannelHandlerContext
