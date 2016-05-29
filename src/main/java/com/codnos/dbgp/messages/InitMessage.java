@@ -16,6 +16,7 @@
 
 package com.codnos.dbgp.messages;
 
+import com.codnos.dbgp.api.SystemInfo;
 import com.codnos.dbgp.xml.XmlUtil;
 import org.w3c.dom.Document;
 
@@ -28,32 +29,36 @@ public class InitMessage extends XmlMessage {
         super(message);
     }
 
-    public String getAppId() {
-        return xpath("/dbgp:init/@appid");
-    }
-
-    public String getIdeKey() {
-        return xpath("/dbgp:init/@idekey");
-    }
-
-    public String getSession() {
-        return xpath("/dbgp:init/@session");
-    }
-
-    public String getLanguage() {
-        return xpath("/dbgp:init/@language");
-    }
-
-    public String getProtocolVersion() {
-        return xpath("/dbgp:init/@protocol_version");
-    }
-
-    public String getFileUri() {
-        return xpath("/dbgp:init/@fileuri");
+    public SystemInfo toSystemInfo() {
+        return new SystemInfo(getAppId(), getIdeKey(), getSession(), getLanguage(), getProtocolVersion(), getFileUri());
     }
 
     @Override
     public String getHandlerKey() {
         return "init:init";
+    }
+
+    private String getAppId() {
+        return xpath("/dbgp:init/@appid");
+    }
+
+    private String getIdeKey() {
+        return xpath("/dbgp:init/@idekey");
+    }
+
+    private String getSession() {
+        return xpath("/dbgp:init/@session");
+    }
+
+    private String getLanguage() {
+        return xpath("/dbgp:init/@language");
+    }
+
+    private String getProtocolVersion() {
+        return xpath("/dbgp:init/@protocol_version");
+    }
+
+    private String getFileUri() {
+        return xpath("/dbgp:init/@fileuri");
     }
 }

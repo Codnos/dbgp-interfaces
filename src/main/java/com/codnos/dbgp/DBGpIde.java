@@ -189,7 +189,7 @@ public class DBGpIde {
             public void handle(Message message) {
                 try {
                     commandQueueProcessor.start();
-                    debuggerIde.onConnected((InitMessage) message);
+                    debuggerIde.onConnected(((InitMessage) message).toSystemInfo());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

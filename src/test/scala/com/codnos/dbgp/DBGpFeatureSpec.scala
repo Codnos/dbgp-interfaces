@@ -20,7 +20,6 @@ import java.util
 
 import com.codnos.dbgp.api._
 import com.codnos.dbgp.commands.status.StateChangeHandlerFactory
-import com.codnos.dbgp.messages.InitMessage
 import com.jayway.awaitility.Awaitility._
 import io.netty.channel.ChannelHandlerContext
 import org.hamcrest.Matchers._
@@ -215,14 +214,14 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
   }
 
   private class FakeDebuggerIde extends DebuggerIde {
-    private var message: InitMessage = null
+    private var message: SystemInfo = null
     private var status: StatusValue = null
 
-    def getInitMessage: InitMessage = message
+    def getInitMessage: SystemInfo = message
 
     def getStatus: StatusValue = status
 
-    override def onConnected(message: InitMessage) {
+    override def onConnected(message: SystemInfo) {
       this.message = message
     }
 

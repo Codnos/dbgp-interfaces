@@ -27,14 +27,14 @@ class InitMessageSpec extends UnitSpec {
 
     val initMessage = new InitMessage(parseMessage(ValidMessage.toString))
 
-    initMessage should have (
+    initMessage.getHandlerKey shouldBe "init:init"
+    initMessage.toSystemInfo should have (
       'appId ("app-id-value"),
       'ideKey ("ide-key-value"),
       'session ("session-id-value"),
       'language ("language-value"),
       'protocolVersion ("1.0"),
-      'fileUri ("file:/home/user/module.xq"),
-      'handlerKey ("init:init")
+      'fileUri ("file:/home/user/module.xq")
     )
   }
 

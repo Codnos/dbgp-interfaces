@@ -16,10 +16,8 @@
 
 package com.codnos.dbgp.api;
 
-import com.codnos.dbgp.messages.InitMessage;
-
 public interface DebuggerIde {
-    void onConnected(InitMessage message) throws InterruptedException;
+    void onConnected(SystemInfo message) throws InterruptedException;
 
     void onStatus(StatusValue status);
 }
