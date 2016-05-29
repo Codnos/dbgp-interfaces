@@ -54,13 +54,7 @@ public class MessageFactory {
         try {
             Constructor<? extends XmlMessage> constructor = messageResponseClass.getConstructor(Document.class);
             return constructor.newInstance(parsedMessage);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
             throw new RuntimeException(e);
         }
     }
@@ -69,11 +63,7 @@ public class MessageFactory {
         try {
             Method m = messageResponseClass.getMethod("canBuildFrom", Document.class);
             return (Boolean) m.invoke(null, parsedMessage);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
