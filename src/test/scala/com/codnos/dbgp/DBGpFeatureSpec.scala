@@ -96,7 +96,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
           When("the run command is sent")
           ctx.ide.run()
           Then("the IDE engine will get notified about any state changes")
-          await until(() => assert(debuggerIde.getStatus.getState == State.BREAK.nameForSending()))
+          await until(() => assert(debuggerIde.getStatus == State.BREAK))
       }
     }
   }
@@ -114,7 +114,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
           Then("the debugger engine receives the status command")
           await until (() => verify(debuggerEngine).getState)
           And("status is the same as returned by the engine")
-          status.getState shouldBe expectedStatus.nameForSending()
+          status shouldBe expectedStatus
       }
     }
   }
@@ -208,24 +208,24 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
           When("the step over command is sent")
           ctx.ide.stepOver()
           Then("the IDE will get notified about any state changes")
-          await until (() => assert(debuggerIde.getStatus.getState == State.BREAK.nameForSending()))
+          await until (() => assert(debuggerIde.getStatus == State.BREAK))
       }
     }
   }
 
   private class FakeDebuggerIde extends DebuggerIde {
     private var message: SystemInfo = null
-    private var status: StatusValue = null
+    private var status: State = null
 
     def getInitMessage: SystemInfo = message
 
-    def getStatus: StatusValue = status
+    def getStatus: State = status
 
     override def onConnected(message: SystemInfo) {
       this.message = message
     }
 
-    override def onStatus(status: StatusValue) {
+    override def onStatus(status: State) {
       this.status = status
     }
   }

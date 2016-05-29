@@ -18,11 +18,10 @@ package com.codnos.dbgp.commands.status;
 
 import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.api.State;
-import com.codnos.dbgp.api.StatusValue;
+import com.codnos.dbgp.commands.Command;
 import com.codnos.dbgp.handlers.DBGPCommandHandler;
 import com.codnos.dbgp.messages.CommandResponse;
 import com.codnos.dbgp.xml.XmlUtil;
-import com.codnos.dbgp.commands.Command;
 import io.netty.channel.ChannelHandlerContext;
 import org.w3c.dom.Document;
 
@@ -64,8 +63,8 @@ public class Status implements Command<Status.Response> {
             return getName() + ":" + getTransactionId();
         }
 
-        public StatusValue getStatus() {
-            return new StatusValue(xpath("/dbgp:response/@status"));
+        public State getStatus() {
+            return State.fromSentName(xpath("/dbgp:response/@status"));
         }
     }
 

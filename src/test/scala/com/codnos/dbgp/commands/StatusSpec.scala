@@ -51,7 +51,7 @@ class StatusSpec extends CommandSpec {
       'transactionId ("transaction_id"),
       'handlerKey ("status:transaction_id")
     )
-    response.getStatus.getState shouldBe "starting"
+    response.getStatus shouldBe State.STARTING
   }
 
   it should "allow building it from valid xml" in {

@@ -22,4 +22,9 @@ public enum State {
     public String nameForSending() {
         return name().toLowerCase();
     }
+
+    public static State fromSentName(String sentName) {
+        return State.valueOf(sentName.toUpperCase());
+    }
+
 }

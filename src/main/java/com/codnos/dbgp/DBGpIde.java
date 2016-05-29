@@ -16,25 +16,17 @@
 
 package com.codnos.dbgp;
 
-import com.codnos.dbgp.api.DebuggerIde;
-import com.codnos.dbgp.commands.breakpoint.BreakpointSet;
-import com.codnos.dbgp.api.StatusValue;
-import com.codnos.dbgp.handlers.DBGpResponseDecoder;
+import com.codnos.dbgp.api.*;
 import com.codnos.dbgp.commands.Command;
 import com.codnos.dbgp.commands.Run;
-import com.codnos.dbgp.api.Breakpoint;
-import com.codnos.dbgp.api.Context;
+import com.codnos.dbgp.commands.breakpoint.BreakpointSet;
 import com.codnos.dbgp.commands.context.ContextGet;
 import com.codnos.dbgp.commands.stack.StackDepth;
-import com.codnos.dbgp.api.StackFrame;
 import com.codnos.dbgp.commands.stack.StackGet;
 import com.codnos.dbgp.commands.status.Status;
 import com.codnos.dbgp.commands.step.StepOver;
-import com.codnos.dbgp.handlers.DBGpCommandEncoder;
+import com.codnos.dbgp.handlers.*;
 import com.codnos.dbgp.messages.InitMessage;
-import com.codnos.dbgp.handlers.DBGpResponseHandler;
-import com.codnos.dbgp.handlers.DBGpServerToClientConnectionHandler;
-import com.codnos.dbgp.handlers.MessageHandler;
 import com.codnos.dbgp.messages.Message;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -163,7 +155,7 @@ public class DBGpIde {
         return new StackFrame(response.getFileUrl(), response.getLineNumber(), response.getWhere());
     }
 
-    public StatusValue status() {
+    public State status() {
         String transactionId = nextTransaction();
         Status command = new Status(transactionId);
         sendCommand(command);
