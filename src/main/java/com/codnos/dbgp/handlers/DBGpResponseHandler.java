@@ -17,7 +17,6 @@
 package com.codnos.dbgp.handlers;
 
 import com.codnos.dbgp.messages.MessageFactory;
-import com.codnos.dbgp.DBGpEventsHandler;
 import com.codnos.dbgp.messages.Message;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

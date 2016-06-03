@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp;
+package com.codnos.dbgp.handlers;
 
 import com.codnos.dbgp.commands.Command;
 import com.codnos.dbgp.handlers.MessageHandler;

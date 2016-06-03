@@ -54,7 +54,7 @@ public class DBGpIde {
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
     private final DBGpEventsHandler eventsHandler = new DBGpEventsHandler();
     private final DBGpServerToClientConnectionHandler outboundConnectionHandler = new DBGpServerToClientConnectionHandler();
-    private final CommandQueueProcessor commandQueueProcessor = new CommandQueueProcessor(outboundConnectionHandler);
+    private final CommandQueueHandler commandQueueHandler = new CommandQueueHandler(outboundConnectionHandler);
     private final AtomicBoolean isConnected = new AtomicBoolean(false);
 
     public DBGpIde(int port, DebuggerIde debuggerIde) {
@@ -89,7 +89,7 @@ public class DBGpIde {
         if (bossGroup != null) {
             bossGroup.shutdownGracefully();
         }
-        commandQueueProcessor.stop();
+        commandQueueHandler.stop();
         eventsHandler.clearHandlers();
         isConnected.set(false);
     }
@@ -171,7 +171,7 @@ public class DBGpIde {
     }
 
     private void sendCommand(Command command) {
-        commandQueueProcessor.add(command);
+        commandQueueHandler.add(command);
     }
 
     private void registerInitHandler() {
@@ -179,7 +179,7 @@ public class DBGpIde {
             @Override
             public void handle(Message message) {
                 try {
-                    commandQueueProcessor.start();
+                    commandQueueHandler.start();
                     debuggerIde.onConnected(((InitMessage) message).toSystemInfo());
                 } catch (InterruptedException e) {
                     e.printStackTrace();

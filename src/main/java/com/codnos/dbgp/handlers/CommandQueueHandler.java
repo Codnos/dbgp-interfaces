@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp;
+package com.codnos.dbgp.handlers;
 
 import com.codnos.dbgp.commands.Command;
 import com.codnos.dbgp.handlers.DBGpServerToClientConnectionHandler;
@@ -22,14 +22,14 @@ import com.codnos.dbgp.handlers.DBGpServerToClientConnectionHandler;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class CommandQueueProcessor {
+public class CommandQueueHandler {
 
     private final DBGpServerToClientConnectionHandler outboundConnectionHandler;
     private final BlockingQueue<Command> commandQueue = new LinkedBlockingQueue<Command>();
     private final Thread senderThread = new Thread(new CommandSender());
     private boolean stop = false;
 
-    public CommandQueueProcessor(DBGpServerToClientConnectionHandler outboundConnectionHandler) {
+    public CommandQueueHandler(DBGpServerToClientConnectionHandler outboundConnectionHandler) {
         this.outboundConnectionHandler = outboundConnectionHandler;
     }
 
