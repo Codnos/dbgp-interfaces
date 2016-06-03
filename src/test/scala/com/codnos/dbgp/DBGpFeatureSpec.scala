@@ -225,15 +225,14 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
       this.message = message
     }
 
-    override def onStatus(status: Status) {
+    override def onStatus(status: Status, dbgpIde: DBGpIde) {
       this.status = status
     }
   }
 
   private def withinASession(f: DebuggingContext => Unit) {
-    val ide = new DBGpIde(Port, eventsHandler)
+    val ide = new DBGpIde(Port, eventsHandler, debuggerIde)
     val engine = new DBGpEngine(Port, debuggerEngine, statusChangeHandlerFactory)
-    ide.registerIde(debuggerIde)
     ide.startListening()
     engine.connect()
     try {

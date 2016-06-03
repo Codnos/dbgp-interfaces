@@ -54,9 +54,10 @@ public class DBGpIde {
     private DebuggerIde debuggerIde;
     private CommandQueueProcessor commandQueueProcessor = new CommandQueueProcessor(outboundConnectionHandler);
 
-    public DBGpIde(int port, DBGpEventsHandler eventsHandler) {
+    public DBGpIde(int port, DBGpEventsHandler eventsHandler, DebuggerIde debuggerIde) {
         this.port = port;
         this.eventsHandler = eventsHandler;
+        this.debuggerIde = debuggerIde;
     }
 
     public void startListening() throws InterruptedException {
@@ -115,7 +116,7 @@ public class DBGpIde {
                 new MessageHandler() {
                     public void handle(Message message) {
                         StatusResponse response = (StatusResponse) message;
-                        debuggerIde.onStatus(response.getStatus());
+                        debuggerIde.onStatus(response.getStatus(), DBGpIde.this);
                     }
                 }
         );
@@ -129,7 +130,7 @@ public class DBGpIde {
                 new MessageHandler() {
                     public void handle(Message message) {
                         StatusResponse response = (StatusResponse) message;
-                        debuggerIde.onStatus(response.getStatus());
+                        debuggerIde.onStatus(response.getStatus(), DBGpIde.this);
                     }
                 }
         );
@@ -170,10 +171,6 @@ public class DBGpIde {
 
     private String nextTransaction() {
         return Integer.toString(transactionId.incrementAndGet());
-    }
-
-    public void registerIde(DebuggerIde debuggerIde) {
-        this.debuggerIde = debuggerIde;
     }
 
     private void sendCommand(Command command) {
