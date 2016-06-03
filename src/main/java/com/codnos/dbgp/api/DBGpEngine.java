@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp;
+package com.codnos.dbgp.api;
 
 import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.commands.Init;

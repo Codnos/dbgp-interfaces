@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp;
+package com.codnos.dbgp.api;
 
 public class UnableToParseResponseException extends RuntimeException {
     public UnableToParseResponseException(Exception e) {

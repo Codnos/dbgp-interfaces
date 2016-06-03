@@ -16,8 +16,6 @@
 
 package com.codnos.dbgp.api;
 
-import com.codnos.dbgp.DBGpIde;
-
 public interface DebuggerIde {
     void onConnected(SystemInfo message) throws InterruptedException;
 

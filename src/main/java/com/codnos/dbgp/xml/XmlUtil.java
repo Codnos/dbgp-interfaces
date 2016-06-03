@@ -16,7 +16,7 @@
 
 package com.codnos.dbgp.xml;
 
-import com.codnos.dbgp.UnableToParseResponseException;
+import com.codnos.dbgp.api.UnableToParseResponseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
