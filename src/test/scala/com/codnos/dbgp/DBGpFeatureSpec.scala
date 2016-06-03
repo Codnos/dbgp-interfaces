@@ -96,7 +96,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
           When("the run command is sent")
           ctx.ide.run()
           Then("the IDE engine will get notified about any status changes")
-          await until(() => assert(debuggerIde.getStatus == Status.BREAK))
+          await until (() => assert(debuggerIde.getStatus == Status.BREAK))
       }
     }
   }
@@ -234,6 +234,9 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
     val ide = new DBGpIde(Port, eventsHandler, debuggerIde)
     val engine = new DBGpEngine(Port, debuggerEngine, statusChangeHandlerFactory)
     ide.startListening()
+    await until {
+      ide.isConnected
+    }
     engine.connect()
     try {
       f(DebuggingContext(ide, engine))

@@ -41,18 +41,22 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DBGpIde {
     private final int port;
     private final DBGpEventsHandler eventsHandler;
     private final AtomicInteger transactionId = new AtomicInteger();
-    private EventLoopGroup bossGroup;
-    private EventLoopGroup workerGroup;
-    private DBGpServerToClientConnectionHandler outboundConnectionHandler = new DBGpServerToClientConnectionHandler();
-    private DebuggerIde debuggerIde;
-    private CommandQueueProcessor commandQueueProcessor = new CommandQueueProcessor(outboundConnectionHandler);
+    private final EventLoopGroup bossGroup = new NioEventLoopGroup();
+    private final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private final DBGpServerToClientConnectionHandler outboundConnectionHandler = new DBGpServerToClientConnectionHandler();
+    private final DebuggerIde debuggerIde;
+    private final CommandQueueProcessor commandQueueProcessor = new CommandQueueProcessor(outboundConnectionHandler);
+    private final AtomicBoolean isConnected = new AtomicBoolean(false);
 
     public DBGpIde(int port, DBGpEventsHandler eventsHandler, DebuggerIde debuggerIde) {
         this.port = port;
@@ -60,10 +64,8 @@ public class DBGpIde {
         this.debuggerIde = debuggerIde;
     }
 
-    public void startListening() throws InterruptedException {
+    public void startListening() {
         registerInitHandler();
-        bossGroup = new NioEventLoopGroup();
-        workerGroup = new NioEventLoopGroup();
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
@@ -79,15 +81,20 @@ public class DBGpIde {
                 .option(ChannelOption.SO_BACKLOG, 128)
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-        ChannelFuture channelFuture = b.bind(port).sync();
-        if (channelFuture.isDone() && channelFuture.isSuccess()) {
-            System.out.println("Successfully connected");
-        } else if (channelFuture.isCancelled()) {
-            System.out.println("Connection cancelled");
-        } else if (!channelFuture.isSuccess()) {
-            System.out.println("Failed to connect");
-            channelFuture.cause().printStackTrace();
-        }
+        b.bind(port).addListener(new GenericFutureListener<Future<? super Void>>() {
+            @Override
+            public void operationComplete(Future<? super Void> channelFuture) throws Exception {
+                if (channelFuture.isDone() && channelFuture.isSuccess()) {
+                    System.out.println("Successfully connected");
+                    isConnected.set(true);
+                } else if (channelFuture.isCancelled()) {
+                    System.out.println("Connection cancelled");
+                } else if (!channelFuture.isSuccess()) {
+                    System.out.println("Failed to connect");
+                    channelFuture.cause().printStackTrace();
+                }
+            }
+        });
     }
 
     public void stopListening() {
@@ -99,6 +106,11 @@ public class DBGpIde {
             bossGroup.shutdownGracefully();
         }
         commandQueueProcessor.stop();
+        isConnected.set(false);
+    }
+
+    public boolean isConnected() {
+        return isConnected.get();
     }
 
     public Breakpoint breakpointSet(final Breakpoint breakpoint) {
