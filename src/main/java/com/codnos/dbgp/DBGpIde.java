@@ -85,7 +85,7 @@ public class DBGpIde {
             @Override
             public void operationComplete(Future<? super Void> channelFuture) throws Exception {
                 if (channelFuture.isDone() && channelFuture.isSuccess()) {
-                    System.out.println("Successfully connected");
+                    System.out.println("Successfully opened port to wait for clients");
                     isConnected.set(true);
                 } else if (channelFuture.isCancelled()) {
                     System.out.println("Connection cancelled");
@@ -98,7 +98,7 @@ public class DBGpIde {
     }
 
     public void stopListening() {
-        System.out.println("Switching off");
+        System.out.println("No longer listening for incoming client connections");
         if (workerGroup != null) {
             workerGroup.shutdownGracefully();
         }

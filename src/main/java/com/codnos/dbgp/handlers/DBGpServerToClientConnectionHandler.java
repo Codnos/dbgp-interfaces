@@ -28,12 +28,14 @@ public class DBGpServerToClientConnectionHandler extends ChannelInboundHandlerAd
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("Got connection from client!");
         channelGroup.add(ctx.channel());
         super.channelActive(ctx);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("Client disconnected!");
         channelGroup.remove(ctx.channel());
         super.channelInactive(ctx);
     }
