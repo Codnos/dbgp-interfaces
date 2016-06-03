@@ -16,11 +16,10 @@
 
 package com.codnos.dbgp.api;
 
-import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.commands.Init;
-import com.codnos.dbgp.commands.run.RunCommandHandler;
 import com.codnos.dbgp.commands.breakpoint.BreakpointSetCommandHandler;
 import com.codnos.dbgp.commands.context.ContextGetCommandHandler;
+import com.codnos.dbgp.commands.run.RunCommandHandler;
 import com.codnos.dbgp.commands.stack.StackDepthCommandHandler;
 import com.codnos.dbgp.commands.stack.StackGetCommandHandler;
 import com.codnos.dbgp.commands.status.StatusChangeHandlerFactory;
