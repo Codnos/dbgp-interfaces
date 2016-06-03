@@ -33,7 +33,10 @@ public abstract class DBGPCommandHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String in = (String) msg;
         System.out.println("got message=" + in);
-        if (canHandle(in)) {
+        System.out.println("Checking if " +this.getClass().getCanonicalName() + " class can handle " + msg);
+        boolean canHandle = canHandle(in);
+        System.out.println("After checking we the result was:" + canHandle);
+        if (canHandle) {
             handle(ctx, in, debuggerEngine);
         } else {
             super.channelRead(ctx, msg);
