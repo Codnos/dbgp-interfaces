@@ -6,7 +6,8 @@ TODO:
  - [x] Refactor commands into separate separate response/handler classes
  - [x] Introduce separate API package (or move all internal to internal)
  - [x] Refactor existing API for consumers so that it's not quirky to construct and doesn't violate a lot of conditions
- - [ ] Introduce sync and async API for IDE
+ - [x] Introduce sync API for IDE
+ - [ ] Introduce async API for IDE
  - [ ] Add unit tests for main building blocks
  - [ ] Better handling of command parameter parsing
  - [ ] Better/systematic handling of xml construction
