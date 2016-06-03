@@ -80,21 +80,7 @@ public class DBGpIde {
                 })
                 .option(ChannelOption.SO_BACKLOG, 128)
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
-
-        b.bind(port).addListener(new GenericFutureListener<Future<? super Void>>() {
-            @Override
-            public void operationComplete(Future<? super Void> channelFuture) throws Exception {
-                if (channelFuture.isDone() && channelFuture.isSuccess()) {
-                    System.out.println("Successfully opened port to wait for clients");
-                    isConnected.set(true);
-                } else if (channelFuture.isCancelled()) {
-                    System.out.println("Connection cancelled");
-                } else if (!channelFuture.isSuccess()) {
-                    System.out.println("Failed to connect");
-                    channelFuture.cause().printStackTrace();
-                }
-            }
-        });
+        bindPort(b);
     }
 
     public void stopListening() {
@@ -198,6 +184,23 @@ public class DBGpIde {
                     debuggerIde.onConnected(((InitMessage) message).toSystemInfo());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void bindPort(ServerBootstrap b) {
+        b.bind(port).addListener(new GenericFutureListener<Future<? super Void>>() {
+            @Override
+            public void operationComplete(Future<? super Void> channelFuture) throws Exception {
+                if (channelFuture.isDone() && channelFuture.isSuccess()) {
+                    System.out.println("Successfully opened port to wait for clients");
+                    isConnected.set(true);
+                } else if (channelFuture.isCancelled()) {
+                    System.out.println("Connection cancelled");
+                } else if (!channelFuture.isSuccess()) {
+                    System.out.println("Failed to connect");
+                    channelFuture.cause().printStackTrace();
                 }
             }
         });
