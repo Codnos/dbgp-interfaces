@@ -14,10 +14,30 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.api;
+package com.codnos.dbgp.internal.commands.run;
 
-public interface DBGpEngine {
-    void connect() throws InterruptedException;
+import com.codnos.dbgp.internal.commands.ContinuationCommand;
 
-    void disconnect();
+public class RunCommand implements ContinuationCommand<Void> {
+    private final String transactionId;
+
+    public RunCommand(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    @Override
+    public String getName() {
+        return "run";
+    }
+
+    @Override
+    public String getMessage() {
+        return getName() + " -i " + transactionId;
+    }
+
+    @Override
+    public String getHandlerKey() {
+        return "status:" + transactionId;
+    }
+
 }

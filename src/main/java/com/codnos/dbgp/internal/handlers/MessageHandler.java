@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.api;
+package com.codnos.dbgp.internal.handlers;
 
-public interface DBGpEngine {
-    void connect() throws InterruptedException;
+import com.codnos.dbgp.internal.messages.Message;
 
-    void disconnect();
+public interface MessageHandler {
+    void handle(Message message);
 }

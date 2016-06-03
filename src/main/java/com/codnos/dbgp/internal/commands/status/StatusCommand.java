@@ -14,10 +14,31 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.api;
+package com.codnos.dbgp.internal.commands.status;
 
-public interface DBGpEngine {
-    void connect() throws InterruptedException;
+import com.codnos.dbgp.internal.commands.Command;
 
-    void disconnect();
+public class StatusCommand implements Command<StatusResponse> {
+
+    private String transactionId;
+
+    public StatusCommand(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    @Override
+    public String getName() {
+        return "status";
+    }
+
+    @Override
+    public String getMessage() {
+        return "status -i " + transactionId;
+    }
+
+    @Override
+    public String getHandlerKey() {
+        return getName() + ":" + transactionId;
+    }
+
 }

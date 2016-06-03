@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.api;
+package com.codnos.dbgp.internal.messages;
 
-public interface DBGpEngine {
-    void connect() throws InterruptedException;
+import org.w3c.dom.Document;
 
-    void disconnect();
+public abstract class CommandResponse extends XmlMessage {
+
+    public CommandResponse(Document message) {
+        super(message);
+    }
+
+    public String getName() {
+        return xpath("/dbgp:response/@command");
+    }
+
+    public String getTransactionId() {
+        return xpath("/dbgp:response/@transaction_id");
+    }
 }

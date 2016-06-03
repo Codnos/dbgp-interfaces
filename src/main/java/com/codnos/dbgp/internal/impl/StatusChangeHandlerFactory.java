@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.api;
+package com.codnos.dbgp.internal.impl;
 
-public interface DBGpEngine {
-    void connect() throws InterruptedException;
+import com.codnos.dbgp.api.StatusChangeHandler;
+import com.codnos.dbgp.internal.commands.status.BreakingOrStoppingStatusHandler;
+import io.netty.channel.ChannelHandlerContext;
 
-    void disconnect();
+public class StatusChangeHandlerFactory {
+    public StatusChangeHandler getInstance(String transactionId, ChannelHandlerContext ctx) {
+        return new BreakingOrStoppingStatusHandler(transactionId, ctx);
+    }
 }

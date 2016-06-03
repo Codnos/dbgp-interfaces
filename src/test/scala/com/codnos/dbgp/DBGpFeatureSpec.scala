@@ -19,7 +19,7 @@ package com.codnos.dbgp
 import java.util
 
 import com.codnos.dbgp.api._
-import com.codnos.dbgp.commands.status.StatusChangeHandlerFactory
+import com.codnos.dbgp.internal.impl.{DBGpEngineImpl, DBGpIdeImpl, StatusChangeHandlerFactory}
 import com.jayway.awaitility.Awaitility._
 import io.netty.channel.ChannelHandlerContext
 import org.hamcrest.Matchers._
@@ -230,8 +230,8 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
   }
 
   private def withinASession(f: DebuggingContext => Unit) {
-    val ide = new DBGpIde(Port, debuggerIde)
-    val engine = new DBGpEngine(Port, debuggerEngine, statusChangeHandlerFactory)
+    val ide: DBGpIde = new DBGpIdeImpl(Port, debuggerIde)
+    val engine: DBGpEngine = new DBGpEngineImpl(Port, debuggerEngine, statusChangeHandlerFactory)
     ide.startListening()
     await until {
       ide.isConnected

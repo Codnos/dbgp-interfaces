@@ -14,27 +14,30 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.api;
+package com.codnos.dbgp.internal.commands.stack;
 
-public interface DBGpIde {
+import com.codnos.dbgp.internal.commands.Command;
 
-    void startListening();
+public class StackDepthCommand implements Command<StackDepthResponse> {
+    private final String transactionId;
 
-    void stopListening();
+    public StackDepthCommand(String transactionId) {
+        this.transactionId = transactionId;
+    }
 
-    boolean isConnected();
+    @Override
+    public String getName() {
+        return "stack_depth";
+    }
 
-    Breakpoint breakpointSet(final Breakpoint breakpoint);
+    @Override
+    public String getMessage() {
+        return "stack_depth -i " + transactionId;
+    }
 
-    void run();
+    @Override
+    public String getHandlerKey() {
+        return getName() + ":" + transactionId;
+    }
 
-    void stepOver();
-
-    int stackDepth();
-
-    Context contextGet(int stackDepth);
-
-    StackFrame stackGet(int depth);
-
-    Status status();
 }
