@@ -16,11 +16,12 @@
 
 package com.codnos.dbgp.handlers;
 
-import com.codnos.dbgp.Constants;
 import com.codnos.dbgp.commands.Init;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DBGPInitHandler extends ChannelInboundHandlerAdapter {
 
@@ -32,9 +33,9 @@ public class DBGPInitHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        byte[] initBytes = initMessage.asString().getBytes(Constants.UTF8);
+        byte[] initBytes = initMessage.asString().getBytes(UTF_8);
         String size = String.valueOf(initBytes.length);
-        byte[] sizeBytes = size.getBytes(Constants.UTF8);
+        byte[] sizeBytes = size.getBytes(UTF_8);
         final ByteBuf initMessageBuffer = ctx.alloc().buffer(sizeBytes.length + 1 + initBytes.length + 1);
         initMessageBuffer.writeBytes(sizeBytes);
         initMessageBuffer.writeZero(1);

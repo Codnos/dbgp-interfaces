@@ -16,11 +16,12 @@
 
 package com.codnos.dbgp.handlers;
 
-import com.codnos.dbgp.Constants;
 import com.codnos.dbgp.commands.Command;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DBGpCommandEncoder extends MessageToByteEncoder {
     private static final int NULL_BYTE = 0;
@@ -30,7 +31,7 @@ public class DBGpCommandEncoder extends MessageToByteEncoder {
         Command command = (Command) msg;
         String commandMessage = command.getMessage();
         System.out.println("sending command: " + commandMessage);
-        out.writeBytes(commandMessage.getBytes(Constants.UTF8));
+        out.writeBytes(commandMessage.getBytes(UTF_8));
         out.writeByte(NULL_BYTE);
     }
 }

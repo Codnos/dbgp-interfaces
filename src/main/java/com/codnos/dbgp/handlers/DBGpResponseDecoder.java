@@ -23,7 +23,7 @@ import io.netty.util.ByteProcessor;
 
 import java.util.List;
 
-import static com.codnos.dbgp.Constants.UTF8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DBGpResponseDecoder extends ByteToMessageDecoder {
 
@@ -49,7 +49,7 @@ public class DBGpResponseDecoder extends ByteToMessageDecoder {
         }
         ByteBuf sizeBuf = in.readBytes(numberOfBytes);
         in.readByte();
-        String sizeBufAsString = sizeBuf.toString(UTF8);
+        String sizeBufAsString = sizeBuf.toString(UTF_8);
         int size = Integer.parseInt(sizeBufAsString);
         int expectedSize = sizeBuf.readableBytes() + NULL_BYTE_SIZE + size + NULL_BYTE_SIZE;
         if (length < expectedSize) {
@@ -60,7 +60,7 @@ public class DBGpResponseDecoder extends ByteToMessageDecoder {
         }
         ByteBuf messageBuf = in.readBytes(size);
         in.readByte();
-        objects.add(messageBuf.toString(UTF8));
+        objects.add(messageBuf.toString(UTF_8));
         sizeBuf.release();
         messageBuf.release();
     }

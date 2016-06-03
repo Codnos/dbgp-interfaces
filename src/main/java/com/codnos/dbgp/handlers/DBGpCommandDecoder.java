@@ -23,7 +23,7 @@ import io.netty.util.ByteProcessor;
 
 import java.util.List;
 
-import static com.codnos.dbgp.Constants.UTF8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DBGpCommandDecoder extends ByteToMessageDecoder {
 
@@ -35,7 +35,7 @@ public class DBGpCommandDecoder extends ByteToMessageDecoder {
         int length = nullPosition - in.readerIndex();
         ByteBuf msgBuffer = in.readBytes(length);
         in.readByte();
-        objects.add(msgBuffer.toString(UTF8));
+        objects.add(msgBuffer.toString(UTF_8));
         msgBuffer.release();
     }
 }

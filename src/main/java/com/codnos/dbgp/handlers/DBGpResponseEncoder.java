@@ -16,24 +16,25 @@
 
 package com.codnos.dbgp.handlers;
 
-import com.codnos.dbgp.Constants;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DBGpResponseEncoder extends MessageToByteEncoder {
     @Override
     protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf byteBuf) throws Exception {
         String message = (String) msg;
-        byte[] initBytes = message.getBytes(Constants.UTF8);
+        byte[] initBytes = message.getBytes(UTF_8);
         String size = String.valueOf(initBytes.length);
-        byte[] sizeBytes = size.getBytes(Constants.UTF8);
+        byte[] sizeBytes = size.getBytes(UTF_8);
         final ByteBuf initMessageBuffer = ctx.alloc().buffer(sizeBytes.length + 1 + initBytes.length + 1);
         initMessageBuffer.writeBytes(sizeBytes);
         initMessageBuffer.writeZero(1);
         initMessageBuffer.writeBytes(initBytes);
         initMessageBuffer.writeZero(1);
-        System.out.println("sending response=" + initMessageBuffer.toString(Constants.UTF8));
+        System.out.println("sending response=" + initMessageBuffer.toString(UTF_8));
         ctx.writeAndFlush(initMessageBuffer);
     }
 }
