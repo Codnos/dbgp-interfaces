@@ -29,7 +29,7 @@ public class DBGpFactory {
         return new DBGpEngineBuilder();
     }
 
-    private static class DBGpIdeBuilder {
+    public static class DBGpIdeBuilder {
         private int port;
         private DebuggerIde debuggerIde;
 
@@ -50,7 +50,7 @@ public class DBGpFactory {
         }
     }
 
-    private static class DBGpEngineBuilder {
+    public static class DBGpEngineBuilder {
         private int port;
         private DebuggerEngine debuggerEngine;
         private StatusChangeHandlerFactory statusChangeHandlerFactory = new StatusChangeHandlerFactory();
