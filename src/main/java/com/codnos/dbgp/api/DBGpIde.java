@@ -49,12 +49,12 @@ public class DBGpIde {
     private final int port;
     private final DebuggerIde debuggerIde;
     private final AtomicInteger transactionId = new AtomicInteger();
-    private final EventLoopGroup bossGroup = new NioEventLoopGroup();
-    private final EventLoopGroup workerGroup = new NioEventLoopGroup();
-    private final DBGpEventsHandler eventsHandler = new DBGpEventsHandler();
     private final DBGpServerToClientConnectionHandler outboundConnectionHandler = new DBGpServerToClientConnectionHandler();
+    private final DBGpEventsHandler eventsHandler = new DBGpEventsHandler();
     private final CommandQueueHandler commandQueueHandler = new CommandQueueHandler(outboundConnectionHandler);
     private final AtomicBoolean isConnected = new AtomicBoolean(false);
+    private EventLoopGroup workerGroup;
+    private EventLoopGroup bossGroup;
 
     public DBGpIde(int port, DebuggerIde debuggerIde) {
         this.port = port;
@@ -64,6 +64,8 @@ public class DBGpIde {
     public void startListening() {
         registerInitHandler();
         ServerBootstrap b = new ServerBootstrap();
+        bossGroup = new NioEventLoopGroup();
+        workerGroup = new NioEventLoopGroup();
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
