@@ -34,7 +34,6 @@ import com.codnos.dbgp.handlers.*;
 import com.codnos.dbgp.messages.InitMessage;
 import com.codnos.dbgp.messages.Message;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -49,18 +48,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class DBGpIde {
     private final int port;
-    private final DBGpEventsHandler eventsHandler;
+    private final DebuggerIde debuggerIde;
     private final AtomicInteger transactionId = new AtomicInteger();
     private final EventLoopGroup bossGroup = new NioEventLoopGroup();
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private final DBGpEventsHandler eventsHandler = new DBGpEventsHandler();
     private final DBGpServerToClientConnectionHandler outboundConnectionHandler = new DBGpServerToClientConnectionHandler();
-    private final DebuggerIde debuggerIde;
     private final CommandQueueProcessor commandQueueProcessor = new CommandQueueProcessor(outboundConnectionHandler);
     private final AtomicBoolean isConnected = new AtomicBoolean(false);
 
-    public DBGpIde(int port, DBGpEventsHandler eventsHandler, DebuggerIde debuggerIde) {
+    public DBGpIde(int port, DebuggerIde debuggerIde) {
         this.port = port;
-        this.eventsHandler = eventsHandler;
         this.debuggerIde = debuggerIde;
     }
 
@@ -92,6 +90,7 @@ public class DBGpIde {
             bossGroup.shutdownGracefully();
         }
         commandQueueProcessor.stop();
+        eventsHandler.clearHandlers();
         isConnected.set(false);
     }
 

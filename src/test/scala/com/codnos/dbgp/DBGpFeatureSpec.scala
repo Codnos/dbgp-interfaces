@@ -34,7 +34,6 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
   private val Port: Int = 9000
   private val debuggerIde: FakeDebuggerIde = new FakeDebuggerIde
   private val debuggerEngine: DebuggerEngine = mock(classOf[DebuggerEngine])
-  private val eventsHandler: DBGpEventsHandler = new DBGpEventsHandler
 
   feature("connection initiation") {
     scenario("<init/> message is sent as the first thing after engine connects to the IDE") {
@@ -231,7 +230,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
   }
 
   private def withinASession(f: DebuggingContext => Unit) {
-    val ide = new DBGpIde(Port, eventsHandler, debuggerIde)
+    val ide = new DBGpIde(Port, debuggerIde)
     val engine = new DBGpEngine(Port, debuggerEngine, statusChangeHandlerFactory)
     ide.startListening()
     await until {
@@ -241,7 +240,6 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
     try {
       f(DebuggingContext(ide, engine))
     } finally {
-      eventsHandler.clearHandlers()
       engine.disconnect()
       ide.stopListening()
     }
