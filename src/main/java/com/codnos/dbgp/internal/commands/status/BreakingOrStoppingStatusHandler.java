@@ -20,7 +20,10 @@ import com.codnos.dbgp.api.Status;
 import com.codnos.dbgp.api.StatusChangeHandler;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.util.logging.Logger;
+
 public class BreakingOrStoppingStatusHandler implements StatusChangeHandler {
+    private static final Logger LOGGER = Logger.getLogger(BreakingOrStoppingStatusHandler.class.getName());
     private final String transactionId;
     private final ChannelHandlerContext ctx;
 
@@ -36,8 +39,8 @@ public class BreakingOrStoppingStatusHandler implements StatusChangeHandler {
                 "          reason=\"ok\"\n" +
                 "          transaction_id=\"" + transactionId + "\">\n" +
                 "</response>";
-        System.out.println("sending message after changed status=" + message);
-        System.out.println("in ctx = " + ctx);
+        LOGGER.fine("sending message after changed status=" + message);
+        LOGGER.fine("in ctx = " + ctx);
         ctx.writeAndFlush(message);
     }
 

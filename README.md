@@ -7,7 +7,7 @@ TODO:
  - [x] Introduce separate API package (or move all internal to internal)
  - [x] Refactor existing API for consumers so that it's not quirky to construct and doesn't violate a lot of conditions
  - [x] Introduce sync API for IDE
- - [ ] Add proper logging with j.u.l
+ - [x] Add proper logging with j.u.l
  - [ ] Better handling of command parameter parsing
  - [ ] Better/systematic handling of xml construction
  - [ ] Add unit tests for main building blocks

@@ -16,12 +16,15 @@
 
 package com.codnos.dbgp.internal.handlers;
 
-import com.codnos.dbgp.internal.messages.MessageFactory;
 import com.codnos.dbgp.internal.messages.Message;
+import com.codnos.dbgp.internal.messages.MessageFactory;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
+import java.util.logging.Logger;
+
 public class DBGpResponseHandler extends ChannelInboundHandlerAdapter {
+    private static final Logger LOGGER = Logger.getLogger(DBGpResponseHandler.class.getName());
     private final DBGpEventsHandler eventsHandler;
 
     public DBGpResponseHandler(DBGpEventsHandler eventsHandler) {
@@ -31,7 +34,7 @@ public class DBGpResponseHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         String message = (String) msg;
-        System.out.println("message received=" + message);
+        LOGGER.fine("message received=" + message);
         Message responseMessage = MessageFactory.getMessage(message);
         eventsHandler.receive(responseMessage);
     }

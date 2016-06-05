@@ -45,8 +45,10 @@ import io.netty.util.concurrent.GenericFutureListener;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 public class DBGpIdeImpl implements DBGpIde {
+    private static final Logger LOGGER = Logger.getLogger(DBGpIdeImpl.class.getName());
     private final int port;
     private final DebuggerIde debuggerIde;
     private final AtomicInteger transactionId = new AtomicInteger();
@@ -86,7 +88,7 @@ public class DBGpIdeImpl implements DBGpIde {
 
     @Override
     public void stopListening() {
-        System.out.println("No longer listening for incoming client connections");
+        LOGGER.fine("No longer listening for incoming client connections");
         if (workerGroup != null) {
             workerGroup.shutdownGracefully();
         }
@@ -205,12 +207,12 @@ public class DBGpIdeImpl implements DBGpIde {
             @Override
             public void operationComplete(Future<? super Void> channelFuture) throws Exception {
                 if (channelFuture.isDone() && channelFuture.isSuccess()) {
-                    System.out.println("Successfully opened port to wait for clients");
+                    LOGGER.fine("Successfully opened port to wait for clients");
                     isConnected.set(true);
                 } else if (channelFuture.isCancelled()) {
-                    System.out.println("Connection cancelled");
+                    LOGGER.fine("Connection cancelled");
                 } else if (!channelFuture.isSuccess()) {
-                    System.out.println("Failed to connect");
+                    LOGGER.fine("Failed to connect");
                     channelFuture.cause().printStackTrace();
                 }
             }

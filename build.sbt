@@ -28,3 +28,7 @@ libraryDependencies ++= Seq(
   "org.xmlunit" % "xmlunit-core" % "2.1.1" % "test",
   "org.scalatest" %% "scalatest" % "2.2.6" % "test"
 )
+
+fork in Test := true
+
+javaOptions in Test += "-Djava.util.logging.config.file=src/test/resources/logging.properties"

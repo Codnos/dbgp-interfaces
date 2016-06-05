@@ -22,8 +22,10 @@ import com.codnos.dbgp.internal.messages.Message;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 public class DBGpEventsHandler {
+    private static final Logger LOGGER = Logger.getLogger(DBGpEventsHandler.class.getName());
     private final Map<String, MessageHandler> responseHandlers = new HashMap<String, MessageHandler>();
     private final Map<String, Message> messageMap = new ConcurrentHashMap<String, Message>();
     private final Object monitor = new Object();
@@ -34,11 +36,11 @@ public class DBGpEventsHandler {
             messageHandler.handle(message);
         } else {
             synchronized (monitor) {
-                System.out.println(Thread.currentThread().getName() + ": got message with key: " + message.getHandlerKey());
+                LOGGER.fine(Thread.currentThread().getName() + ": got message with key: " + message.getHandlerKey());
                 messageMap.put(message.getHandlerKey(), message);
-                System.out.println(Thread.currentThread().getName() + ": notifying about message with key: " + message.getHandlerKey());
+                LOGGER.fine(Thread.currentThread().getName() + ": notifying about message with key: " + message.getHandlerKey());
                 monitor.notifyAll();
-                System.out.println(Thread.currentThread().getName() + ": notified about message with key: " + message.getHandlerKey());
+                LOGGER.fine(Thread.currentThread().getName() + ": notified about message with key: " + message.getHandlerKey());
             }
         }
     }
@@ -57,14 +59,14 @@ public class DBGpEventsHandler {
 
     public <T> T getResponse(Command<T> command) {
         int tryCount = 0;
-        System.out.println(Thread.currentThread().getName() + ": checking response for message with key: " + command.getHandlerKey());
+        LOGGER.fine(Thread.currentThread().getName() + ": checking response for message with key: " + command.getHandlerKey());
         synchronized (monitor) {
             while (!messageMap.containsKey(command.getHandlerKey())) {
 
-                System.out.println(Thread.currentThread().getName() + ": about to wait for message with key: " + command.getHandlerKey());
+                LOGGER.fine(Thread.currentThread().getName() + ": about to wait for message with key: " + command.getHandlerKey());
                 try {
                     monitor.wait(3000L);
-                    System.out.println(Thread.currentThread().getName() + ": got notified while waiting for message with key: " + command.getHandlerKey());
+                    LOGGER.fine(Thread.currentThread().getName() + ": got notified while waiting for message with key: " + command.getHandlerKey());
                     tryCount++;
                     if (tryCount > 10)
                         throw new RuntimeException("not waiting any longer!");
@@ -73,9 +75,9 @@ public class DBGpEventsHandler {
                     return null;
                 }
             }
-            System.out.println(Thread.currentThread().getName() + ": no longer waiting for message with key: " + command.getHandlerKey());
+            LOGGER.fine(Thread.currentThread().getName() + ": no longer waiting for message with key: " + command.getHandlerKey());
             T result = (T) messageMap.remove(command.getHandlerKey());
-            System.out.println(Thread.currentThread().getName() + ": after waiting for message with key: " + command.getHandlerKey() + " got response " + result + " with key " + (result != null ? ((Message) result).getHandlerKey() : null));
+            LOGGER.fine(Thread.currentThread().getName() + ": after waiting for message with key: " + command.getHandlerKey() + " got response " + result + " with key " + (result != null ? ((Message) result).getHandlerKey() : null));
             return result;
 
         }

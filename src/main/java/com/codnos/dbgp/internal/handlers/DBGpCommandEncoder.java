@@ -21,16 +21,19 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
+import java.util.logging.Logger;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DBGpCommandEncoder extends MessageToByteEncoder {
+    private static final Logger LOGGER = Logger.getLogger(DBGpCommandEncoder.class.getName());
     private static final int NULL_BYTE = 0;
 
     @Override
     protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
         Command command = (Command) msg;
         String commandMessage = command.getMessage();
-        System.out.println("sending command: " + commandMessage);
+        LOGGER.fine("sending command: " + commandMessage);
         out.writeBytes(commandMessage.getBytes(UTF_8));
         out.writeByte(NULL_BYTE);
     }

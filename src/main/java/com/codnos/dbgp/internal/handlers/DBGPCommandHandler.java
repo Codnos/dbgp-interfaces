@@ -21,7 +21,10 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
+import java.util.logging.Logger;
+
 public abstract class DBGPCommandHandler extends ChannelInboundHandlerAdapter {
+    private static final Logger LOGGER = Logger.getLogger(DBGPCommandHandler.class.getName());
 
     private final DebuggerEngine debuggerEngine;
 
@@ -32,10 +35,10 @@ public abstract class DBGPCommandHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String in = (String) msg;
-        System.out.println("got message=" + in);
-        System.out.println("Checking if " +this.getClass().getCanonicalName() + " class can handle " + msg);
+        LOGGER.fine("got message=" + in);
+        LOGGER.fine("Checking if " + this.getClass().getCanonicalName() + " class can handle " + msg);
         boolean canHandle = canHandle(in);
-        System.out.println("After checking we the result was:" + canHandle);
+        LOGGER.fine("After checking we the result was:" + canHandle);
         if (canHandle) {
             handle(ctx, in, debuggerEngine);
         } else {
@@ -53,10 +56,10 @@ public abstract class DBGPCommandHandler extends ChannelInboundHandlerAdapter {
         ChannelFuture channelFuture = ctx.writeAndFlush(responseString);
         try {
             ChannelFuture sync = channelFuture.sync();
-            System.out.println("isdone sending = "+ sync.isDone());
-            System.out.println("was success= "+ sync.isSuccess());
+            LOGGER.fine("isdone sending = " + sync.isDone());
+            LOGGER.fine("was success= " + sync.isSuccess());
         } catch (InterruptedException e) {
-            System.out.println("got interrupted");
+            LOGGER.fine("got interrupted");
             e.printStackTrace();
         }
     }

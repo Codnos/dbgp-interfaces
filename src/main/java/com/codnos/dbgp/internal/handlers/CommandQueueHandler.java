@@ -20,9 +20,10 @@ import com.codnos.dbgp.internal.commands.Command;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Logger;
 
 public class CommandQueueHandler {
-
+    private static final Logger LOGGER = Logger.getLogger(CommandQueueHandler.class.getName());
     private final DBGpServerToClientConnectionHandler outboundConnectionHandler;
     private final BlockingQueue<Command> commandQueue = new LinkedBlockingQueue<Command>();
     private final Thread senderThread = new Thread(new CommandSender());
@@ -49,11 +50,11 @@ public class CommandQueueHandler {
         public void run() {
             do {
                 try {
-                    System.out.println("waiting to take message from queue");
+                    LOGGER.fine("waiting to take message from queue");
                     Command command = commandQueue.take();
-                    System.out.println("got message from queue = " + command.getHandlerKey());
+                    LOGGER.fine("got message from queue = " + command.getHandlerKey());
                     outboundConnectionHandler.writeAndFlush(command);
-                    System.out.println("message from queue sent = " + command.getHandlerKey());
+                    LOGGER.fine("message from queue sent = " + command.getHandlerKey());
                 } catch (InterruptedException e) {
                     stop = true;
                 }

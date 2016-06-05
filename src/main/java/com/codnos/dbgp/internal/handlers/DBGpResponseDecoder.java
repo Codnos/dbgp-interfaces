@@ -22,28 +22,30 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.util.ByteProcessor;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DBGpResponseDecoder extends ByteToMessageDecoder {
+    private static final Logger LOGGER = Logger.getLogger(DBGpResponseDecoder.class.getName());
 
     private static final int NULL_BYTE_SIZE = 1;
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> objects) throws Exception {
         final int length = in.readableBytes();
-        System.out.println("got something from engine ("+length+ " bytes)");
+        LOGGER.fine("got something from engine (" + length + " bytes)");
         int nullPosition = in.forEachByte(ByteProcessor.FIND_NUL);
         int readerIndex = in.readerIndex();
         int numberOfBytes = nullPosition - readerIndex;
-        System.out.println("found nullposition on "+nullPosition+ " and readerIndex is " + readerIndex + " calculated number of bytes " + numberOfBytes);
+        LOGGER.fine("found nullposition on " + nullPosition + " and readerIndex is " + readerIndex + " calculated number of bytes " + numberOfBytes);
         if (numberOfBytes <= 0) {
-            System.out.println("not enough to read, finishing");
+            LOGGER.fine("not enough to read, finishing");
             in.resetReaderIndex();
             return;
         }
         if (nullPosition > length) {
-            System.out.println("have null position further than length, finishing");
+            LOGGER.fine("have null position further than length, finishing");
             in.resetReaderIndex();
             return;
         }
@@ -53,7 +55,7 @@ public class DBGpResponseDecoder extends ByteToMessageDecoder {
         int size = Integer.parseInt(sizeBufAsString);
         int expectedSize = sizeBuf.readableBytes() + NULL_BYTE_SIZE + size + NULL_BYTE_SIZE;
         if (length < expectedSize) {
-            System.out.println("don't have the whole message yet (expected " + expectedSize + "), finishing");
+            LOGGER.fine("don't have the whole message yet (expected " + expectedSize + "), finishing");
             in.resetReaderIndex();
             sizeBuf.release();
             return;

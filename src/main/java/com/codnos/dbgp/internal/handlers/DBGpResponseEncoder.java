@@ -20,9 +20,13 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
+import java.util.logging.Logger;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DBGpResponseEncoder extends MessageToByteEncoder {
+    private static final Logger LOGGER = Logger.getLogger(DBGpResponseEncoder.class.getName());
+
     @Override
     protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf byteBuf) throws Exception {
         String message = (String) msg;
@@ -34,7 +38,7 @@ public class DBGpResponseEncoder extends MessageToByteEncoder {
         initMessageBuffer.writeZero(1);
         initMessageBuffer.writeBytes(initBytes);
         initMessageBuffer.writeZero(1);
-        System.out.println("sending response=" + initMessageBuffer.toString(UTF_8));
+        LOGGER.fine("sending response=" + initMessageBuffer.toString(UTF_8));
         ctx.writeAndFlush(initMessageBuffer);
     }
 }

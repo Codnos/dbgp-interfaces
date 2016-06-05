@@ -23,25 +23,28 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
+import java.util.logging.Logger;
+
 public class DBGpServerToClientConnectionHandler extends ChannelInboundHandlerAdapter {
+    private static final Logger LOGGER = Logger.getLogger(DBGpServerToClientConnectionHandler.class.getName());
     private ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("Got connection from client!");
+        LOGGER.fine("Got connection from client!");
         channelGroup.add(ctx.channel());
         super.channelActive(ctx);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("Client disconnected!");
+        LOGGER.fine("Client disconnected!");
         channelGroup.remove(ctx.channel());
         super.channelInactive(ctx);
     }
 
     public void writeAndFlush(Command command) {
-        System.out.println("got message to send outside " + command.getHandlerKey());
+        LOGGER.fine("got message to send outside " + command.getHandlerKey());
         channelGroup.writeAndFlush(command);
     }
 }
