@@ -20,10 +20,10 @@ import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.api.Status;
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
-import com.codnos.dbgp.internal.handlers.DBGPCommandHandler;
+import com.codnos.dbgp.internal.handlers.DBGpCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
-public final class StatusCommandHandler extends DBGPCommandHandler {
+public final class StatusCommandHandler extends DBGpCommandHandler {
 
     public StatusCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
         super(debuggerEngine, argumentConfiguration);

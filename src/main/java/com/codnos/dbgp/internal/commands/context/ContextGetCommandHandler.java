@@ -20,12 +20,12 @@ import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.api.PropertyValue;
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
-import com.codnos.dbgp.internal.handlers.DBGPCommandHandler;
+import com.codnos.dbgp.internal.handlers.DBGpCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.util.Collection;
 
-public class ContextGetCommandHandler extends DBGPCommandHandler {
+public class ContextGetCommandHandler extends DBGpCommandHandler {
 
     public ContextGetCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
         super(debuggerEngine, argumentConfiguration);

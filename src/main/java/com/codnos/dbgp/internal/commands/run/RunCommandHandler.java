@@ -19,11 +19,11 @@ package com.codnos.dbgp.internal.commands.run;
 import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
-import com.codnos.dbgp.internal.handlers.DBGPCommandHandler;
+import com.codnos.dbgp.internal.handlers.DBGpCommandHandler;
 import com.codnos.dbgp.internal.impl.StatusChangeHandlerFactory;
 import io.netty.channel.ChannelHandlerContext;
 
-public final class RunCommandHandler extends DBGPCommandHandler {
+public final class RunCommandHandler extends DBGpCommandHandler {
 
     private final StatusChangeHandlerFactory statusChangeHandlerFactory;
 

@@ -25,13 +25,13 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import java.util.logging.Logger;
 
-public abstract class DBGPCommandHandler extends ChannelInboundHandlerAdapter {
-    private static final Logger LOGGER = Logger.getLogger(DBGPCommandHandler.class.getName());
+public abstract class DBGpCommandHandler extends ChannelInboundHandlerAdapter {
+    private static final Logger LOGGER = Logger.getLogger(DBGpCommandHandler.class.getName());
 
     private final DebuggerEngine debuggerEngine;
     private final ArgumentConfiguration argumentConfiguration;
 
-    public DBGPCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
+    public DBGpCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
         this.debuggerEngine = debuggerEngine;
         this.argumentConfiguration = argumentConfiguration;
     }

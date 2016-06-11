@@ -23,11 +23,11 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class DBGPInitHandler extends ChannelInboundHandlerAdapter {
+public class DBGpInitHandler extends ChannelInboundHandlerAdapter {
 
     private final Init initMessage;
 
-    public DBGPInitHandler(Init initMessage) {
+    public DBGpInitHandler(Init initMessage) {
         this.initMessage = initMessage;
     }
 

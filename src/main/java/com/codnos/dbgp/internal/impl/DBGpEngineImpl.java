@@ -27,7 +27,7 @@ import com.codnos.dbgp.internal.commands.stack.StackDepthCommandHandler;
 import com.codnos.dbgp.internal.commands.stack.StackGetCommandHandler;
 import com.codnos.dbgp.internal.commands.status.StatusCommandHandler;
 import com.codnos.dbgp.internal.commands.step.StepOverCommandHandler;
-import com.codnos.dbgp.internal.handlers.DBGPInitHandler;
+import com.codnos.dbgp.internal.handlers.DBGpInitHandler;
 import com.codnos.dbgp.internal.handlers.DBGpCommandDecoder;
 import com.codnos.dbgp.internal.handlers.DBGpResponseEncoder;
 import io.netty.bootstrap.Bootstrap;
@@ -78,7 +78,7 @@ public class DBGpEngineImpl implements DBGpEngine {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast(
-                        new DBGPInitHandler(new Init(debuggerEngine)),
+                        new DBGpInitHandler(new Init(debuggerEngine)),
                         new DBGpCommandDecoder(),
                         new DBGpResponseEncoder(),
                         new BreakpointSetCommandHandler(debuggerEngine, argumentConfiguration),
