@@ -19,6 +19,6 @@ package com.codnos.dbgp
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{FlatSpec, Matchers}
 
-class UnitSpec extends FlatSpec with Matchers with MockitoSugar {
+abstract class UnitSpec extends FlatSpec with Matchers with MockitoSugar {
 
 }
