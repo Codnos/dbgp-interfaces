@@ -18,6 +18,8 @@ package com.codnos.dbgp.internal.commands.context;
 
 import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.api.PropertyValue;
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
+import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGPCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -25,8 +27,8 @@ import java.util.Collection;
 
 public class ContextGetCommandHandler extends DBGPCommandHandler {
 
-    public ContextGetCommandHandler(DebuggerEngine debuggerEngine) {
-        super(debuggerEngine);
+    public ContextGetCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
+        super(debuggerEngine, argumentConfiguration);
     }
 
     @Override
@@ -35,10 +37,9 @@ public class ContextGetCommandHandler extends DBGPCommandHandler {
     }
 
     @Override
-    protected void handle(ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) {
-        String[] commandParts = msg.split(" ");
-        String transactionId = commandParts[2];
-        Integer depth = Integer.valueOf(commandParts[4]);
+    protected void handle(ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) {
+        int transactionId = arguments.getInteger("i");
+        Integer depth = arguments.getInteger("d");
         Collection<PropertyValue> variables = debuggerEngine.getVariables(depth);
         StringBuilder variablesXml = new StringBuilder();
         for (PropertyValue variable : variables) {

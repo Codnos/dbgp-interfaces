@@ -21,7 +21,7 @@ import com.codnos.dbgp.internal.commands.status.BreakingOrStoppingStatusHandler;
 import io.netty.channel.ChannelHandlerContext;
 
 public class StatusChangeHandlerFactory {
-    public StatusChangeHandler getInstance(String transactionId, ChannelHandlerContext ctx) {
+    public StatusChangeHandler getInstance(int transactionId, ChannelHandlerContext ctx) {
         return new BreakingOrStoppingStatusHandler(transactionId, ctx);
     }
 }

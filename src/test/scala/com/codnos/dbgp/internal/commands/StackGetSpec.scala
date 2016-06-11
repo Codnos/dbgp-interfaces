@@ -17,6 +17,8 @@
 package com.codnos.dbgp.internal.commands
 
 import com.codnos.dbgp.api.StackFrame
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
+import com.codnos.dbgp.internal.arguments.ArgumentFormat._
 import com.codnos.dbgp.internal.commands.stack.{StackDepthCommand, StackGetCommand, StackGetCommandHandler, StackGetResponse}
 import com.codnos.dbgp.internal.xml.XmlUtil._
 import org.mockito.BDDMockito._
@@ -35,6 +37,7 @@ class StackGetSpec extends CommandSpec {
            cmdbegin="line_number:offset"
            cmdend="line_number:offset"/>
   </response>
+  val argumentConfiguration = configuration.withCommand("stack_get", numeric("i"), numeric("d")).build
 
   "Command" should "have message constructed from the parameters" in {
     val command = new StackGetCommand("456", 345)
@@ -67,7 +70,7 @@ class StackGetSpec extends CommandSpec {
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {
-    val handler = new StackGetCommandHandler(engine)
+    val handler = new StackGetCommandHandler(engine, argumentConfiguration)
     val frame = new StackFrame("file:///home/user/file.xq", 45, "local:functionName()")
     given(engine.getFrame(555)).willReturn(frame)
 

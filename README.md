@@ -8,8 +8,9 @@ TODO:
  - [x] Refactor existing API for consumers so that it's not quirky to construct and doesn't violate a lot of conditions
  - [x] Introduce sync API for IDE
  - [x] Add proper logging with j.u.l
- - [ ] Better handling of command parameter parsing
+ - [x] Better handling of command parameter parsing
  - [ ] Better/systematic handling of xml construction
+ - [ ] Refactor DBGPCommandHandler to return Optional<String> and remove ctx from arguments
  - [ ] Add unit tests for main building blocks
  - [ ] Add missing argument/attribute handling for existing commands/responses
  - [ ] Proper configuration/parameter negotiation

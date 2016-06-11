@@ -16,6 +16,8 @@
 
 package com.codnos.dbgp.internal.commands
 
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
+import com.codnos.dbgp.internal.arguments.ArgumentFormat._
 import com.codnos.dbgp.internal.commands.stack.{StackDepthCommand, StackDepthCommandHandler, StackDepthResponse}
 import com.codnos.dbgp.internal.xml.XmlUtil._
 import org.mockito.BDDMockito._
@@ -27,6 +29,7 @@ class StackDepthSpec extends CommandSpec {
                                 command="stack_depth"
                                 depth="986"
                                 transaction_id="transaction_id"/>
+  val argumentConfiguration = configuration.withCommand("stack_depth", numeric("i")).build
 
   "Command" should "have message constructed from the parameters" in {
     val command = new StackDepthCommand("456")
@@ -57,7 +60,7 @@ class StackDepthSpec extends CommandSpec {
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {
-    val handler = new StackDepthCommandHandler(engine)
+    val handler = new StackDepthCommandHandler(engine, argumentConfiguration)
     given(engine.getStackDepth()).willReturn(643)
 
     handler.channelRead(ctx, "stack_depth -i 456")

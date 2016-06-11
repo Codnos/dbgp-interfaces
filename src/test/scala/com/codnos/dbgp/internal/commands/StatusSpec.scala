@@ -17,6 +17,8 @@
 package com.codnos.dbgp.internal.commands
 
 import com.codnos.dbgp.api.Status
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
+import com.codnos.dbgp.internal.arguments.ArgumentFormat._
 import com.codnos.dbgp.internal.commands.status.{StatusCommand, StatusCommandHandler, StatusResponse}
 import com.codnos.dbgp.internal.xml.XmlUtil._
 import org.mockito.BDDMockito.given
@@ -32,6 +34,7 @@ class StatusSpec extends CommandSpec {
               transaction_id="transaction_id">
       message data
     </response>
+  val argumentConfiguration = configuration.withCommand("status", numeric("i")).build
 
   "Command" should "have message constructed from the parameters" in {
     val command = new StatusCommand("432")
@@ -63,7 +66,7 @@ class StatusSpec extends CommandSpec {
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {
-    val handler = new StatusCommandHandler(engine)
+    val handler = new StatusCommandHandler(engine, argumentConfiguration)
     given(engine.getStatus).willReturn(Status.RUNNING)
 
     handler.channelRead(ctx, "status -i 123")

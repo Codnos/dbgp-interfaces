@@ -17,6 +17,8 @@
 package com.codnos.dbgp.internal.commands
 
 import com.codnos.dbgp.api.Breakpoint
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
+import com.codnos.dbgp.internal.arguments.ArgumentFormat._
 import com.codnos.dbgp.internal.commands.breakpoint.{BreakpointSetCommand, BreakpointSetCommandHandler, BreakpointSetResponse}
 import com.codnos.dbgp.internal.xml.XmlUtil._
 import org.mockito.BDDMockito._
@@ -33,6 +35,7 @@ class BreakpointSetSpec extends CommandSpec {
   val lineNumber = 555
   val fileUri = "file:///home/user/file.xq"
   val originalBreakpoint: Breakpoint = new Breakpoint(fileUri, lineNumber)
+  val argumentConfiguration = configuration.withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n")).build
 
   "Command" should "have message constructed from the parameters" in {
     val command = new BreakpointSetCommand("432", originalBreakpoint)
@@ -64,7 +67,7 @@ class BreakpointSetSpec extends CommandSpec {
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {
-    val handler = new BreakpointSetCommandHandler(engine)
+    val handler = new BreakpointSetCommandHandler(engine, argumentConfiguration)
     val breakpointId = s"${fileUri}@${lineNumber}"
     given(engine.breakpointSet(any())).willReturn(new Breakpoint(originalBreakpoint, breakpointId, "enabled"))
 

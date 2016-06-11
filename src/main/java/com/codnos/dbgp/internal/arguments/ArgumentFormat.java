@@ -16,7 +16,7 @@
 
 package com.codnos.dbgp.internal.arguments;
 
-class ArgumentFormat {
+public class ArgumentFormat {
     private final String name;
     private final ArgumentType argumentType;
 

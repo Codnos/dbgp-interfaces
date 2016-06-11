@@ -22,7 +22,7 @@ import com.codnos.dbgp.internal.commands.status.BreakingOrStoppingStatusHandler
 class BreakingOrStoppingStatusHandlerSpec extends CommandSpec {
 
   "handler" should "not be applicable for not monitored status changes" in {
-    val handler = new BreakingOrStoppingStatusHandler("123", ctx)
+    val handler = new BreakingOrStoppingStatusHandler(123, ctx)
 
     handler.applicableFor(Status.STARTING, Status.RUNNING) shouldBe false
     handler.applicableFor(Status.BREAK, Status.RUNNING) shouldBe false
@@ -30,14 +30,14 @@ class BreakingOrStoppingStatusHandlerSpec extends CommandSpec {
   }
 
   it should "be applicable for monitored status changes" in {
-    val handler = new BreakingOrStoppingStatusHandler("123", ctx)
+    val handler = new BreakingOrStoppingStatusHandler(123, ctx)
 
     handler.applicableFor(Status.RUNNING, Status.BREAK) shouldBe true
     handler.applicableFor(Status.STOPPING, Status.STOPPED) shouldBe true
   }
 
   it should "send the new status out" in {
-    val handler = new BreakingOrStoppingStatusHandler("123", ctx)
+    val handler = new BreakingOrStoppingStatusHandler(123, ctx)
 
     handler.statusChanged(Status.RUNNING, Status.BREAK)
 

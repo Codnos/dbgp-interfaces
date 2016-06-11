@@ -17,16 +17,18 @@
 package com.codnos.dbgp.internal.commands.step;
 
 import com.codnos.dbgp.api.DebuggerEngine;
-import com.codnos.dbgp.internal.impl.StatusChangeHandlerFactory;
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
+import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGPCommandHandler;
+import com.codnos.dbgp.internal.impl.StatusChangeHandlerFactory;
 import io.netty.channel.ChannelHandlerContext;
 
 public final class StepOverCommandHandler extends DBGPCommandHandler {
 
     private final StatusChangeHandlerFactory statusChangeHandlerFactory;
 
-    public StepOverCommandHandler(DebuggerEngine debuggerEngine, StatusChangeHandlerFactory statusChangeHandlerFactory) {
-        super(debuggerEngine);
+    public StepOverCommandHandler(DebuggerEngine debuggerEngine, StatusChangeHandlerFactory statusChangeHandlerFactory, ArgumentConfiguration argumentConfiguration) {
+        super(debuggerEngine, argumentConfiguration);
         this.statusChangeHandlerFactory = statusChangeHandlerFactory;
     }
 
@@ -36,9 +38,8 @@ public final class StepOverCommandHandler extends DBGPCommandHandler {
     }
 
     @Override
-    protected void handle(final ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) throws Exception {
-        String[] commandParts = msg.split(" ");
-        final String transactionId = commandParts[2];
+    protected void handle(final ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) throws Exception {
+        int transactionId = arguments.getInteger("i");
         debuggerEngine.registerStatusChangeHandler(statusChangeHandlerFactory.getInstance(transactionId, ctx));
         debuggerEngine.stepOver();
     }

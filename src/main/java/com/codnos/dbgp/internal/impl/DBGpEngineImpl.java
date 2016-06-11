@@ -18,6 +18,7 @@ package com.codnos.dbgp.internal.impl;
 
 import com.codnos.dbgp.api.DBGpEngine;
 import com.codnos.dbgp.api.DebuggerEngine;
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.commands.Init;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetCommandHandler;
 import com.codnos.dbgp.internal.commands.context.ContextGetCommandHandler;
@@ -37,10 +38,23 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+import static com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder.configuration;
+import static com.codnos.dbgp.internal.arguments.ArgumentFormat.numeric;
+import static com.codnos.dbgp.internal.arguments.ArgumentFormat.string;
+
 public class DBGpEngineImpl implements DBGpEngine {
     private final int port;
     private final DebuggerEngine debuggerEngine;
     private final StatusChangeHandlerFactory statusChangeHandlerFactory;
+    private final ArgumentConfiguration argumentConfiguration = configuration()
+            .withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n"))
+            .withCommand("run", numeric("i"))
+            .withCommand("context_get", numeric("i"), numeric("d"))
+            .withCommand("stack_depth", numeric("i"))
+            .withCommand("stack_get", numeric("i"), numeric("d"))
+            .withCommand("status", numeric("i"))
+            .withCommand("step_over", numeric("i"))
+            .build();
     private EventLoopGroup workerGroup;
 
     public DBGpEngineImpl(int port, DebuggerEngine debuggerEngine, StatusChangeHandlerFactory statusChangeHandlerFactory) {
@@ -67,13 +81,13 @@ public class DBGpEngineImpl implements DBGpEngine {
                         new DBGPInitHandler(new Init(debuggerEngine)),
                         new DBGpCommandDecoder(),
                         new DBGpResponseEncoder(),
-                        new BreakpointSetCommandHandler(debuggerEngine),
-                        new StackDepthCommandHandler(debuggerEngine),
-                        new RunCommandHandler(debuggerEngine, statusChangeHandlerFactory),
-                        new StepOverCommandHandler(debuggerEngine, statusChangeHandlerFactory),
-                        new StackGetCommandHandler(debuggerEngine),
-                        new ContextGetCommandHandler(debuggerEngine),
-                        new StatusCommandHandler(debuggerEngine)
+                        new BreakpointSetCommandHandler(debuggerEngine, argumentConfiguration),
+                        new StackDepthCommandHandler(debuggerEngine, argumentConfiguration),
+                        new RunCommandHandler(debuggerEngine, statusChangeHandlerFactory, argumentConfiguration),
+                        new StepOverCommandHandler(debuggerEngine, statusChangeHandlerFactory, argumentConfiguration),
+                        new StackGetCommandHandler(debuggerEngine, argumentConfiguration),
+                        new ContextGetCommandHandler(debuggerEngine, argumentConfiguration),
+                        new StatusCommandHandler(debuggerEngine, argumentConfiguration)
                 );
             }
         });

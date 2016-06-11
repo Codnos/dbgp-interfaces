@@ -17,6 +17,8 @@
 package com.codnos.dbgp.internal.handlers;
 
 import com.codnos.dbgp.api.DebuggerEngine;
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
+import com.codnos.dbgp.internal.arguments.Arguments;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -27,9 +29,11 @@ public abstract class DBGPCommandHandler extends ChannelInboundHandlerAdapter {
     private static final Logger LOGGER = Logger.getLogger(DBGPCommandHandler.class.getName());
 
     private final DebuggerEngine debuggerEngine;
+    private final ArgumentConfiguration argumentConfiguration;
 
-    public DBGPCommandHandler(DebuggerEngine debuggerEngine) {
+    public DBGPCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
         this.debuggerEngine = debuggerEngine;
+        this.argumentConfiguration = argumentConfiguration;
     }
 
     @Override
@@ -40,7 +44,8 @@ public abstract class DBGPCommandHandler extends ChannelInboundHandlerAdapter {
         boolean canHandle = canHandle(in);
         LOGGER.fine("After checking we the result was:" + canHandle);
         if (canHandle) {
-            handle(ctx, in, debuggerEngine);
+            Arguments arguments = argumentConfiguration.buildArgumentsFrom(in);
+            handle(ctx, arguments, debuggerEngine);
         } else {
             super.channelRead(ctx, msg);
         }
@@ -66,5 +71,5 @@ public abstract class DBGPCommandHandler extends ChannelInboundHandlerAdapter {
 
     protected abstract boolean canHandle(String msg);
 
-    protected abstract void handle(ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) throws Exception;
+    protected abstract void handle(ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) throws Exception;
 }

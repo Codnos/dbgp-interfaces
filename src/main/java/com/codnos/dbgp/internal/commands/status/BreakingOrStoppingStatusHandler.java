@@ -24,10 +24,10 @@ import java.util.logging.Logger;
 
 public class BreakingOrStoppingStatusHandler implements StatusChangeHandler {
     private static final Logger LOGGER = Logger.getLogger(BreakingOrStoppingStatusHandler.class.getName());
-    private final String transactionId;
+    private final int transactionId;
     private final ChannelHandlerContext ctx;
 
-    public BreakingOrStoppingStatusHandler(String transactionId, ChannelHandlerContext ctx) {
+    public BreakingOrStoppingStatusHandler(int transactionId, ChannelHandlerContext ctx) {
         this.transactionId = transactionId;
         this.ctx = ctx;
     }

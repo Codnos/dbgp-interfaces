@@ -250,7 +250,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
   class SpyingStatusChangeHandlerFactory() extends StatusChangeHandlerFactory {
     var lastStatusChangeHandler: StatusChangeHandler = null
 
-    override def getInstance(transactionId: String, ctx: ChannelHandlerContext): StatusChangeHandler = {
+    override def getInstance(transactionId: Int, ctx: ChannelHandlerContext): StatusChangeHandler = {
       lastStatusChangeHandler = super.getInstance(transactionId, ctx)
       lastStatusChangeHandler
     }

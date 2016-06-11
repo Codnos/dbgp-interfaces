@@ -17,13 +17,15 @@
 package com.codnos.dbgp.internal.commands.stack;
 
 import com.codnos.dbgp.api.DebuggerEngine;
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
+import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGPCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
 public class StackDepthCommandHandler extends DBGPCommandHandler {
 
-    public StackDepthCommandHandler(DebuggerEngine debuggerEngine) {
-        super(debuggerEngine);
+    public StackDepthCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
+        super(debuggerEngine, argumentConfiguration);
     }
 
     @Override
@@ -32,9 +34,8 @@ public class StackDepthCommandHandler extends DBGPCommandHandler {
     }
 
     @Override
-    protected void handle(ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) {
-        String[] commandParts = msg.split(" ");
-        String transactionId = commandParts[2];
+    protected void handle(ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) {
+        int transactionId = arguments.getInteger("i");
         Integer depth = debuggerEngine.getStackDepth();
         String responseString = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" command=\"stack_depth\"\n" +
                 "          transaction_id=\"" + transactionId + "\"\n" +

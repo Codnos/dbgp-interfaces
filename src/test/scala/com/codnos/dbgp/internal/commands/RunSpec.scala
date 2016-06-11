@@ -17,12 +17,16 @@
 package com.codnos.dbgp.internal.commands
 
 import com.codnos.dbgp.api.StatusChangeHandler
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
+import com.codnos.dbgp.internal.arguments.ArgumentFormat._
 import com.codnos.dbgp.internal.commands.run.{RunCommand, RunCommandHandler}
 import com.codnos.dbgp.internal.impl.StatusChangeHandlerFactory
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 
 class RunSpec extends CommandSpec {
+
+  val argumentConfiguration = configuration.withCommand("run", numeric("i")).build
 
   "Command" should "have message constructed from the parameters" in {
     val command = new RunCommand("456")
@@ -35,7 +39,7 @@ class RunSpec extends CommandSpec {
   }
 
   "CommandHandler" should "register status change handler and run" in {
-    val handler = new RunCommandHandler(engine, new StatusChangeHandlerFactory)
+    val handler = new RunCommandHandler(engine, new StatusChangeHandlerFactory, argumentConfiguration)
 
     handler.channelRead(ctx, "run -i 456")
 

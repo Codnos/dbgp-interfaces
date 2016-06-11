@@ -18,13 +18,15 @@ package com.codnos.dbgp.internal.commands.breakpoint;
 
 import com.codnos.dbgp.api.Breakpoint;
 import com.codnos.dbgp.api.DebuggerEngine;
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
+import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGPCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
 public class BreakpointSetCommandHandler extends DBGPCommandHandler {
 
-    public BreakpointSetCommandHandler(DebuggerEngine debuggerEngine) {
-        super(debuggerEngine);
+    public BreakpointSetCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
+        super(debuggerEngine, argumentConfiguration);
     }
 
     @Override
@@ -33,13 +35,12 @@ public class BreakpointSetCommandHandler extends DBGPCommandHandler {
     }
 
     @Override
-    protected void handle(ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) {
-        String[] commandParts = msg.split(" ");
-        String transactionId = commandParts[2];
-        String file = commandParts[6];
-        String line = commandParts[8];
+    protected void handle(ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) {
+        int transactionId = arguments.getInteger("i");
+        String file = arguments.getString("f");
+        int line = arguments.getInteger("n");
         String breakPointId = file + "@" + line;
-        debuggerEngine.breakpointSet(new Breakpoint(file, Integer.valueOf(line)));
+        debuggerEngine.breakpointSet(new Breakpoint(file, line));
         String responseString = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" command=\"breakpoint_set\"\n" +
                 "          transaction_id=\"" + transactionId + "\"\n" +
                 "          state=\"enabled\"\n" +

@@ -17,12 +17,16 @@
 package com.codnos.dbgp.internal.commands
 
 import com.codnos.dbgp.api.StatusChangeHandler
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
+import com.codnos.dbgp.internal.arguments.ArgumentFormat._
 import com.codnos.dbgp.internal.commands.step.{StepOverCommand, StepOverCommandHandler}
 import com.codnos.dbgp.internal.impl.StatusChangeHandlerFactory
 import org.mockito.Matchers.any
 import org.mockito.Mockito.verify
 
 class StepOverSpec extends CommandSpec {
+
+  val argumentConfiguration = configuration.withCommand("step_over", numeric("i")).build
 
   "Command" should "have message constructed from the parameters" in {
     val command = new StepOverCommand("456")
@@ -35,7 +39,7 @@ class StepOverSpec extends CommandSpec {
   }
 
   "CommandHandler" should "register status change handler and step over" in {
-    val handler = new StepOverCommandHandler(engine, new StatusChangeHandlerFactory)
+    val handler = new StepOverCommandHandler(engine, new StatusChangeHandlerFactory, argumentConfiguration)
 
     handler.channelRead(ctx, "step_over -i 456")
 

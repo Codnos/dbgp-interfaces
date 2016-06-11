@@ -18,7 +18,7 @@ package com.codnos.dbgp.internal.arguments;
 
 import java.util.List;
 
-class Arguments {
+public class Arguments {
     public static final String ARGUMENT_PREFIX = "-";
     private final List<String> arguments;
     private final List<ArgumentFormat> argumentFormats;

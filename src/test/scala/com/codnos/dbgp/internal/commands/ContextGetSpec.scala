@@ -19,6 +19,8 @@ package com.codnos.dbgp.internal.commands
 import java.util.Arrays.asList
 
 import com.codnos.dbgp.api.PropertyValue
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
+import com.codnos.dbgp.internal.arguments.ArgumentFormat._
 import com.codnos.dbgp.internal.commands.context.{ContextGetCommand, ContextGetCommandHandler, ContextGetResponse}
 import com.codnos.dbgp.internal.xml.XmlUtil._
 import org.mockito.BDDMockito.given
@@ -42,6 +44,7 @@ class ContextGetSpec extends CommandSpec {
       children="0"
       encoding="none">...encoded Value Data...</property>
     </response>
+  val argumentConfiguration = configuration.withCommand("context_get", numeric("i"), numeric("d")).build
 
   "Command" should "have message constructed from the parameters" in {
     val command = new ContextGetCommand("432", 6)
@@ -77,7 +80,7 @@ class ContextGetSpec extends CommandSpec {
   }
 
   "CommandHandler" should "respond with variables from given stack depth" in {
-    val handler = new ContextGetCommandHandler(engine)
+    val handler = new ContextGetCommandHandler(engine, argumentConfiguration)
     val variables = asList(new PropertyValue("name", "xs:double", "1.0"))
     given(engine.getVariables(2)).willReturn(variables)
 

@@ -18,13 +18,15 @@ package com.codnos.dbgp.internal.commands.status;
 
 import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.api.Status;
+import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
+import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGPCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
 public final class StatusCommandHandler extends DBGPCommandHandler {
 
-    public StatusCommandHandler(DebuggerEngine debuggerEngine) {
-        super(debuggerEngine);
+    public StatusCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
+        super(debuggerEngine, argumentConfiguration);
     }
 
     @Override
@@ -33,9 +35,8 @@ public final class StatusCommandHandler extends DBGPCommandHandler {
     }
 
     @Override
-    protected void handle(ChannelHandlerContext ctx, String msg, DebuggerEngine debuggerEngine) {
-        String[] commandParts = msg.split(" ");
-        String transactionId = commandParts[2];
+    protected void handle(ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) {
+        int transactionId = arguments.getInteger("i");
         Status status = debuggerEngine.getStatus();
         String responseString = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" command=\"status\"\n" +
                 "          transaction_id=\"" + transactionId + "\"\n" +
