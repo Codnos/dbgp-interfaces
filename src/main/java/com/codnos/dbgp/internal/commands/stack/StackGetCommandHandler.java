@@ -29,7 +29,7 @@ public class StackGetCommandHandler extends DBGPCommandHandler {
 
     @Override
     protected boolean canHandle(String msg) {
-        return msg.contains("stack_get");
+        return msg.startsWith("stack_get");
     }
 
     @Override

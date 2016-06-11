@@ -32,7 +32,7 @@ public final class RunCommandHandler extends DBGPCommandHandler {
 
     @Override
     protected boolean canHandle(String msg) {
-        return msg.contains("run");
+        return msg.startsWith("run");
     }
 
     @Override

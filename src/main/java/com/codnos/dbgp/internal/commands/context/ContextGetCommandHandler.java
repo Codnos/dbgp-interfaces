@@ -31,7 +31,7 @@ public class ContextGetCommandHandler extends DBGPCommandHandler {
 
     @Override
     protected boolean canHandle(String msg) {
-        return msg.contains("context_get");
+        return msg.startsWith("context_get");
     }
 
     @Override

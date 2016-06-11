@@ -28,7 +28,7 @@ public class StackDepthCommandHandler extends DBGPCommandHandler {
 
     @Override
     protected boolean canHandle(String msg) {
-        return msg.contains("stack_depth");
+        return msg.startsWith("stack_depth");
     }
 
     @Override

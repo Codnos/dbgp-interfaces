@@ -29,7 +29,7 @@ public class BreakpointSetCommandHandler extends DBGPCommandHandler {
 
     @Override
     protected boolean canHandle(String msg) {
-        return msg.contains("breakpoint_set");
+        return msg.startsWith("breakpoint_set");
     }
 
     @Override

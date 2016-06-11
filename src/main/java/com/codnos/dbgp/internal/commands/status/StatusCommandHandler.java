@@ -29,7 +29,7 @@ public final class StatusCommandHandler extends DBGPCommandHandler {
 
     @Override
     protected boolean canHandle(String msg) {
-        return msg.contains("status");
+        return msg.startsWith("status");
     }
 
     @Override

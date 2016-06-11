@@ -32,7 +32,7 @@ public final class StepOverCommandHandler extends DBGPCommandHandler {
 
     @Override
     protected boolean canHandle(String msg) {
-        return msg.contains("step_over");
+        return msg.startsWith("step_over");
     }
 
     @Override
