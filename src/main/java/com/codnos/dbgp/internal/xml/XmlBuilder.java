@@ -39,6 +39,16 @@ public class XmlBuilder {
         return this;
     }
 
+    public XmlBuilder a(String attributeName, int value) {
+        this.attributes.add(new Attribute(attributeName, String.valueOf(value)));
+        return this;
+    }
+
+    public XmlBuilder a(String attributeName, double value) {
+        this.attributes.add(new Attribute(attributeName, String.valueOf(value)));
+        return this;
+    }
+
     public XmlBuilder e(XmlBuilder elementBuilder) {
         this.elements.add(elementBuilder.asString());
         return this;

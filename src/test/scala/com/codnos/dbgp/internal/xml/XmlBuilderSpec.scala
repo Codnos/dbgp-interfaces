@@ -67,6 +67,17 @@ class XmlBuilderSpec extends UnitSpec {
     assertXmlElementsAreEqual(expectedXml, xml)
   }
 
+  "it" should "construct root element with numeric attributes" in {
+    val expectedXml = <document_root xmlns="urn:debugger_protocol_v1" abc="123" def="10.1"/>
+
+    val xml = e("document_root", "urn:debugger_protocol_v1")
+      .a("abc", 123)
+      .a("def", 10.1)
+      .asString()
+
+    assertXmlElementsAreEqual(expectedXml, xml)
+  }
+
 
   def assertXmlElementsAreEqual(expectedXml: Elem, actualXml: String): Unit = {
     val comparison = DiffBuilder.compare(Input.from(expectedXml.toString()))
