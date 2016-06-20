@@ -32,7 +32,7 @@ class XmlBuilderSpec extends UnitSpec {
     assertXmlElementsAreEqual(expectedXml, xml)
   }
 
-  "it" should "construct root element with default namespace" in {
+  it should "construct root element with default namespace" in {
     val expectedXml = <document_root xmlns="urn:debugger_protocol_v1"/>
 
     val xml = e("document_root", "urn:debugger_protocol_v1").asString()
@@ -40,7 +40,7 @@ class XmlBuilderSpec extends UnitSpec {
     assertXmlElementsAreEqual(expectedXml, xml)
   }
 
-  "it" should "construct root element with attributes" in {
+  it should "construct root element with attributes" in {
     val expectedXml = <document_root xmlns="urn:debugger_protocol_v1" abc="value123" def="10.1"/>
 
     val xml = e("document_root", "urn:debugger_protocol_v1")
@@ -51,7 +51,7 @@ class XmlBuilderSpec extends UnitSpec {
     assertXmlElementsAreEqual(expectedXml, xml)
   }
 
-  "it" should "construct root element with inner elements" in {
+  it should "construct root element with inner elements" in {
     val expectedXml = <document_root xmlns="urn:debugger_protocol_v1" abc="value123" def="10.1">
       <inner/>
       <second some="value"/>
@@ -67,7 +67,7 @@ class XmlBuilderSpec extends UnitSpec {
     assertXmlElementsAreEqual(expectedXml, xml)
   }
 
-  "it" should "construct root element with numeric attributes" in {
+  it should "construct root element with numeric attributes" in {
     val expectedXml = <document_root xmlns="urn:debugger_protocol_v1" abc="123" def="10.1"/>
 
     val xml = e("document_root", "urn:debugger_protocol_v1")
@@ -78,6 +78,15 @@ class XmlBuilderSpec extends UnitSpec {
     assertXmlElementsAreEqual(expectedXml, xml)
   }
 
+  it should "construct element with body content" in {
+    val expectedXml = <document_root xmlns="urn:debugger_protocol_v1">my body content</document_root>
+
+    val xml = e("document_root", "urn:debugger_protocol_v1")
+      .b("my body content")
+      .asString()
+
+    assertXmlElementsAreEqual(expectedXml, xml)
+  }
 
   def assertXmlElementsAreEqual(expectedXml: Elem, actualXml: String): Unit = {
     val comparison = DiffBuilder.compare(Input.from(expectedXml.toString()))

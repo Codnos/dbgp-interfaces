@@ -25,6 +25,7 @@ public class XmlBuilder {
     private final String defaultElementNamespace;
     private final List<Attribute> attributes = new ArrayList<>();
     private final List<String> elements = new ArrayList<>();
+    private String body;
 
     public static XmlBuilder e(String elementName) {
         return new XmlBuilder(elementName);
@@ -54,6 +55,11 @@ public class XmlBuilder {
         return this;
     }
 
+    public XmlBuilder b(String body) {
+        this.body = body;
+        return this;
+    }
+
     private XmlBuilder(String elementName) {
         this.elementName = elementName;
         this.defaultElementNamespace = DEFAULT_NAMESPACE;
@@ -71,14 +77,21 @@ public class XmlBuilder {
         xml.append(elementName);
         xml.append(namespace);
         appendAttributes(xml);
-        if (elements.size() > 0) {
+        if (elements.size() > 0 || body != null) {
             closeTagOpening(xml);
             appendElements(xml);
+            appendBody(xml);
             closeNonEmptyTag(xml);
         } else {
             closeEmptyTag(xml);
         }
         return xml.toString();
+    }
+
+    private void appendBody(StringBuilder xml) {
+        if (body != null) {
+            xml.append(body);
+        }
     }
 
     private void closeNonEmptyTag(StringBuilder xml) {
