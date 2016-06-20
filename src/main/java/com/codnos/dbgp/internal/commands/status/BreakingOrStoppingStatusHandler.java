@@ -18,7 +18,7 @@ package com.codnos.dbgp.internal.commands.status;
 
 import com.codnos.dbgp.api.Status;
 import com.codnos.dbgp.api.StatusChangeHandler;
-import io.netty.channel.ChannelHandlerContext;
+import com.codnos.dbgp.internal.handlers.ResponseSender;
 
 import java.util.logging.Logger;
 
@@ -27,11 +27,11 @@ import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
 public class BreakingOrStoppingStatusHandler implements StatusChangeHandler {
     private static final Logger LOGGER = Logger.getLogger(BreakingOrStoppingStatusHandler.class.getName());
     private final int transactionId;
-    private final ChannelHandlerContext ctx;
+    private final ResponseSender responseSender;
 
-    public BreakingOrStoppingStatusHandler(int transactionId, ChannelHandlerContext ctx) {
+    public BreakingOrStoppingStatusHandler(int transactionId, ResponseSender responseSender) {
         this.transactionId = transactionId;
-        this.ctx = ctx;
+        this.responseSender = responseSender;
     }
 
     @Override
@@ -43,8 +43,7 @@ public class BreakingOrStoppingStatusHandler implements StatusChangeHandler {
                 .a("reason", "ok")
                 .asString();
         LOGGER.fine("sending message after changed status=" + xml);
-        LOGGER.fine("in ctx = " + ctx);
-        ctx.writeAndFlush(xml);
+        responseSender.send(xml);
     }
 
     @Override

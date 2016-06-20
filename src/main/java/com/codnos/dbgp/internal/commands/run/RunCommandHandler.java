@@ -19,11 +19,11 @@ package com.codnos.dbgp.internal.commands.run;
 import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
-import com.codnos.dbgp.internal.handlers.DBGpCommandHandler;
+import com.codnos.dbgp.internal.handlers.DBGpContinuationCommandHandler;
+import com.codnos.dbgp.internal.handlers.ResponseSender;
 import com.codnos.dbgp.internal.impl.StatusChangeHandlerFactory;
-import io.netty.channel.ChannelHandlerContext;
 
-public final class RunCommandHandler extends DBGpCommandHandler {
+public final class RunCommandHandler extends DBGpContinuationCommandHandler {
 
     private final StatusChangeHandlerFactory statusChangeHandlerFactory;
 
@@ -38,9 +38,9 @@ public final class RunCommandHandler extends DBGpCommandHandler {
     }
 
     @Override
-    protected void handle(final ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) throws Exception {
+    protected void handle(Arguments arguments, DebuggerEngine debuggerEngine, ResponseSender responseSender) throws Exception {
         int transactionId = arguments.getInteger("i");
-        debuggerEngine.registerStatusChangeHandler(statusChangeHandlerFactory.getInstance(transactionId, ctx));
+        debuggerEngine.registerStatusChangeHandler(statusChangeHandlerFactory.getInstance(transactionId, responseSender));
         debuggerEngine.run();
     }
 }

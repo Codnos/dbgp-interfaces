@@ -10,7 +10,7 @@ TODO:
  - [x] Add proper logging with j.u.l
  - [x] Better handling of command parameter parsing
  - [x] Better/systematic handling of xml construction
- - [ ] Refactor DBGPCommandHandler to return Optional<String> and remove ctx from arguments
+ - [x] Refactor DBGPCommandHandler to return Optional<String> and remove ctx from arguments
  - [ ] Add unit tests for main building blocks
  - [ ] Add missing argument/attribute handling for existing commands/responses
  - [ ] Proper configuration/parameter negotiation

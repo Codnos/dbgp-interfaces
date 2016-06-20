@@ -22,7 +22,7 @@ import com.codnos.dbgp.internal.commands.status.BreakingOrStoppingStatusHandler
 class BreakingOrStoppingStatusHandlerSpec extends CommandSpec {
 
   "handler" should "not be applicable for not monitored status changes" in {
-    val handler = new BreakingOrStoppingStatusHandler(123, ctx)
+    val handler = new BreakingOrStoppingStatusHandler(123, responseSender)
 
     handler.applicableFor(Status.STARTING, Status.RUNNING) shouldBe false
     handler.applicableFor(Status.BREAK, Status.RUNNING) shouldBe false
@@ -30,14 +30,14 @@ class BreakingOrStoppingStatusHandlerSpec extends CommandSpec {
   }
 
   it should "be applicable for monitored status changes" in {
-    val handler = new BreakingOrStoppingStatusHandler(123, ctx)
+    val handler = new BreakingOrStoppingStatusHandler(123, responseSender)
 
     handler.applicableFor(Status.RUNNING, Status.BREAK) shouldBe true
     handler.applicableFor(Status.STOPPING, Status.STOPPED) shouldBe true
   }
 
   it should "send the new status out" in {
-    val handler = new BreakingOrStoppingStatusHandler(123, ctx)
+    val handler = new BreakingOrStoppingStatusHandler(123, responseSender)
 
     handler.statusChanged(Status.RUNNING, Status.BREAK)
 
@@ -45,6 +45,6 @@ class BreakingOrStoppingStatusHandlerSpec extends CommandSpec {
     val expectedResponse = <response xmlns="urn:debugger_protocol_v1" xmlns:xdebug="http://xdebug.org/dbgp/xdebug" transaction_id="123" command="status"
                                      status="break"
                                      reason="ok"/>
-    assertReceived(expectedResponse)
+    assertReceivedViaResponseSender(expectedResponse)
   }
 }

@@ -20,13 +20,12 @@ import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.api.StackFrame;
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
-import com.codnos.dbgp.internal.handlers.DBGpCommandHandler;
+import com.codnos.dbgp.internal.handlers.DBGpRegularCommandHandler;
 import com.codnos.dbgp.internal.xml.XmlBuilder;
-import io.netty.channel.ChannelHandlerContext;
 
 import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
 
-public class StackGetCommandHandler extends DBGpCommandHandler {
+public class StackGetCommandHandler extends DBGpRegularCommandHandler {
 
     public StackGetCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
         super(debuggerEngine, argumentConfiguration);
@@ -38,7 +37,7 @@ public class StackGetCommandHandler extends DBGpCommandHandler {
     }
 
     @Override
-    protected void handle(ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) {
+    protected String handle(Arguments arguments, DebuggerEngine debuggerEngine) {
         int transactionId = arguments.getInteger("i");
         Integer depth = arguments.getInteger("d");
         StackFrame frame = debuggerEngine.getFrame(depth);
@@ -50,11 +49,10 @@ public class StackGetCommandHandler extends DBGpCommandHandler {
         if (frame.getWhere() != null) {
             stack.a("where", frame.getWhere());
         }
-        String xml = e("response", "urn:debugger_protocol_v1")
+        return e("response", "urn:debugger_protocol_v1")
                 .a("command", "stack_get")
                 .a("transaction_id", transactionId)
                 .e(stack)
                 .asString();
-        sendBackResponse(ctx, xml);
     }
 }

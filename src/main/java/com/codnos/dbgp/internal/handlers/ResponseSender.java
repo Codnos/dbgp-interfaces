@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.internal.impl;
+package com.codnos.dbgp.internal.handlers;
 
-import com.codnos.dbgp.api.StatusChangeHandler;
-import com.codnos.dbgp.internal.commands.status.BreakingOrStoppingStatusHandler;
-import com.codnos.dbgp.internal.handlers.ResponseSender;
-
-public class StatusChangeHandlerFactory {
-    public StatusChangeHandler getInstance(int transactionId, ResponseSender responseSender) {
-        return new BreakingOrStoppingStatusHandler(transactionId, responseSender);
-    }
+public interface ResponseSender {
+    void send(String response);
 }

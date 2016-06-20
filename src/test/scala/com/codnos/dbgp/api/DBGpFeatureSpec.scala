@@ -20,8 +20,8 @@ import java.util
 
 import com.codnos.dbgp.internal.impl.StatusChangeHandlerFactory
 import com.codnos.dbgp.AwaitilitySupport
+import com.codnos.dbgp.internal.handlers.ResponseSender
 import com.jayway.awaitility.Awaitility._
-import io.netty.channel.ChannelHandlerContext
 import org.hamcrest.Matchers._
 import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
@@ -250,8 +250,8 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
   class SpyingStatusChangeHandlerFactory() extends StatusChangeHandlerFactory {
     var lastStatusChangeHandler: StatusChangeHandler = null
 
-    override def getInstance(transactionId: Int, ctx: ChannelHandlerContext): StatusChangeHandler = {
-      lastStatusChangeHandler = super.getInstance(transactionId, ctx)
+    override def getInstance(transactionId: Int, responseSender: ResponseSender): StatusChangeHandler = {
+      lastStatusChangeHandler = super.getInstance(transactionId, responseSender)
       lastStatusChangeHandler
     }
   }

@@ -20,15 +20,12 @@ import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.api.PropertyValue;
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
-import com.codnos.dbgp.internal.handlers.DBGpCommandHandler;
+import com.codnos.dbgp.internal.handlers.DBGpRegularCommandHandler;
 import com.codnos.dbgp.internal.xml.XmlBuilder;
-import io.netty.channel.ChannelHandlerContext;
-
-import java.util.Collection;
 
 import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
 
-public class ContextGetCommandHandler extends DBGpCommandHandler {
+public class ContextGetCommandHandler extends DBGpRegularCommandHandler {
 
     public ContextGetCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
         super(debuggerEngine, argumentConfiguration);
@@ -40,7 +37,7 @@ public class ContextGetCommandHandler extends DBGpCommandHandler {
     }
 
     @Override
-    protected void handle(ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) {
+    protected String handle(Arguments arguments, DebuggerEngine debuggerEngine) {
         int transactionId = arguments.getInteger("i");
         Integer depth = arguments.getInteger("d");
         XmlBuilder response = e("response", "urn:debugger_protocol_v1")
@@ -55,6 +52,6 @@ public class ContextGetCommandHandler extends DBGpCommandHandler {
                     .b(variable.getValue())
             );
         }
-        sendBackResponse(ctx, response.asString());
+        return response.asString();
     }
 }

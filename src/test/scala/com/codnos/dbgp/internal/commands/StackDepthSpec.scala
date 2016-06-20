@@ -61,7 +61,7 @@ class StackDepthSpec extends CommandSpec {
 
   "CommandHandler" should "respond with variables from given stack depth" in {
     val handler = new StackDepthCommandHandler(engine, argumentConfiguration)
-    given(engine.getStackDepth()).willReturn(643)
+    given(engine.getStackDepth).willReturn(643)
 
     handler.channelRead(ctx, "stack_depth -i 456")
 

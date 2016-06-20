@@ -20,12 +20,11 @@ import com.codnos.dbgp.api.Breakpoint;
 import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
-import com.codnos.dbgp.internal.handlers.DBGpCommandHandler;
-import io.netty.channel.ChannelHandlerContext;
+import com.codnos.dbgp.internal.handlers.DBGpRegularCommandHandler;
 
 import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
 
-public class BreakpointSetCommandHandler extends DBGpCommandHandler {
+public class BreakpointSetCommandHandler extends DBGpRegularCommandHandler {
 
     public BreakpointSetCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
         super(debuggerEngine, argumentConfiguration);
@@ -37,18 +36,17 @@ public class BreakpointSetCommandHandler extends DBGpCommandHandler {
     }
 
     @Override
-    protected void handle(ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) {
+    protected String handle(Arguments arguments, DebuggerEngine debuggerEngine) {
         int transactionId = arguments.getInteger("i");
         String file = arguments.getString("f");
         int line = arguments.getInteger("n");
         String breakPointId = file + "@" + line;
         debuggerEngine.breakpointSet(new Breakpoint(file, line));
-        String xml = e("response", "urn:debugger_protocol_v1")
+        return e("response", "urn:debugger_protocol_v1")
                 .a("command", "breakpoint_set")
                 .a("transaction_id", transactionId)
                 .a("state", "enabled")
                 .a("id", breakPointId)
                 .asString();
-       sendBackResponse(ctx, xml);
     }
 }

@@ -18,6 +18,7 @@ package com.codnos.dbgp.internal.commands
 
 import com.codnos.dbgp.UnitSpec
 import com.codnos.dbgp.api.DebuggerEngine
+import com.codnos.dbgp.internal.handlers.ResponseSender
 import io.netty.channel.{ChannelFuture, ChannelHandlerContext}
 import org.mockito.ArgumentCaptor
 import org.mockito.BDDMockito._
@@ -37,10 +38,18 @@ abstract class CommandSpec extends UnitSpec {
 
   val ctx = mock[ChannelHandlerContext]
   val channelFuture = mock[ChannelFuture]
+  val responseSender = mock[ResponseSender]
   val engine = mock[DebuggerEngine]
 
   given(channelFuture.sync()).willReturn(channelFuture)
   given(ctx.writeAndFlush(any())).willReturn(channelFuture)
+
+  def assertReceivedViaResponseSender(expectedResponse: Elem): Unit = {
+    val captor = ArgumentCaptor.forClass(classOf[String])
+    verify(responseSender).send(captor.capture())
+    val response = XML.loadString(captor.getValue)
+    assertXmlElementsAreEqual(expectedResponse, response)
+  }
 
   def assertReceived(expectedResponse: Elem): Unit = {
     val captor = ArgumentCaptor.forClass(classOf[String])
