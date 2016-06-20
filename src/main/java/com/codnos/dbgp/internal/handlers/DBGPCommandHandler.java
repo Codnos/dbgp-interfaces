@@ -19,7 +19,6 @@ package com.codnos.dbgp.internal.handlers;
 import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -28,8 +27,8 @@ import java.util.logging.Logger;
 public abstract class DBGpCommandHandler extends ChannelInboundHandlerAdapter {
     private static final Logger LOGGER = Logger.getLogger(DBGpCommandHandler.class.getName());
 
-    private final DebuggerEngine debuggerEngine;
-    private final ArgumentConfiguration argumentConfiguration;
+    final DebuggerEngine debuggerEngine;
+    final ArgumentConfiguration argumentConfiguration;
 
     public DBGpCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
         this.debuggerEngine = debuggerEngine;
@@ -55,18 +54,6 @@ public abstract class DBGpCommandHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
         ctx.close();
-    }
-
-    public void sendBackResponse(ChannelHandlerContext ctx, String responseString) {
-        ChannelFuture channelFuture = ctx.writeAndFlush(responseString);
-        try {
-            ChannelFuture sync = channelFuture.sync();
-            LOGGER.fine("isdone sending = " + sync.isDone());
-            LOGGER.fine("was success= " + sync.isSuccess());
-        } catch (InterruptedException e) {
-            LOGGER.fine("got interrupted");
-            e.printStackTrace();
-        }
     }
 
     protected abstract boolean canHandle(String msg);

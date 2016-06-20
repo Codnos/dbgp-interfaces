@@ -17,3 +17,5 @@ TODO:
  - [ ] Add additional protocol elements
  - [ ] Introduce async API for IDE
  - [ ] Add proper JavaDoc and examples
+ - [ ] Functional tests using PHP
+ - [ ] Functional tests using eXistDB
