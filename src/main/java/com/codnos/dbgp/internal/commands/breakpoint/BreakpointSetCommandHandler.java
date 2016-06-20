@@ -23,6 +23,8 @@ import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGpCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
+import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
+
 public class BreakpointSetCommandHandler extends DBGpCommandHandler {
 
     public BreakpointSetCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
@@ -41,10 +43,12 @@ public class BreakpointSetCommandHandler extends DBGpCommandHandler {
         int line = arguments.getInteger("n");
         String breakPointId = file + "@" + line;
         debuggerEngine.breakpointSet(new Breakpoint(file, line));
-        String responseString = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" command=\"breakpoint_set\"\n" +
-                "          transaction_id=\"" + transactionId + "\"\n" +
-                "          state=\"enabled\"\n" +
-                "          id=\"" + breakPointId + "\"/>";
-       sendBackResponse(ctx, responseString);
+        String xml = e("response", "urn:debugger_protocol_v1")
+                .a("command", "breakpoint_set")
+                .a("transaction_id", transactionId)
+                .a("state", "enabled")
+                .a("id", breakPointId)
+                .asString();
+       sendBackResponse(ctx, xml);
     }
 }

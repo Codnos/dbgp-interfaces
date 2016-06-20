@@ -22,6 +22,8 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.util.logging.Logger;
 
+import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
+
 public class BreakingOrStoppingStatusHandler implements StatusChangeHandler {
     private static final Logger LOGGER = Logger.getLogger(BreakingOrStoppingStatusHandler.class.getName());
     private final int transactionId;
@@ -34,14 +36,15 @@ public class BreakingOrStoppingStatusHandler implements StatusChangeHandler {
 
     @Override
     public void statusChanged(Status previous, Status current) {
-        String message = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\"  command=\"status\"\n" +
-                "          status=\"" + current.nameForSending() + "\"\n" +
-                "          reason=\"ok\"\n" +
-                "          transaction_id=\"" + transactionId + "\">\n" +
-                "</response>";
-        LOGGER.fine("sending message after changed status=" + message);
+        String xml = e("response", "urn:debugger_protocol_v1")
+                .a("command", "status")
+                .a("transaction_id", transactionId)
+                .a("status", current.nameForSending())
+                .a("reason", "ok")
+                .asString();
+        LOGGER.fine("sending message after changed status=" + xml);
         LOGGER.fine("in ctx = " + ctx);
-        ctx.writeAndFlush(message);
+        ctx.writeAndFlush(xml);
     }
 
     @Override

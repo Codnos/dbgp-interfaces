@@ -21,7 +21,10 @@ import com.codnos.dbgp.api.StackFrame;
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGpCommandHandler;
+import com.codnos.dbgp.internal.xml.XmlBuilder;
 import io.netty.channel.ChannelHandlerContext;
+
+import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
 
 public class StackGetCommandHandler extends DBGpCommandHandler {
 
@@ -39,12 +42,19 @@ public class StackGetCommandHandler extends DBGpCommandHandler {
         int transactionId = arguments.getInteger("i");
         Integer depth = arguments.getInteger("d");
         StackFrame frame = debuggerEngine.getFrame(depth);
-        String responseString = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" command=\"stack_get\"\n" +
-                "          transaction_id=\"" + transactionId + "\">" +
-                "<stack level=\""+depth+"\" type=\"file\" filename=\""+ frame.getFileURL() + "\" lineno=\"" + frame.getLineNumber() + "\"" +
-                (frame.getWhere() != null ? " where=\"" + frame.getWhere() +"\"" : "")
-                + "/>" +
-                "</response>";
-        sendBackResponse(ctx, responseString);
+        XmlBuilder stack = e("stack")
+                .a("level", depth)
+                .a("type", "file")
+                .a("filename", frame.getFileURL())
+                .a("lineno", frame.getLineNumber());
+        if (frame.getWhere() != null) {
+            stack.a("where", frame.getWhere());
+        }
+        String xml = e("response", "urn:debugger_protocol_v1")
+                .a("command", "stack_get")
+                .a("transaction_id", transactionId)
+                .e(stack)
+                .asString();
+        sendBackResponse(ctx, xml);
     }
 }

@@ -22,6 +22,8 @@ import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGpCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
+import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
+
 public class StackDepthCommandHandler extends DBGpCommandHandler {
 
     public StackDepthCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
@@ -37,9 +39,11 @@ public class StackDepthCommandHandler extends DBGpCommandHandler {
     protected void handle(ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) {
         int transactionId = arguments.getInteger("i");
         Integer depth = debuggerEngine.getStackDepth();
-        String responseString = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" command=\"stack_depth\"\n" +
-                "          transaction_id=\"" + transactionId + "\"\n" +
-                "          depth=\"" + depth + "\"/>";
-        sendBackResponse(ctx, responseString);
+        String xml = e("response", "urn:debugger_protocol_v1")
+                .a("command", "stack_depth")
+                .a("transaction_id", transactionId)
+                .a("depth", depth)
+                .asString();
+        sendBackResponse(ctx, xml);
     }
 }

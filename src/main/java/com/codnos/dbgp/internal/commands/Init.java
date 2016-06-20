@@ -18,6 +18,8 @@ package com.codnos.dbgp.internal.commands;
 
 import com.codnos.dbgp.api.DebuggerEngine;
 
+import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
+
 public class Init {
 
     private final DebuggerEngine debuggerEngine;
@@ -27,13 +29,13 @@ public class Init {
     }
 
     public String asString() {
-        return "<init xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" " +
-                "appid=\"" + debuggerEngine.getAppId() + "\" " +
-                "idekey=\"" + debuggerEngine.getIdeKey() + "\" " +
-                "session=\"" + debuggerEngine.getSession() + "\" " +
-                "language=\"" + debuggerEngine.getLanguage() + "\" " +
-                "protocol_version=\"" + debuggerEngine.getProtocolVersion() + "\" " +
-                "fileuri=\"" + debuggerEngine.getInitialFileUri() + "\"" +
-                "/>";
+        return e("init", "urn:debugger_protocol_v1")
+                .a("appid", debuggerEngine.getAppId())
+                .a("idekey", debuggerEngine.getIdeKey())
+                .a("session", debuggerEngine.getSession())
+                .a("language", debuggerEngine.getLanguage())
+                .a("protocol_version", debuggerEngine.getProtocolVersion())
+                .a("fileuri", debuggerEngine.getInitialFileUri())
+                .asString();
     }
 }

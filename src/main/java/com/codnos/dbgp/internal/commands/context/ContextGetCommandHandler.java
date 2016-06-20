@@ -21,9 +21,12 @@ import com.codnos.dbgp.api.PropertyValue;
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGpCommandHandler;
+import com.codnos.dbgp.internal.xml.XmlBuilder;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.util.Collection;
+
+import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
 
 public class ContextGetCommandHandler extends DBGpCommandHandler {
 
@@ -40,31 +43,18 @@ public class ContextGetCommandHandler extends DBGpCommandHandler {
     protected void handle(ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) {
         int transactionId = arguments.getInteger("i");
         Integer depth = arguments.getInteger("d");
-        Collection<PropertyValue> variables = debuggerEngine.getVariables(depth);
-        StringBuilder variablesXml = new StringBuilder();
-        for (PropertyValue variable : variables) {
-            variablesXml.append("<property");
-            variablesXml.append(" ");
-            variablesXml.append("name=\"");
-            variablesXml.append(variable.getName());
-            variablesXml.append("\"");
-            variablesXml.append(" ");
-            variablesXml.append("fullname=\"");
-            variablesXml.append(variable.getName());
-            variablesXml.append("\"");
-            variablesXml.append(" ");
-            variablesXml.append("type=\"");
-            variablesXml.append(variable.getType());
-            variablesXml.append("\"");
-            variablesXml.append(" ");
-            variablesXml.append("encoding=\"none\"");
-            variablesXml.append(">");
-            variablesXml.append(variable.getValue());
-            variablesXml.append("</property>");
-            variablesXml.append("\n");
+        XmlBuilder response = e("response", "urn:debugger_protocol_v1")
+                .a("command", "context_get")
+                .a("transaction_id", transactionId);
+        for (PropertyValue variable : debuggerEngine.getVariables(depth)) {
+            response.e(e("property")
+                    .a("name", variable.getName())
+                    .a("fullname", variable.getName())
+                    .a("type", variable.getType())
+                    .a("encoding", "none")
+                    .b(variable.getValue())
+            );
         }
-        String responseString = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" command=\"context_get\"\n" +
-                "          transaction_id=\"" + transactionId + "\">" + variablesXml.toString() + "</response>";
-        sendBackResponse(ctx, responseString);
+        sendBackResponse(ctx, response.asString());
     }
 }

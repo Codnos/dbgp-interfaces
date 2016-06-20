@@ -23,6 +23,8 @@ import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGpCommandHandler;
 import io.netty.channel.ChannelHandlerContext;
 
+import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
+
 public final class StatusCommandHandler extends DBGpCommandHandler {
 
     public StatusCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
@@ -38,9 +40,12 @@ public final class StatusCommandHandler extends DBGpCommandHandler {
     protected void handle(ChannelHandlerContext ctx, Arguments arguments, DebuggerEngine debuggerEngine) {
         int transactionId = arguments.getInteger("i");
         Status status = debuggerEngine.getStatus();
-        String responseString = "<response xmlns=\"urn:debugger_protocol_v1\" xmlns:xdebug=\"http://xdebug.org/dbgp/xdebug\" command=\"status\"\n" +
-                "          transaction_id=\"" + transactionId + "\"\n" +
-                "          status=\"" + status.nameForSending() + "\" reason=\"ok\"/>";
-        sendBackResponse(ctx, responseString);
+        String xml = e("response", "urn:debugger_protocol_v1")
+                .a("command", "status")
+                .a("transaction_id", transactionId)
+                .a("status", status.nameForSending())
+                .a("reason", "ok")
+                .asString();
+        sendBackResponse(ctx, xml);
     }
 }
