@@ -19,14 +19,14 @@ package com.codnos.dbgp
 import java.util.concurrent.Callable
 
 trait AwaitilitySupport {
-  implicit def byNameFunctionToCallableOfType[T](function: => T): Callable[T] = {
+  implicit def byNameFunctionToCallableOfType[T](function: () => T): Callable[T] = {
     new Callable[T] {
-      def call(): T = function
+      def call(): T = function()
     }
   }
-  implicit def byNameFunctionToRunnable[T](function: => T): Runnable = {
+  implicit def byNameFunctionToRunnable[T](function: () => T): Runnable = {
     new Runnable {
-      def run(): Unit = function
+      def run() = function()
     }
   }
 }
