@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-package com.codnos.dbgp.api;
+package com.codnos.dbgp.internal.commands.step;
 
-public interface DBGpIde {
+import com.codnos.dbgp.internal.commands.ContinuationCommand;
 
-    void startListening();
+public class StepOutCommand implements ContinuationCommand<Void> {
+    private final String transactionId;
 
-    void stopListening();
+    public StepOutCommand(String transactionId) {
+        this.transactionId = transactionId;
+    }
 
-    boolean isConnected();
+    @Override
+    public String getName() {
+        return "step_out";
+    }
 
-    Breakpoint breakpointSet(final Breakpoint breakpoint);
+    @Override
+    public String getMessage() {
+        return getName() + " -i " + transactionId;
+    }
 
-    void run();
+    @Override
+    public String getHandlerKey() {
+        return "status:" + transactionId;
+    }
 
-    void stepOver();
-
-    void stepInto();
-
-    void stepOut();
-
-    int stackDepth();
-
-    Context contextGet(int stackDepth);
-
-    StackFrame stackGet(int depth);
-
-    Status status();
 }

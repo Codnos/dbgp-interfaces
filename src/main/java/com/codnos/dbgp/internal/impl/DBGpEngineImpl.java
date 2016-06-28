@@ -26,6 +26,8 @@ import com.codnos.dbgp.internal.commands.run.RunCommandHandler;
 import com.codnos.dbgp.internal.commands.stack.StackDepthCommandHandler;
 import com.codnos.dbgp.internal.commands.stack.StackGetCommandHandler;
 import com.codnos.dbgp.internal.commands.status.StatusCommandHandler;
+import com.codnos.dbgp.internal.commands.step.StepIntoCommandHandler;
+import com.codnos.dbgp.internal.commands.step.StepOutCommandHandler;
 import com.codnos.dbgp.internal.commands.step.StepOverCommandHandler;
 import com.codnos.dbgp.internal.handlers.DBGpInitHandler;
 import com.codnos.dbgp.internal.handlers.DBGpCommandDecoder;
@@ -54,6 +56,8 @@ public class DBGpEngineImpl implements DBGpEngine {
             .withCommand("stack_get", numeric("i"), numeric("d"))
             .withCommand("status", numeric("i"))
             .withCommand("step_over", numeric("i"))
+            .withCommand("step_into", numeric("i"))
+            .withCommand("step_out", numeric("i"))
             .build();
     private EventLoopGroup workerGroup;
 
@@ -85,6 +89,8 @@ public class DBGpEngineImpl implements DBGpEngine {
                         new StackDepthCommandHandler(debuggerEngine, argumentConfiguration),
                         new RunCommandHandler(debuggerEngine, statusChangeHandlerFactory, argumentConfiguration),
                         new StepOverCommandHandler(debuggerEngine, statusChangeHandlerFactory, argumentConfiguration),
+                        new StepIntoCommandHandler(debuggerEngine, statusChangeHandlerFactory, argumentConfiguration),
+                        new StepOutCommandHandler(debuggerEngine, statusChangeHandlerFactory, argumentConfiguration),
                         new StackGetCommandHandler(debuggerEngine, argumentConfiguration),
                         new ContextGetCommandHandler(debuggerEngine, argumentConfiguration),
                         new StatusCommandHandler(debuggerEngine, argumentConfiguration)

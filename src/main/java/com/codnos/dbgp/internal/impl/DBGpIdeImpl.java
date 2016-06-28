@@ -29,6 +29,8 @@ import com.codnos.dbgp.internal.commands.stack.StackGetCommand;
 import com.codnos.dbgp.internal.commands.stack.StackGetResponse;
 import com.codnos.dbgp.internal.commands.status.StatusCommand;
 import com.codnos.dbgp.internal.commands.status.StatusResponse;
+import com.codnos.dbgp.internal.commands.step.StepIntoCommand;
+import com.codnos.dbgp.internal.commands.step.StepOutCommand;
 import com.codnos.dbgp.internal.commands.step.StepOverCommand;
 import com.codnos.dbgp.internal.handlers.*;
 import com.codnos.dbgp.internal.messages.InitMessage;
@@ -133,6 +135,36 @@ public class DBGpIdeImpl implements DBGpIde {
     public void stepOver() {
         String transactionId = nextTransaction();
         StepOverCommand command = new StepOverCommand(transactionId);
+        eventsHandler.registerMessageHandler(command,
+                new MessageHandler() {
+                    public void handle(Message message) {
+                        StatusResponse response = (StatusResponse) message;
+                        debuggerIde.onStatus(response.getStatus(), DBGpIdeImpl.this);
+                    }
+                }
+        );
+        sendCommand(command);
+    }
+
+    @Override
+    public void stepInto() {
+        String transactionId = nextTransaction();
+        StepIntoCommand command = new StepIntoCommand(transactionId);
+        eventsHandler.registerMessageHandler(command,
+                new MessageHandler() {
+                    public void handle(Message message) {
+                        StatusResponse response = (StatusResponse) message;
+                        debuggerIde.onStatus(response.getStatus(), DBGpIdeImpl.this);
+                    }
+                }
+        );
+        sendCommand(command);
+    }
+
+    @Override
+    public void stepOut() {
+        String transactionId = nextTransaction();
+        StepOutCommand command = new StepOutCommand(transactionId);
         eventsHandler.registerMessageHandler(command,
                 new MessageHandler() {
                     public void handle(Message message) {

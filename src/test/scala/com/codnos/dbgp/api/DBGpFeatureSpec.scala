@@ -18,22 +18,28 @@ package com.codnos.dbgp.api
 
 import java.util
 
-import com.codnos.dbgp.internal.impl.StatusChangeHandlerFactory
 import com.codnos.dbgp.AwaitilitySupport
 import com.codnos.dbgp.internal.handlers.ResponseSender
+import com.codnos.dbgp.internal.impl.StatusChangeHandlerFactory
 import com.jayway.awaitility.Awaitility._
 import org.hamcrest.Matchers._
 import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
-import org.mockito.{BDDMockito, Matchers}
-import org.scalatest.{FeatureSpec, GivenWhenThen}
+import org.mockito.{BDDMockito, Matchers, Mockito}
+import org.scalatest.{BeforeAndAfter, FeatureSpec, GivenWhenThen}
 
-class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupport with org.scalatest.Matchers {
+class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupport with org.scalatest.Matchers with BeforeAndAfter {
   private val statusChangeHandlerFactory = new SpyingStatusChangeHandlerFactory()
   private val Port: Int = 9000
   private val debuggerIde: FakeDebuggerIde = new FakeDebuggerIde
   private val debuggerEngine: DebuggerEngine = mock(classOf[DebuggerEngine])
+
+  after {
+    statusChangeHandlerFactory.lastStatusChangeHandler = null
+    debuggerIde.clear
+    Mockito.reset(debuggerEngine)
+  }
 
   feature("connection initiation") {
     scenario("<init/> message is sent as the first thing after engine connects to the IDE") {
@@ -41,7 +47,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
       withinASession { _ =>
 
         Then("Init message is received")
-        await until(() => debuggerIde.getInitMessage, is(notNullValue))
+        await until(() => debuggerIde.getInitMessage, is(notNullValue(classOf[SystemInfo])))
       }
     }
   }
@@ -212,6 +218,68 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
     }
   }
 
+  feature("stepping into the code") {
+    scenario("after initiating the session the code can be stepped into") {
+      Given("the engine and the IDE are connected")
+      withinASession {
+        ctx =>
+          When("the step into command is sent")
+          ctx.ide.stepInto()
+          Then("the debugger engine will get notified about any status changes")
+          await until (() => verify(debuggerEngine).registerStatusChangeHandler(Matchers.any(classOf[StatusChangeHandler])))
+          And("the debugger engine receives the step into command")
+          await until (() => verify(debuggerEngine).stepInto())
+      }
+    }
+    scenario("after stepping into the code we get notified about any status changes") {
+      BDDMockito.given(debuggerEngine.stepInto()).will(new Answer[Unit] {
+        override def answer(invocation: InvocationOnMock): Unit = {
+          statusChangeHandlerFactory.lastStatusChangeHandler.statusChanged(Status.RUNNING, Status.BREAK)
+        }
+      })
+
+      Given("the engine and the IDE are connected")
+      withinASession {
+        ctx =>
+          When("the step into command is sent")
+          ctx.ide.stepInto()
+          Then("the IDE will get notified about any status changes")
+          await until (() => assert(debuggerIde.getStatus == Status.BREAK))
+      }
+    }
+  }
+
+  feature("stepping out of the code") {
+    scenario("after initiating the session the code can be stepped out of") {
+      Given("the engine and the IDE are connected")
+      withinASession {
+        ctx =>
+          When("the step out command is sent")
+          ctx.ide.stepOut()
+          Then("the debugger engine will get notified about any status changes")
+          await until (() => verify(debuggerEngine).registerStatusChangeHandler(Matchers.any(classOf[StatusChangeHandler])))
+          And("the debugger engine receives the step out command")
+          await until (() => verify(debuggerEngine).stepOut())
+      }
+    }
+    scenario("after stepping out of the code we get notified about any status changes") {
+      BDDMockito.given(debuggerEngine.stepOut()).will(new Answer[Unit] {
+        override def answer(invocation: InvocationOnMock): Unit = {
+          statusChangeHandlerFactory.lastStatusChangeHandler.statusChanged(Status.RUNNING, Status.BREAK)
+        }
+      })
+
+      Given("the engine and the IDE are connected")
+      withinASession {
+        ctx =>
+          When("the step out command is sent")
+          ctx.ide.stepOut()
+          Then("the IDE will get notified about any status changes")
+          await until (() => assert(debuggerIde.getStatus == Status.BREAK))
+      }
+    }
+  }
+
   private class FakeDebuggerIde extends DebuggerIde {
     private var message: SystemInfo = null
     private var status: Status = null
@@ -227,15 +295,18 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
     override def onStatus(status: Status, dbgpIde: DBGpIde) {
       this.status = status
     }
+
+    def clear: Unit = {
+      message = null
+      status = null
+    }
   }
 
   private def withinASession(f: DebuggingContext => Unit) {
     val ide: DBGpIde = DBGpFactory.ide().withPort(Port).withDebuggerIde(debuggerIde).build()
     val engine: DBGpEngine = DBGpFactory.engine.withPort(Port).withDebuggerEngine(debuggerEngine).withStatusChangeHandlerFactory(statusChangeHandlerFactory).build()
     ide.startListening()
-    await until {
-      ide.isConnected
-    }
+    await until(() => ide.isConnected)
     engine.connect()
     try {
       f(DebuggingContext(ide, engine))

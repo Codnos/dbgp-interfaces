@@ -35,6 +35,10 @@ public interface DebuggerEngine {
 
     void stepOver();
 
+    void stepInto();
+
+    void stepOut();
+
     Breakpoint breakpointSet(Breakpoint breakpoint);
 
     void registerStatusChangeHandler(StatusChangeHandler statusChangeHandler);
