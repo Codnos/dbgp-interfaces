@@ -37,7 +37,7 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
 
   after {
     statusChangeHandlerFactory.lastStatusChangeHandler = null
-    debuggerIde.clear
+    debuggerIde.clear()
     Mockito.reset(debuggerEngine)
   }
 
@@ -246,7 +246,7 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       this.status = status
     }
 
-    def clear: Unit = {
+    def clear(): Unit = {
       message = null
       status = null
     }
