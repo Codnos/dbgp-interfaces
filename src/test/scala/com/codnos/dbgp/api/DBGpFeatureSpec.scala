@@ -55,7 +55,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
   feature("setting breakpoints") {
     scenario("when breakpoint is set the debugger engine will receive the breakpoint and respond with details") {
       val breakpoint = new Breakpoint("file", 123)
-      val breakpointAfterSetting = new Breakpoint(breakpoint, "id", "enabled")
+      val breakpointAfterSetting = new Breakpoint(breakpoint, "id", "other")
       BDDMockito.given(debuggerEngine.breakpointSet(Matchers.any(classOf[Breakpoint]))).willReturn(breakpointAfterSetting)
 
       Given("the engine and the IDE are connected")
@@ -71,6 +71,7 @@ class DBGpFeatureSpec extends FeatureSpec with GivenWhenThen with AwaitilitySupp
           result.getFileURL shouldBe breakpointAfterSetting.getFileURL
           result.getLineNumber shouldBe breakpointAfterSetting.getLineNumber
           result.getState shouldBe breakpointAfterSetting.getState
+          result.getBreakpointId shouldBe breakpointAfterSetting.getBreakpointId
       }
     }
   }

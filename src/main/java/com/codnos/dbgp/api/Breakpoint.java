@@ -47,4 +47,8 @@ public class Breakpoint {
     public String getState() {
         return state;
     }
+
+    public String getBreakpointId() {
+        return breakpointId;
+    }
 }

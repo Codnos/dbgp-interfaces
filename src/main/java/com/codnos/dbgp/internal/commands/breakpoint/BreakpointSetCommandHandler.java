@@ -40,13 +40,13 @@ public class BreakpointSetCommandHandler extends DBGpRegularCommandHandler {
         int transactionId = arguments.getInteger("i");
         String file = arguments.getString("f");
         int line = arguments.getInteger("n");
-        String breakPointId = file + "@" + line;
-        debuggerEngine.breakpointSet(new Breakpoint(file, line));
+        Breakpoint breakpointToSet = new Breakpoint(file, line);
+        Breakpoint resultingBreakpoint = debuggerEngine.breakpointSet(breakpointToSet);
         return e("response", "urn:debugger_protocol_v1")
                 .a("command", "breakpoint_set")
                 .a("transaction_id", transactionId)
-                .a("state", "enabled")
-                .a("id", breakPointId)
+                .a("state", resultingBreakpoint.getState())
+                .a("id", resultingBreakpoint.getBreakpointId())
                 .asString();
     }
 }
