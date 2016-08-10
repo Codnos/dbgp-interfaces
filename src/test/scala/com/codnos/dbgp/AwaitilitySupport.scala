@@ -24,9 +24,9 @@ trait AwaitilitySupport {
       def call(): T = function()
     }
   }
-  implicit def byNameFunctionToRunnable[T](function: () => T): Runnable = {
+  implicit def byNameFunctionToRunnable[T](function: => T): Runnable = {
     new Runnable {
-      def run() = function()
+      def run() = function
     }
   }
 }
