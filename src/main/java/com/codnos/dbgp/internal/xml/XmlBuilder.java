@@ -90,7 +90,9 @@ public class XmlBuilder {
 
     private void appendBody(StringBuilder xml) {
         if (body != null) {
+            xml.append("<![CDATA[");
             xml.append(body);
+            xml.append("]]>");
         }
     }
 

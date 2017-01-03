@@ -156,6 +156,24 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
           )
       }
     }
+    scenario("after initiating the session the context can be checked for xml as value") {
+      val xmlValue = "<note>\n  <date>2015-09-01</date>\n  <hour>08:30</hour>\n  <to>Tove</to>\n  <from>Jani</from>\n  <body>Don't forget me this weekend!</body>\n</note>"
+      val variables = util.Arrays.asList(new PropertyValue("abc", "item()*", xmlValue))
+      BDDMockito.given(debuggerEngine.getVariables(7)).willReturn(variables)
+
+      withinASession {
+        ctx =>
+          val result = ctx.ide.contextGet(7)
+          await until { verify(debuggerEngine).getVariables(7) }
+          val variablesFound = result.getVariables.toArray()
+          variablesFound should have size 1
+          variablesFound(0) should have(
+            'name ("abc"),
+            'type ("item()*"),
+            'value (xmlValue)
+          )
+      }
+    }
   }
 
   feature("stepping over the code") {

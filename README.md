@@ -19,3 +19,4 @@ TODO:
  - [ ] Add proper JavaDoc and examples
  - [ ] Functional tests using PHP
  - [ ] Functional tests using eXistDB
+ - [ ] Release to Maven Central (https://maven.apache.org/guides/mini/guide-central-repository-upload.html)
