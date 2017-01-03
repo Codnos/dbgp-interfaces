@@ -18,6 +18,8 @@ package com.codnos.dbgp.internal.impl;
 
 import com.codnos.dbgp.api.*;
 import com.codnos.dbgp.internal.commands.Command;
+import com.codnos.dbgp.internal.commands.breakpoint.BreakpointRemoveCommand;
+import com.codnos.dbgp.internal.commands.breakpoint.BreakpointRemoveResponse;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetCommand;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetResponse;
 import com.codnos.dbgp.internal.commands.context.ContextGetCommand;
@@ -114,6 +116,15 @@ public class DBGpIdeImpl implements DBGpIde {
         sendCommand(command);
         BreakpointSetResponse response = eventsHandler.getResponse(command);
         return new Breakpoint(breakpoint, response.getBreakpointId(), response.getState());
+    }
+
+    @Override
+    public Breakpoint breakpointRemove(final Breakpoint breakpoint) {
+        String transactionId = nextTransaction();
+        BreakpointRemoveCommand command = new BreakpointRemoveCommand(transactionId, breakpoint);
+        sendCommand(command);
+        BreakpointRemoveResponse response = eventsHandler.getResponse(command);
+        return new Breakpoint(breakpoint, breakpoint.getBreakpointId(), breakpoint.getState());
     }
 
     @Override

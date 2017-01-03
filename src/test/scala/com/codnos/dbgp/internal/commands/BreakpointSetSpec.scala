@@ -66,7 +66,7 @@ class BreakpointSetSpec extends CommandSpec {
     assert(!breakpoint.BreakpointSetResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
   }
 
-  "CommandHandler" should "respond with variables from given stack depth" in {
+  "CommandHandler" should "respond with details of the breakpoint" in {
     val handler = new BreakpointSetCommandHandler(engine, argumentConfiguration)
     val breakpointId = s"${fileUri}@${lineNumber}"
     given(engine.breakpointSet(any())).willReturn(new Breakpoint(originalBreakpoint, breakpointId, "enabled"))

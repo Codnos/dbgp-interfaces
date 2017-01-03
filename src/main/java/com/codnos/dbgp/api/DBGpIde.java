@@ -26,6 +26,8 @@ public interface DBGpIde {
 
     Breakpoint breakpointSet(final Breakpoint breakpoint);
 
+    Breakpoint breakpointRemove(final Breakpoint breakpoint);
+
     void run();
 
     void stepOver();

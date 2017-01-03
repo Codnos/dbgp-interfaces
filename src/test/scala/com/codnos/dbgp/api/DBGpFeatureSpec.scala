@@ -248,6 +248,25 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
     }
   }
 
+  feature("removing breakpoints") {
+    scenario("when breakpoint is removed the debugger engine will receive the breakpoint") {
+      val breakpoint = new Breakpoint("file", 123)
+      val breakpointAfterSetting = new Breakpoint(breakpoint, "myId", "enabled")
+
+      withinASession {
+        ctx =>
+          val result = ctx.ide.breakpointRemove(breakpointAfterSetting)
+
+          await until { verify(debuggerEngine).breakpointRemove("myId") }
+
+          result.getFileURL shouldBe breakpointAfterSetting.getFileURL
+          result.getLineNumber shouldBe breakpointAfterSetting.getLineNumber
+          result.getState shouldBe breakpointAfterSetting.getState
+          result.getBreakpointId shouldBe breakpointAfterSetting.getBreakpointId
+      }
+    }
+  }
+
   private class FakeDebuggerIde extends DebuggerIde {
     private var message: SystemInfo = _
     private var status: Status = _

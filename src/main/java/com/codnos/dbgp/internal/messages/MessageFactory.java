@@ -16,6 +16,7 @@
 
 package com.codnos.dbgp.internal.messages;
 
+import com.codnos.dbgp.internal.commands.breakpoint.BreakpointRemoveResponse;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetResponse;
 import com.codnos.dbgp.internal.commands.context.ContextGetResponse;
 import com.codnos.dbgp.internal.commands.stack.StackDepthResponse;
@@ -35,6 +36,7 @@ public class MessageFactory {
 
     private static final List<Class<? extends XmlMessage>> messageResponseClasses = asList(InitMessage.class,
             BreakpointSetResponse.class,
+            BreakpointRemoveResponse.class,
             StatusResponse.class,
             StackDepthResponse.class,
             StackGetResponse.class,
