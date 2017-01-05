@@ -15,8 +15,38 @@ TODO:
  - [ ] Add missing argument/attribute handling for existing commands/responses
  - [ ] Proper configuration/parameter negotiation
  - [ ] Add additional protocol elements
+     - [ ] breakpoint_remove
+     - [ ] breakpoint_get
+     - [ ] breakpoint_list
+     - [ ] breakpoint_update
+     - [ ] break
+     - [ ] eval
+     - [ ] feature_get
+     - [ ] feature_set
+     - [ ] stop
+     - [ ] detach
+     - [ ] context_names
+     - [ ] typemap_get
+     - [ ] property_get
+     - [ ] property_set
+     - [ ] source
+     - [ ] stdout
+     - [ ] stderr
+     - [ ] stdin
+     - [ ] expr
+     - [ ] exec
+     - [ ] spawnpoint_set
+     - [ ] spawnpoint_get
+     - [ ] spawnpoint_update
+     - [ ] spawnpoint_remove
+     - [ ] spawnpoint_list
+     - [ ] notifications
+     - [ ] interact
  - [ ] Introduce async API for IDE
  - [ ] Add proper JavaDoc and examples
  - [ ] Functional tests using PHP
  - [ ] Functional tests using eXistDB
  - [ ] Release to Maven Central (https://maven.apache.org/guides/mini/guide-central-repository-upload.html)
+ - [ ] Exception/error support
+ - [ ] Support for proxies
+ - [ ] Multi-process/multi-thread support
