@@ -1,8 +1,8 @@
 name := "dbgp-interfaces"
 
-organization := "com.codnos.dbgp-interfaces"
+organization := "com.codnos"
 
-version := "1.0-SNAPSHOT"
+version := "0.0.1-SNAPSHOT"
 
 description := "Interfaces and implementations for both client and server side of DBGp"
 
