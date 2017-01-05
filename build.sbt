@@ -8,10 +8,6 @@ description := "Interfaces and implementations for both client and server side o
 
 scalaVersion := "2.11.8"
 
-publishMavenStyle := true
-
-publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath+"/.m2/repository")))
-
 crossPaths := false
 
 autoScalaLibrary := false
@@ -32,3 +28,37 @@ libraryDependencies ++= Seq(
 fork in Test := true
 
 javaOptions in Test += "-Djava.util.logging.config.file=src/test/resources/logging.properties"
+
+// publishing settings
+
+publishMavenStyle := true
+
+publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+}
+
+publishArtifact in Test := false
+
+pomIncludeRepository := { _ => false }
+
+licenses := Seq("Apache-2.0" -> url("https://github.com/Codnos/dbgp-interfaces/blob/master/LICENSE"))
+
+homepage := Some(url("https://github.com/Codnos/dbgp-interfaces"))
+
+pomExtra := (
+    <scm>
+      <url>https://github.com/Codnos/dbgp-interfaces</url>
+      <connection>scm:git:git@github.com:Codnos/dbgp-interfaces.git</connection>
+    </scm>
+    <developers>
+      <developer>
+        <id>ligasgr</id>
+        <name>Grzegorz Ligas</name>
+        <email>grzegorz.ligas@codnos.com</email>
+        <url>https://github.com/ligasgr</url>
+      </developer>
+    </developers>)

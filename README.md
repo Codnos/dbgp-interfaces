@@ -1,4 +1,28 @@
-TODO:
+# Interfaces and implementations for both client and server side of DBGp.
+
+## Where to get from:
+
+### Stable:
+Maven Central
+```xml
+<dependency>
+    <groupId>com.codnos</groupId>
+    <artifactId>dbgp-interfaces</artifactId>
+    <version>0.0.1</version>
+</dependency>
+```
+
+### Snapshots:
+Sonatype snapshots: https://oss.sonatype.org/content/repositories/snapshots/
+```xml
+<dependency>
+    <groupId>com.codnos</groupId>
+    <artifactId>dbgp-interfaces</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
+
+## TODO:
  - [x] Rewrite commands tests to ScalaTest
  - [x] Rewrite feature test to ScalaTest
  - [x] Add unit tests for already existing commands/messages
