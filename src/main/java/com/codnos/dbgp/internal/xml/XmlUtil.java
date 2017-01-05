@@ -30,6 +30,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
+import java.util.Optional;
 
 public class XmlUtil {
     public static Document parseMessage(String message) {
@@ -50,9 +51,29 @@ public class XmlUtil {
         try {
             XPathExpression xPathExpression = xPath.compile(expression);
             return xPathExpression.evaluate(parsedMessage);
-
         } catch (XPathExpressionException e) {
             throw new UnableToParseResponseException(e);
+        }
+    }
+
+    public static Optional<String> optionalStringForXPath(Node parsedMessage, String xpath) {
+        try {
+            String value = stringForXPath(parsedMessage, xpath);
+            if (value == null || value.length() == 0) {
+                return Optional.empty();
+            }
+            return Optional.of(value);
+        } catch (UnableToParseResponseException e) {
+            return Optional.empty();
+        }
+    }
+
+
+    public static Optional<Integer> optionalIntForXPath(Node parsedMessage, String xpath) {
+        try {
+            return Optional.ofNullable(intForXPath(parsedMessage, xpath));
+        } catch (UnableToParseResponseException | NumberFormatException e) {
+            return Optional.empty();
         }
     }
 
@@ -69,7 +90,7 @@ public class XmlUtil {
         }
     }
 
-    public static Integer intForXPath(Document message, String expression) {
+    public static Integer intForXPath(Node message, String expression) {
         return Integer.valueOf(stringForXPath(message, expression));
     }
 

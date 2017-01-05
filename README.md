@@ -15,8 +15,8 @@ TODO:
  - [ ] Add missing argument/attribute handling for existing commands/responses
  - [ ] Proper configuration/parameter negotiation
  - [ ] Add additional protocol elements
-     - [ ] breakpoint_remove
-     - [ ] breakpoint_get
+     - [x] breakpoint_remove
+     - [x] breakpoint_get
      - [ ] breakpoint_list
      - [ ] breakpoint_update
      - [ ] break

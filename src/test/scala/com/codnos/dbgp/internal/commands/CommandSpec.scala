@@ -20,15 +20,16 @@ import com.codnos.dbgp.UnitSpec
 import com.codnos.dbgp.api.DebuggerEngine
 import com.codnos.dbgp.internal.handlers.ResponseSender
 import io.netty.channel.{ChannelFuture, ChannelHandlerContext}
-import org.mockito.ArgumentCaptor
+import org.mockito.{ArgumentCaptor, Mockito}
 import org.mockito.BDDMockito._
 import org.mockito.Matchers._
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfterEach
 import org.xmlunit.builder.{DiffBuilder, Input}
 
 import scala.xml.{Elem, XML}
 
-abstract class CommandSpec extends UnitSpec {
+abstract class CommandSpec extends UnitSpec with BeforeAndAfterEach {
   val MadeUpCommandResponse =
       <response xmlns="urn:debugger_protocol_v1"
                 xmlns:xdebug="http://xdebug.org/dbgp/xdebug"
@@ -41,8 +42,16 @@ abstract class CommandSpec extends UnitSpec {
   val responseSender = mock[ResponseSender]
   val engine = mock[DebuggerEngine]
 
-  given(channelFuture.sync()).willReturn(channelFuture)
-  given(ctx.writeAndFlush(any())).willReturn(channelFuture)
+  override def beforeEach() {
+    given(channelFuture.sync()).willReturn(channelFuture)
+    given(ctx.writeAndFlush(any())).willReturn(channelFuture)
+    super.beforeEach()
+  }
+
+  override def afterEach() {
+    super.afterEach()
+    Mockito.reset(ctx, channelFuture, responseSender, engine)
+  }
 
   def assertReceivedViaResponseSender(expectedResponse: Elem): Unit = {
     val captor = ArgumentCaptor.forClass(classOf[String])

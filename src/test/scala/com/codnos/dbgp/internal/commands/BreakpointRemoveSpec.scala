@@ -16,6 +16,8 @@
 
 package com.codnos.dbgp.internal.commands
 
+import java.util.Optional
+
 import com.codnos.dbgp.api.Breakpoint
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
 import com.codnos.dbgp.internal.arguments.ArgumentFormat._
@@ -34,11 +36,11 @@ class BreakpointRemoveSpec extends CommandSpec {
   val fileUri = "file:///home/user/file.xq"
   val breakpointId = "myId"
   val originalBreakpoint: Breakpoint = new Breakpoint(fileUri, lineNumber)
-  val breakpointThatWasSet: Breakpoint = new Breakpoint(originalBreakpoint, breakpointId, "enabled")
+  val breakpointThatWasSet: Breakpoint = new Breakpoint(originalBreakpoint, breakpointId)
   val argumentConfiguration = configuration.withCommand("breakpoint_remove", numeric("i"), string("d")).build
 
   "Command" should "have message constructed from the parameters" in {
-    val command = new BreakpointRemoveCommand("432", breakpointThatWasSet)
+    val command = new BreakpointRemoveCommand("432", "myId")
 
     command should have (
       'name ("breakpoint_remove"),
@@ -64,10 +66,29 @@ class BreakpointRemoveSpec extends CommandSpec {
     assert(!breakpoint.BreakpointRemoveResponse.canBuildFrom(parseMessage(MadeUpCommandResponse.toString)))
   }
 
-  "CommandHandler" should "respond with variables from given stack depth" in {
+  "CommandHandler" should "respond with breakpoint data when returned by engine" in {
     val handler = new BreakpointRemoveCommandHandler(engine, argumentConfiguration)
     val breakpointId = s"${fileUri}@${lineNumber}"
-    given(engine.breakpointRemove(any())).willReturn(new Breakpoint(originalBreakpoint, breakpointId, "enabled"))
+    given(engine.breakpointRemove(any())).willReturn(Optional.of(new Breakpoint(originalBreakpoint, breakpointId)))
+
+    handler.channelRead(ctx, "breakpoint_remove -i 123 -d " + breakpointId)
+
+    val expectedResponse = <response xmlns="urn:debugger_protocol_v1" xmlns:xdebug="http://xdebug.org/dbgp/xdebug" command="breakpoint_remove"
+                                     transaction_id="123">
+                            <breakpoint id={s"$breakpointId"}
+                                        type="line"
+                                        state="enabled"
+                                        filename={s"$fileUri"}
+                                        lineno={s"$lineNumber"}>
+                              </breakpoint>
+                           </response>
+    assertReceived(expectedResponse)
+  }
+
+  it should "respond without breakpoint data when not returned by engine" in {
+    val handler = new BreakpointRemoveCommandHandler(engine, argumentConfiguration)
+    val breakpointId = s"${fileUri}@${lineNumber}"
+    given(engine.breakpointRemove(any())).willReturn(Optional.empty[Breakpoint]())
 
     handler.channelRead(ctx, "breakpoint_remove -i 123 -d " + breakpointId)
 

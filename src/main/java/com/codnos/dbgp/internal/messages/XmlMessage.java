@@ -33,6 +33,7 @@ public abstract class XmlMessage implements Message {
     protected String xpath(String xpath) {
         return stringForXPath(parsedMessage, xpath);
     }
+
     protected Integer intXpath(String xpath) {
         return intForXPath(parsedMessage, xpath);
     }

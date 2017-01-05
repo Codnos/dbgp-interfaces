@@ -16,35 +16,10 @@
 
 package com.codnos.dbgp.api;
 
-import java.util.Optional;
+public enum BreakpointType {
+    LINE, CALL, RETURN, EXCEPTION, CONDITIONAL, WATCH;
 
-public interface DBGpIde {
-
-    void startListening();
-
-    void stopListening();
-
-    boolean isConnected();
-
-    Breakpoint breakpointSet(final Breakpoint breakpoint);
-
-    Optional<Breakpoint> breakpointRemove(final String breakpointId);
-
-    Breakpoint breakpointGet(final String breakpointId);
-
-    void run();
-
-    void stepOver();
-
-    void stepInto();
-
-    void stepOut();
-
-    int stackDepth();
-
-    Context contextGet(int stackDepth);
-
-    StackFrame stackGet(int depth);
-
-    Status status();
+    public String asString() {
+        return name().toLowerCase();
+    }
 }

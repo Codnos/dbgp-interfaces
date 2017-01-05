@@ -69,14 +69,14 @@ class BreakpointSetSpec extends CommandSpec {
   "CommandHandler" should "respond with details of the breakpoint" in {
     val handler = new BreakpointSetCommandHandler(engine, argumentConfiguration)
     val breakpointId = s"${fileUri}@${lineNumber}"
-    given(engine.breakpointSet(any())).willReturn(new Breakpoint(originalBreakpoint, breakpointId, "enabled"))
+    given(engine.breakpointSet(any())).willReturn(new Breakpoint(originalBreakpoint, breakpointId))
 
     handler.channelRead(ctx, "breakpoint_set -i 123 -t line -f " + fileUri + " -n " + lineNumber)
 
     val expectedResponse = <response xmlns="urn:debugger_protocol_v1" xmlns:xdebug="http://xdebug.org/dbgp/xdebug" command="breakpoint_set"
                                      transaction_id="123"
                       state="enabled"
-                      id={s"${breakpointId}"}/>
+                      id={s"$breakpointId"}/>
     assertReceived(expectedResponse)
   }
 }

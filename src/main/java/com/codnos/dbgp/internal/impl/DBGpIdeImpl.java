@@ -16,8 +16,15 @@
 
 package com.codnos.dbgp.internal.impl;
 
-import com.codnos.dbgp.api.*;
+import com.codnos.dbgp.api.Breakpoint;
+import com.codnos.dbgp.api.Context;
+import com.codnos.dbgp.api.DBGpIde;
+import com.codnos.dbgp.api.DebuggerIde;
+import com.codnos.dbgp.api.StackFrame;
+import com.codnos.dbgp.api.Status;
 import com.codnos.dbgp.internal.commands.Command;
+import com.codnos.dbgp.internal.commands.breakpoint.BreakpointGetCommand;
+import com.codnos.dbgp.internal.commands.breakpoint.BreakpointGetResponse;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointRemoveCommand;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointRemoveResponse;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetCommand;
@@ -34,7 +41,13 @@ import com.codnos.dbgp.internal.commands.status.StatusResponse;
 import com.codnos.dbgp.internal.commands.step.StepIntoCommand;
 import com.codnos.dbgp.internal.commands.step.StepOutCommand;
 import com.codnos.dbgp.internal.commands.step.StepOverCommand;
-import com.codnos.dbgp.internal.handlers.*;
+import com.codnos.dbgp.internal.handlers.CommandQueueHandler;
+import com.codnos.dbgp.internal.handlers.DBGpCommandEncoder;
+import com.codnos.dbgp.internal.handlers.DBGpEventsHandler;
+import com.codnos.dbgp.internal.handlers.DBGpResponseDecoder;
+import com.codnos.dbgp.internal.handlers.DBGpResponseHandler;
+import com.codnos.dbgp.internal.handlers.DBGpServerToClientConnectionHandler;
+import com.codnos.dbgp.internal.handlers.MessageHandler;
 import com.codnos.dbgp.internal.messages.InitMessage;
 import com.codnos.dbgp.internal.messages.Message;
 import io.netty.bootstrap.ServerBootstrap;
@@ -47,6 +60,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
@@ -115,16 +129,25 @@ public class DBGpIdeImpl implements DBGpIde {
         BreakpointSetCommand command = new BreakpointSetCommand(transactionId, breakpoint);
         sendCommand(command);
         BreakpointSetResponse response = eventsHandler.getResponse(command);
-        return new Breakpoint(breakpoint, response.getBreakpointId(), response.getState());
+        return new Breakpoint(breakpoint, response.getBreakpointId());
     }
 
     @Override
-    public Breakpoint breakpointRemove(final Breakpoint breakpoint) {
+    public Optional<Breakpoint> breakpointRemove(final String breakpointId) {
         String transactionId = nextTransaction();
-        BreakpointRemoveCommand command = new BreakpointRemoveCommand(transactionId, breakpoint);
+        BreakpointRemoveCommand command = new BreakpointRemoveCommand(transactionId, breakpointId);
         sendCommand(command);
         BreakpointRemoveResponse response = eventsHandler.getResponse(command);
-        return new Breakpoint(breakpoint, breakpoint.getBreakpointId(), breakpoint.getState());
+        return response.getBreakpoint();
+    }
+
+    @Override
+    public Breakpoint breakpointGet(final String breakpointId) {
+        String transactionId = nextTransaction();
+        BreakpointGetCommand command = new BreakpointGetCommand(transactionId, breakpointId);
+        sendCommand(command);
+        BreakpointGetResponse response = eventsHandler.getResponse(command);
+        return response.getBreakpoint();
     }
 
     @Override

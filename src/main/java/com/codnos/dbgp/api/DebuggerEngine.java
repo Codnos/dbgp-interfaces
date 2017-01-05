@@ -17,6 +17,7 @@
 package com.codnos.dbgp.api;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface DebuggerEngine {
     String getAppId();
@@ -41,7 +42,9 @@ public interface DebuggerEngine {
 
     Breakpoint breakpointSet(Breakpoint breakpoint);
 
-    Breakpoint breakpointRemove(String breakpointId);
+    Optional<Breakpoint> breakpointRemove(String breakpointId);
+
+    Breakpoint breakpointGet(String breakpointId);
 
     void registerStatusChangeHandler(StatusChangeHandler statusChangeHandler);
 

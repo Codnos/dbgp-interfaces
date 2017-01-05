@@ -20,6 +20,7 @@ import com.codnos.dbgp.api.DBGpEngine;
 import com.codnos.dbgp.api.DebuggerEngine;
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.commands.Init;
+import com.codnos.dbgp.internal.commands.breakpoint.BreakpointGetCommandHandler;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointRemoveCommandHandler;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetCommandHandler;
 import com.codnos.dbgp.internal.commands.context.ContextGetCommandHandler;
@@ -30,8 +31,8 @@ import com.codnos.dbgp.internal.commands.status.StatusCommandHandler;
 import com.codnos.dbgp.internal.commands.step.StepIntoCommandHandler;
 import com.codnos.dbgp.internal.commands.step.StepOutCommandHandler;
 import com.codnos.dbgp.internal.commands.step.StepOverCommandHandler;
-import com.codnos.dbgp.internal.handlers.DBGpInitHandler;
 import com.codnos.dbgp.internal.handlers.DBGpCommandDecoder;
+import com.codnos.dbgp.internal.handlers.DBGpInitHandler;
 import com.codnos.dbgp.internal.handlers.DBGpResponseEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -52,6 +53,7 @@ public class DBGpEngineImpl implements DBGpEngine {
     private final ArgumentConfiguration argumentConfiguration = configuration()
             .withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n"))
             .withCommand("breakpoint_remove", numeric("i"), string("d"))
+            .withCommand("breakpoint_get", numeric("i"), string("d"))
             .withCommand("run", numeric("i"))
             .withCommand("context_get", numeric("i"), numeric("d"))
             .withCommand("stack_depth", numeric("i"))
@@ -88,6 +90,7 @@ public class DBGpEngineImpl implements DBGpEngine {
                         new DBGpCommandDecoder(),
                         new DBGpResponseEncoder(),
                         new BreakpointSetCommandHandler(debuggerEngine, argumentConfiguration),
+                        new BreakpointGetCommandHandler(debuggerEngine, argumentConfiguration),
                         new BreakpointRemoveCommandHandler(debuggerEngine, argumentConfiguration),
                         new StackDepthCommandHandler(debuggerEngine, argumentConfiguration),
                         new RunCommandHandler(debuggerEngine, statusChangeHandlerFactory, argumentConfiguration),

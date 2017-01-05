@@ -16,26 +16,25 @@
 
 package com.codnos.dbgp.internal.commands.breakpoint;
 
-import com.codnos.dbgp.api.Breakpoint;
 import com.codnos.dbgp.internal.commands.Command;
 
-public class BreakpointSetCommand implements Command<BreakpointSetResponse> {
+public class BreakpointGetCommand implements Command<BreakpointGetResponse> {
     private final String transactionId;
-    private final Breakpoint breakpoint;
+    private final String breakpointId;
 
-    public BreakpointSetCommand(String transactionId, Breakpoint breakpoint) {
+    public BreakpointGetCommand(String transactionId, String breakpointId) {
         this.transactionId = transactionId;
-        this.breakpoint = breakpoint;
+        this.breakpointId = breakpointId;
     }
 
     @Override
     public String getName() {
-        return "breakpoint_set";
+        return "breakpoint_get";
     }
 
     @Override
     public String getMessage() {
-        return "breakpoint_set -i " + transactionId + " -t " + breakpoint.getType().asString() + " -f " + breakpoint.getFileURL().get() + " -n " + breakpoint.getLineNumber().get();
+        return "breakpoint_get -i " + transactionId + " -d " + breakpointId;
     }
 
     @Override

@@ -79,7 +79,7 @@ class XmlBuilderSpec extends UnitSpec {
   }
 
   it should "construct element with body content" in {
-    val expectedXml = <document_root xmlns="urn:debugger_protocol_v1">my body content</document_root>
+    val expectedXml = <document_root xmlns="urn:debugger_protocol_v1">{ scala.xml.Unparsed("<![CDATA[my body content]]>")}</document_root>
 
     val xml = e("document_root", "urn:debugger_protocol_v1")
       .b("my body content")

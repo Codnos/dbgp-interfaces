@@ -23,34 +23,30 @@ import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGpRegularCommandHandler;
 import com.codnos.dbgp.internal.xml.XmlBuilder;
 
-import java.util.Optional;
-
 import static com.codnos.dbgp.internal.commands.breakpoint.BreakpointConverter.breakpointToXml;
 import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
 
-public class BreakpointRemoveCommandHandler extends DBGpRegularCommandHandler {
+public class BreakpointGetCommandHandler extends DBGpRegularCommandHandler {
 
-    public BreakpointRemoveCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
+    public BreakpointGetCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
         super(debuggerEngine, argumentConfiguration);
     }
 
     @Override
     protected boolean canHandle(String msg) {
-        return msg.startsWith("breakpoint_remove");
+        return msg.startsWith("breakpoint_get");
     }
 
     @Override
     protected String handle(Arguments arguments, DebuggerEngine debuggerEngine) {
         int transactionId = arguments.getInteger("i");
         String breakpointId = arguments.getString("d");
-        Optional<Breakpoint> resultingBreakpoint = debuggerEngine.breakpointRemove(breakpointId);
+        Breakpoint breakpoint = debuggerEngine.breakpointGet(breakpointId);
         XmlBuilder response = e("response", "urn:debugger_protocol_v1")
-                .a("command", "breakpoint_remove")
-                .a("transaction_id", transactionId);
-        if (resultingBreakpoint.isPresent()) {
-            Breakpoint breakpoint = resultingBreakpoint.get();
-            response.e(breakpointToXml(breakpoint));
-        }
+                .a("command", "breakpoint_get")
+                .a("transaction_id", transactionId)
+                .e(breakpointToXml(breakpoint));
         return response.asString();
     }
+
 }

@@ -17,6 +17,7 @@
 package com.codnos.dbgp.api
 
 import java.util
+import java.util.Optional
 
 import com.codnos.dbgp.AwaitilitySupport
 import com.codnos.dbgp.internal.handlers.ResponseSender
@@ -52,7 +53,7 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
   feature("setting breakpoints") {
     scenario("when breakpoint is set the debugger engine will receive the breakpoint and respond with details") {
       val breakpoint = new Breakpoint("file", 123)
-      val breakpointAfterSetting = new Breakpoint(breakpoint, "id", "other")
+      val breakpointAfterSetting = new Breakpoint(breakpoint, "id")
       BDDMockito.given(debuggerEngine.breakpointSet(Matchers.any(classOf[Breakpoint]))).willReturn(breakpointAfterSetting)
 
       withinASession {
@@ -63,7 +64,7 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
 
           result.getFileURL shouldBe breakpointAfterSetting.getFileURL
           result.getLineNumber shouldBe breakpointAfterSetting.getLineNumber
-          result.getState shouldBe breakpointAfterSetting.getState
+          result.isEnabled shouldBe breakpointAfterSetting.isEnabled
           result.getBreakpointId shouldBe breakpointAfterSetting.getBreakpointId
       }
     }
@@ -249,19 +250,54 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
   }
 
   feature("removing breakpoints") {
-    scenario("when breakpoint is removed the debugger engine will receive the breakpoint") {
+    scenario("when breakpoint is removed the debugger engine will receive the breakpoint id and ide receive the data") {
       val breakpoint = new Breakpoint("file", 123)
-      val breakpointAfterSetting = new Breakpoint(breakpoint, "myId", "enabled")
+      val breakpointAfterSetting = new Breakpoint(breakpoint, "myId")
+      BDDMockito.given(debuggerEngine.breakpointRemove(Matchers.anyString())).willReturn(Optional.of(breakpointAfterSetting))
 
       withinASession {
         ctx =>
-          val result = ctx.ide.breakpointRemove(breakpointAfterSetting)
+          val resultResponse = ctx.ide.breakpointRemove("myId")
 
           await until { verify(debuggerEngine).breakpointRemove("myId") }
 
+          resultResponse.isPresent shouldBe true
+          val result = resultResponse.get()
           result.getFileURL shouldBe breakpointAfterSetting.getFileURL
           result.getLineNumber shouldBe breakpointAfterSetting.getLineNumber
-          result.getState shouldBe breakpointAfterSetting.getState
+          result.isEnabled shouldBe breakpointAfterSetting.isEnabled
+          result.getBreakpointId shouldBe breakpointAfterSetting.getBreakpointId
+      }
+    }
+    scenario("when breakpoint is removed the debugger engine will receive the breakpoint id and ide will not get data") {
+      BDDMockito.given(debuggerEngine.breakpointRemove(Matchers.anyString())).willReturn(Optional.empty[Breakpoint]())
+
+      withinASession {
+        ctx =>
+          val resultResponse = ctx.ide.breakpointRemove("myId")
+
+          await until { verify(debuggerEngine).breakpointRemove("myId") }
+
+          resultResponse.isPresent shouldBe false
+      }
+    }
+  }
+
+  feature("getting breakpoint") {
+    scenario("when breakpoint is retrieved the debugger engine will receive the breakpoint id and ide receive the data") {
+      val breakpoint = new Breakpoint("file", 123)
+      val breakpointAfterSetting = new Breakpoint(breakpoint, "myId")
+      BDDMockito.given(debuggerEngine.breakpointGet(Matchers.anyString())).willReturn(breakpointAfterSetting)
+
+      withinASession {
+        ctx =>
+          val result = ctx.ide.breakpointGet("myId")
+
+          await until { verify(debuggerEngine).breakpointGet("myId") }
+
+          result.getFileURL shouldBe breakpointAfterSetting.getFileURL
+          result.getLineNumber shouldBe breakpointAfterSetting.getLineNumber
+          result.isEnabled shouldBe breakpointAfterSetting.isEnabled
           result.getBreakpointId shouldBe breakpointAfterSetting.getBreakpointId
       }
     }

@@ -22,6 +22,7 @@ import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGpRegularCommandHandler;
 
+import static com.codnos.dbgp.internal.commands.breakpoint.BreakpointConverter.breakpointStateAsString;
 import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
 
 public class BreakpointSetCommandHandler extends DBGpRegularCommandHandler {
@@ -45,7 +46,7 @@ public class BreakpointSetCommandHandler extends DBGpRegularCommandHandler {
         return e("response", "urn:debugger_protocol_v1")
                 .a("command", "breakpoint_set")
                 .a("transaction_id", transactionId)
-                .a("state", resultingBreakpoint.getState())
+                .a("state", breakpointStateAsString(resultingBreakpoint))
                 .a("id", resultingBreakpoint.getBreakpointId())
                 .asString();
     }

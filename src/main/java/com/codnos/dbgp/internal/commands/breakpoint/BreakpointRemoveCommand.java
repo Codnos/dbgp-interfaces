@@ -16,16 +16,15 @@
 
 package com.codnos.dbgp.internal.commands.breakpoint;
 
-import com.codnos.dbgp.api.Breakpoint;
 import com.codnos.dbgp.internal.commands.Command;
 
 public class BreakpointRemoveCommand implements Command<BreakpointRemoveResponse> {
     private final String transactionId;
-    private final Breakpoint breakpoint;
+    private final String breakpointId;
 
-    public BreakpointRemoveCommand(String transactionId, Breakpoint breakpoint) {
+    public BreakpointRemoveCommand(String transactionId, String breakpointId) {
         this.transactionId = transactionId;
-        this.breakpoint = breakpoint;
+        this.breakpointId = breakpointId;
     }
 
     @Override
@@ -35,7 +34,7 @@ public class BreakpointRemoveCommand implements Command<BreakpointRemoveResponse
 
     @Override
     public String getMessage() {
-        return "breakpoint_remove -i " + transactionId + " -d " + breakpoint.getBreakpointId();
+        return "breakpoint_remove -i " + transactionId + " -d " + breakpointId;
     }
 
     @Override

@@ -22,33 +22,27 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.Optional;
-
 import static com.codnos.dbgp.internal.commands.breakpoint.BreakpointConverter.breakpointFromNode;
 import static com.codnos.dbgp.internal.xml.XmlUtil.boolForXPath;
 
-public class BreakpointRemoveResponse extends CommandResponse {
+public class BreakpointGetResponse extends CommandResponse {
 
     public static boolean canBuildFrom(Document document) {
-        return boolForXPath(document, "string(/dbgp:response/@command)='breakpoint_remove'");
+        return boolForXPath(document, "string(/dbgp:response/@command)='breakpoint_get'");
     }
 
-    public BreakpointRemoveResponse(Document message) {
+    public BreakpointGetResponse(Document message) {
         super(message);
+    }
+
+    public Breakpoint getBreakpoint() {
+        NodeList breakpointList = nodeXpath("/dbgp:response/dbgp:breakpoint");
+        Node breakpointNode = breakpointList.item(0);
+        return breakpointFromNode(breakpointNode);
     }
 
     @Override
     public String getHandlerKey() {
         return getName() + ":" + getTransactionId();
-    }
-
-    public Optional<Breakpoint> getBreakpoint() {
-        NodeList breakpointList = nodeXpath("/dbgp:response/dbgp:breakpoint");
-        if (breakpointList.getLength() > 0) {
-            Node breakpointNode = breakpointList.item(0);
-            return Optional.of(breakpointFromNode(breakpointNode));
-        } else {
-            return Optional.empty();
-        }
     }
 }
