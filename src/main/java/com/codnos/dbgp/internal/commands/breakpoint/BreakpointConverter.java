@@ -30,6 +30,7 @@ public class BreakpointConverter {
         return new Breakpoint(
                 stringForXPath(breakpointNode, "@id"),
                 !"disabled".equals(stringForXPath(breakpointNode, "@state")),
+                "1".equals(stringForXPath(breakpointNode, "@temporary")),
                 stringForXPath(breakpointNode, "@type"),
                 optionalStringForXPath(breakpointNode, "@filename"),
                 optionalIntForXPath(breakpointNode, "@lineno"),

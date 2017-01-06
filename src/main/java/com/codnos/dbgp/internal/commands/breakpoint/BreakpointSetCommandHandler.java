@@ -41,7 +41,11 @@ public class BreakpointSetCommandHandler extends DBGpRegularCommandHandler {
         int transactionId = arguments.getInteger("i");
         String file = arguments.getString("f");
         int line = arguments.getInteger("n");
-        Breakpoint breakpointToSet = new Breakpoint(file, line);
+        boolean temporary = false;
+        if (arguments.hasValueFor("r")) {
+            temporary = arguments.getBoolean("r");
+        }
+        Breakpoint breakpointToSet = new Breakpoint(file, line, temporary);
         Breakpoint resultingBreakpoint = debuggerEngine.breakpointSet(breakpointToSet);
         return e("response", "urn:debugger_protocol_v1")
                 .a("command", "breakpoint_set")

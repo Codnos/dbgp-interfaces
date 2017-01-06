@@ -21,6 +21,7 @@ import java.util.Optional;
 public class Breakpoint {
     private final String breakpointId;
     private final boolean enabled;
+    private final boolean temporary;
     private final BreakpointType type;
     private final Optional<String> fileURL;
     private final Optional<Integer> lineNumber;
@@ -33,10 +34,15 @@ public class Breakpoint {
 
 
     public Breakpoint(String fileURL, int lineNumber) {
+        this(fileURL, lineNumber, false);
+    }
+
+    public Breakpoint(String fileURL, int lineNumber, boolean temporary) {
         this.fileURL = Optional.of(fileURL);
         this.lineNumber = Optional.of(lineNumber);
         this.breakpointId = null;
         this.enabled = true;
+        this.temporary = temporary;
         this.type = BreakpointType.LINE;
         this.function = Optional.empty();
         this.exception = Optional.empty();
@@ -46,9 +52,10 @@ public class Breakpoint {
         this.hitCount = Optional.empty();
     }
 
-    public Breakpoint(String breakpointId, boolean enabled, String type, Optional<String> fileURL, Optional<Integer> lineNumber, Optional<String> function, Optional<String> exception, Optional<String> expression, Optional<String> hitValue, Optional<String> hitCondition, Optional<Integer> hitCount) {
+    public Breakpoint(String breakpointId, boolean enabled, boolean temporary, String type, Optional<String> fileURL, Optional<Integer> lineNumber, Optional<String> function, Optional<String> exception, Optional<String> expression, Optional<String> hitValue, Optional<String> hitCondition, Optional<Integer> hitCount) {
         this.breakpointId = breakpointId;
         this.enabled = enabled;
+        this.temporary = temporary;
         this.type = BreakpointType.valueOf(type.toUpperCase());
         this.fileURL = fileURL;
         this.lineNumber = lineNumber;
@@ -63,6 +70,7 @@ public class Breakpoint {
     public Breakpoint(Breakpoint breakpoint, String breakpointId) {
         this.breakpointId = breakpointId;
         this.enabled = breakpoint.enabled;
+        this.temporary = breakpoint.temporary;
         this.type = breakpoint.type;
         this.fileURL = breakpoint.fileURL;
         this.lineNumber = breakpoint.lineNumber;
@@ -88,6 +96,10 @@ public class Breakpoint {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public boolean isTemporary() {
+        return temporary;
     }
 
     public String getBreakpointId() {

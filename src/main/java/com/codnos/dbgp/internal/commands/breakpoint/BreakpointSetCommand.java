@@ -35,7 +35,16 @@ public class BreakpointSetCommand implements Command<BreakpointSetResponse> {
 
     @Override
     public String getMessage() {
-        return "breakpoint_set -i " + transactionId + " -t " + breakpoint.getType().asString() + " -f " + breakpoint.getFileURL().get() + " -n " + breakpoint.getLineNumber().get();
+        StringBuilder command = new StringBuilder();
+        command
+                .append("breakpoint_set -i ").append(transactionId)
+                .append(" -t ").append(breakpoint.getType().asString())
+                .append(" -f ").append(breakpoint.getFileURL().get())
+                .append(" -n ").append(breakpoint.getLineNumber().get());
+        if (breakpoint.isTemporary()) {
+            command.append(" -r 1");
+        }
+        return command.toString();
     }
 
     @Override

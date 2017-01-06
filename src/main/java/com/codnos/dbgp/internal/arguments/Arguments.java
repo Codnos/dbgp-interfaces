@@ -40,6 +40,15 @@ public class Arguments {
         return findValueFor(argumentName);
     }
 
+    public boolean hasValueFor(String argumentName) {
+        try {
+            findValueFor(argumentName);
+            return true;
+        } catch (ArgumentNotConfiguredException | ArgumentValueNotAvailableException e) {
+            return false;
+        }
+    }
+
     private <T> T findValueFor(String argumentName) {
         for (ArgumentFormat argumentFormat : argumentFormats) {
             if (argumentFormat.getName().equals(argumentName)) {

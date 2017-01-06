@@ -38,12 +38,16 @@ class BreakpointGetSpec extends CommandSpec {
                 lineno="555">
     </breakpoint>
   </response>
-  val ValidMandatoryFieldsOnlyResponse = <response xmlns="urn:debugger_protocol_v1"
+  val ValidResponseForTemporary = <response xmlns="urn:debugger_protocol_v1"
                                                    xmlns:xdebug="http://xdebug.org/dbgp/xdebug"
                                                    command="breakpoint_get"
                                                    transaction_id="TRANSACTION_ID">
     <breakpoint id="BREAKPOINT_ID"
-                type="TYPE">
+                type="line"
+                state="enabled"
+                temporary="1"
+                filename="FILENAME"
+                lineno="555">
     </breakpoint>
   </response>
   val lineNumber = 555
@@ -71,6 +75,7 @@ class BreakpointGetSpec extends CommandSpec {
     )
     val breakpoint = response.getBreakpoint
     breakpoint.isEnabled shouldBe true
+    breakpoint.isTemporary shouldBe false
     breakpoint should have (
       'breakpointId ("BREAKPOINT_ID"),
       'type (BreakpointType.LINE),
@@ -83,6 +88,18 @@ class BreakpointGetSpec extends CommandSpec {
       'hitCondition (Optional.empty()),
       'hitCount (Optional.empty())
     )
+  }
+
+  it should "correctly mark that breakpoint is temporary" in {
+    val response = new BreakpointGetResponse(parseMessage(ValidResponseForTemporary.toString))
+
+    response should have(
+      'transactionId ("TRANSACTION_ID"),
+      'handlerKey ("breakpoint_get:TRANSACTION_ID")
+    )
+    val breakpoint = response.getBreakpoint
+    breakpoint.isEnabled shouldBe true
+    breakpoint.isTemporary shouldBe true
   }
 
   it should "allow building it from valid xml" in {

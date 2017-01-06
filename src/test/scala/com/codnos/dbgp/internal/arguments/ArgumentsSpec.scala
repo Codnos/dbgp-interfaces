@@ -94,4 +94,24 @@ class ArgumentsSpec extends UnitSpec {
       arguments.getInteger("i")
     }
   }
+
+  they should "allow verification if argument was in command" in {
+    val argumentsConfig = configuration().withCommand("breakpoint_set", numeric("i"), string("n"), bool("r")).build()
+
+    val arguments = argumentsConfig.buildArgumentsFrom("breakpoint_set -i 123 -t exception -r 1 -n NullPointerException")
+
+    arguments.hasValueFor("r") shouldBe true
+    arguments.hasValueFor("i") shouldBe true
+    arguments.hasValueFor("n") shouldBe true
+  }
+
+  they should "allow verification if argument was not in command" in {
+    val argumentsConfig = configuration().withCommand("breakpoint_set", numeric("i"), string("n"), bool("r")).build()
+
+    val arguments = argumentsConfig.buildArgumentsFrom("breakpoint_set")
+
+    arguments.hasValueFor("r") shouldBe false
+    arguments.hasValueFor("i") shouldBe false
+    arguments.hasValueFor("n") shouldBe false
+  }
 }

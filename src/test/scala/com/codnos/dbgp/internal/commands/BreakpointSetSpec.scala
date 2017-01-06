@@ -21,8 +21,10 @@ import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
 import com.codnos.dbgp.internal.arguments.ArgumentFormat._
 import com.codnos.dbgp.internal.commands.breakpoint.{BreakpointSetCommand, BreakpointSetCommandHandler, BreakpointSetResponse}
 import com.codnos.dbgp.internal.xml.XmlUtil._
+import org.mockito.ArgumentCaptor
 import org.mockito.BDDMockito._
 import org.mockito.Matchers.any
+import org.mockito.Mockito.verify
 
 class BreakpointSetSpec extends CommandSpec {
 
@@ -35,7 +37,7 @@ class BreakpointSetSpec extends CommandSpec {
   val lineNumber = 555
   val fileUri = "file:///home/user/file.xq"
   val originalBreakpoint: Breakpoint = new Breakpoint(fileUri, lineNumber)
-  val argumentConfiguration = configuration.withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n")).build
+  val argumentConfiguration = configuration.withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n"), bool("r")).build
 
   "Command" should "have message constructed from the parameters" in {
     val command = new BreakpointSetCommand("432", originalBreakpoint)
@@ -43,6 +45,17 @@ class BreakpointSetSpec extends CommandSpec {
     command should have (
       'name ("breakpoint_set"),
       'message ("breakpoint_set -i 432 -t line -f file:///home/user/file.xq -n 555"),
+      'handlerKey ("breakpoint_set:432")
+    )
+  }
+
+  it should "have message message with temporary flag on" in {
+    val temporaryBreakpoint = new Breakpoint(fileUri, lineNumber, true)
+    val command = new BreakpointSetCommand("432", temporaryBreakpoint)
+
+    command should have (
+      'name ("breakpoint_set"),
+      'message ("breakpoint_set -i 432 -t line -f file:///home/user/file.xq -n 555 -r 1"),
       'handlerKey ("breakpoint_set:432")
     )
   }
@@ -78,5 +91,18 @@ class BreakpointSetSpec extends CommandSpec {
                       state="enabled"
                       id={s"$breakpointId"}/>
     assertReceived(expectedResponse)
+  }
+
+  it  should "send breakpoint with temporary flag" in {
+    val handler = new BreakpointSetCommandHandler(engine, argumentConfiguration)
+    val breakpointId = s"${fileUri}@${lineNumber}"
+    given(engine.breakpointSet(any())).willReturn(new Breakpoint(originalBreakpoint, breakpointId))
+
+    handler.channelRead(ctx, "breakpoint_set -i 123 -t line -f " + fileUri + " -n " + lineNumber + " -r 1")
+
+    val captor = ArgumentCaptor.forClass(classOf[Breakpoint])
+    verify(engine).breakpointSet(captor.capture())
+    val sentBreakpoint = captor.getValue
+    sentBreakpoint.isTemporary shouldBe true
   }
 }

@@ -43,6 +43,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import static com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder.configuration;
+import static com.codnos.dbgp.internal.arguments.ArgumentFormat.bool;
 import static com.codnos.dbgp.internal.arguments.ArgumentFormat.numeric;
 import static com.codnos.dbgp.internal.arguments.ArgumentFormat.string;
 
@@ -51,7 +52,7 @@ public class DBGpEngineImpl implements DBGpEngine {
     private final DebuggerEngine debuggerEngine;
     private final StatusChangeHandlerFactory statusChangeHandlerFactory;
     private final ArgumentConfiguration argumentConfiguration = configuration()
-            .withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n"))
+            .withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n"), bool("r"))
             .withCommand("breakpoint_remove", numeric("i"), string("d"))
             .withCommand("breakpoint_get", numeric("i"), string("d"))
             .withCommand("run", numeric("i"))
