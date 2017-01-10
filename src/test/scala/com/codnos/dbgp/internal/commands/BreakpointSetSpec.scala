@@ -17,6 +17,7 @@
 package com.codnos.dbgp.internal.commands
 
 import com.codnos.dbgp.api.Breakpoint
+import com.codnos.dbgp.api.Breakpoint.{aCopyOf, aLineBreakpoint}
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
 import com.codnos.dbgp.internal.arguments.ArgumentFormat._
 import com.codnos.dbgp.internal.commands.breakpoint.{BreakpointSetCommand, BreakpointSetCommandHandler, BreakpointSetResponse}
@@ -36,7 +37,9 @@ class BreakpointSetSpec extends CommandSpec {
                                 id="BREAKPOINT_ID"/>
   val lineNumber = 555
   val fileUri = "file:///home/user/file.xq"
-  val originalBreakpoint: Breakpoint = new Breakpoint(fileUri, lineNumber)
+  val breakpointId = "myId"
+  val originalBreakpoint: Breakpoint = aLineBreakpoint(fileUri, lineNumber).build()
+  val breakpointThatWasSet: Breakpoint = aCopyOf(originalBreakpoint).withBreakpointId(breakpointId).build()
   val argumentConfiguration = configuration.withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n"), bool("r")).build
 
   "Command" should "have message constructed from the parameters" in {
@@ -50,7 +53,7 @@ class BreakpointSetSpec extends CommandSpec {
   }
 
   it should "have message message with temporary flag on" in {
-    val temporaryBreakpoint = new Breakpoint(fileUri, lineNumber, true)
+    val temporaryBreakpoint = aLineBreakpoint(fileUri, lineNumber).withTemporary(true).build()
     val command = new BreakpointSetCommand("432", temporaryBreakpoint)
 
     command should have (
@@ -81,8 +84,7 @@ class BreakpointSetSpec extends CommandSpec {
 
   "CommandHandler" should "respond with details of the breakpoint" in {
     val handler = new BreakpointSetCommandHandler(engine, argumentConfiguration)
-    val breakpointId = s"${fileUri}@${lineNumber}"
-    given(engine.breakpointSet(any())).willReturn(new Breakpoint(originalBreakpoint, breakpointId))
+    given(engine.breakpointSet(any())).willReturn(breakpointThatWasSet)
 
     handler.channelRead(ctx, "breakpoint_set -i 123 -t line -f " + fileUri + " -n " + lineNumber)
 
@@ -95,8 +97,7 @@ class BreakpointSetSpec extends CommandSpec {
 
   it  should "send breakpoint with temporary flag" in {
     val handler = new BreakpointSetCommandHandler(engine, argumentConfiguration)
-    val breakpointId = s"${fileUri}@${lineNumber}"
-    given(engine.breakpointSet(any())).willReturn(new Breakpoint(originalBreakpoint, breakpointId))
+    given(engine.breakpointSet(any())).willReturn(breakpointThatWasSet)
 
     handler.channelRead(ctx, "breakpoint_set -i 123 -t line -f " + fileUri + " -n " + lineNumber + " -r 1")
 

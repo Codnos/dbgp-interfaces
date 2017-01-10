@@ -67,6 +67,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
+import static com.codnos.dbgp.api.Breakpoint.aCopyOf;
+
 public class DBGpIdeImpl implements DBGpIde {
     private static final Logger LOGGER = Logger.getLogger(DBGpIdeImpl.class.getName());
     private final int port;
@@ -131,7 +133,7 @@ public class DBGpIdeImpl implements DBGpIde {
         BreakpointSetCommand command = new BreakpointSetCommand(transactionId, breakpoint);
         sendCommand(command);
         BreakpointSetResponse response = eventsHandler.getResponse(command);
-        return new Breakpoint(breakpoint, response.getBreakpointId());
+        return aCopyOf(breakpoint).withBreakpointId(response.getBreakpointId()).build();
     }
 
     @Override

@@ -18,6 +18,7 @@ package com.codnos.dbgp.internal.commands
 
 import java.util.Optional
 
+import com.codnos.dbgp.api.Breakpoint.{aCopyOf, aLineBreakpoint}
 import com.codnos.dbgp.api.{Breakpoint, BreakpointType}
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
 import com.codnos.dbgp.internal.arguments.ArgumentFormat._
@@ -39,9 +40,9 @@ class BreakpointGetSpec extends CommandSpec {
     </breakpoint>
   </response>
   val ValidResponseForTemporary = <response xmlns="urn:debugger_protocol_v1"
-                                                   xmlns:xdebug="http://xdebug.org/dbgp/xdebug"
-                                                   command="breakpoint_get"
-                                                   transaction_id="TRANSACTION_ID">
+                                            xmlns:xdebug="http://xdebug.org/dbgp/xdebug"
+                                            command="breakpoint_get"
+                                            transaction_id="TRANSACTION_ID">
     <breakpoint id="BREAKPOINT_ID"
                 type="line"
                 state="enabled"
@@ -52,8 +53,8 @@ class BreakpointGetSpec extends CommandSpec {
   </response>
   val lineNumber = 555
   val fileUri = "file:///home/user/file.xq"
-  val originalBreakpoint: Breakpoint = new Breakpoint(fileUri, lineNumber)
-  val breakpointAfterSetting: Breakpoint = new Breakpoint(originalBreakpoint, "myId")
+  val originalBreakpoint: Breakpoint = aLineBreakpoint(fileUri, lineNumber).build()
+  val breakpointAfterSetting: Breakpoint = aCopyOf(originalBreakpoint).withBreakpointId("myId").build()
   val argumentConfiguration = configuration.withCommand("breakpoint_get", numeric("i"), string("d")).build
 
   "Command" should "have message constructed from the parameters" in {
@@ -76,7 +77,7 @@ class BreakpointGetSpec extends CommandSpec {
     val breakpoint = response.getBreakpoint
     breakpoint.isEnabled shouldBe true
     breakpoint.isTemporary shouldBe false
-    breakpoint should have (
+    breakpoint should have(
       'breakpointId ("BREAKPOINT_ID"),
       'type (BreakpointType.LINE),
       'fileURL (Optional.of("FILENAME")),
@@ -113,7 +114,7 @@ class BreakpointGetSpec extends CommandSpec {
   "CommandHandler" should "respond with details of the breakpoint" in {
     val handler = new BreakpointGetCommandHandler(engine, argumentConfiguration)
     val breakpointId = s"${fileUri}@${lineNumber}"
-    given(engine.breakpointGet(breakpointId)).willReturn(new Breakpoint(originalBreakpoint, breakpointId))
+    given(engine.breakpointGet(breakpointId)).willReturn(aCopyOf(originalBreakpoint).withBreakpointId(breakpointId).build())
 
     handler.channelRead(ctx, "breakpoint_get -i 123 -d " + breakpointId)
 

@@ -22,6 +22,7 @@ import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGpRegularCommandHandler;
 
+import static com.codnos.dbgp.api.Breakpoint.aLineBreakpoint;
 import static com.codnos.dbgp.internal.commands.breakpoint.BreakpointConverter.breakpointStateAsString;
 import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
 
@@ -39,13 +40,7 @@ public class BreakpointSetCommandHandler extends DBGpRegularCommandHandler {
     @Override
     protected String handle(Arguments arguments, DebuggerEngine debuggerEngine) {
         int transactionId = arguments.getInteger("i");
-        String file = arguments.getString("f");
-        int line = arguments.getInteger("n");
-        boolean temporary = false;
-        if (arguments.hasValueFor("r")) {
-            temporary = arguments.getBoolean("r");
-        }
-        Breakpoint breakpointToSet = new Breakpoint(file, line, temporary);
+        Breakpoint breakpointToSet = breakpointFrom(arguments);
         Breakpoint resultingBreakpoint = debuggerEngine.breakpointSet(breakpointToSet);
         return e("response", "urn:debugger_protocol_v1")
                 .a("command", "breakpoint_set")
@@ -53,5 +48,14 @@ public class BreakpointSetCommandHandler extends DBGpRegularCommandHandler {
                 .a("state", breakpointStateAsString(resultingBreakpoint))
                 .a("id", resultingBreakpoint.getBreakpointId())
                 .asString();
+    }
+
+    private Breakpoint breakpointFrom(Arguments arguments) {
+        Breakpoint.BreakpointBuilder builder =
+                aLineBreakpoint(arguments.getString("f"), arguments.getInteger("n"));
+        if (arguments.hasValueFor("r")) {
+            builder.withTemporary(arguments.getBoolean("r"));
+        }
+        return builder.build();
     }
 }

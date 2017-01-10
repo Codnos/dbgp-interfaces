@@ -20,6 +20,7 @@ import java.util
 import java.util.Optional
 
 import com.codnos.dbgp.AwaitilitySupport
+import com.codnos.dbgp.api.Breakpoint.{aCopyOf, aLineBreakpoint}
 import com.codnos.dbgp.internal.handlers.ResponseSender
 import com.codnos.dbgp.internal.impl.StatusChangeHandlerFactory
 import com.jayway.awaitility.Awaitility._
@@ -52,8 +53,8 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
 
   feature("setting breakpoints") {
     scenario("when breakpoint is set the debugger engine will receive the breakpoint and respond with details") {
-      val breakpoint = new Breakpoint("file", 123)
-      val breakpointAfterSetting = new Breakpoint(breakpoint, "id")
+      val breakpoint = aLineBreakpoint("file", 123).build()
+      val breakpointAfterSetting = aCopyOf(breakpoint).withBreakpointId("id").build()
       BDDMockito.given(debuggerEngine.breakpointSet(Matchers.any(classOf[Breakpoint]))).willReturn(breakpointAfterSetting)
 
       withinASession {
@@ -287,8 +288,8 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
 
   feature("removing breakpoints") {
     scenario("when breakpoint is removed the debugger engine will receive the breakpoint id and ide receive the data") {
-      val breakpoint = new Breakpoint("file", 123)
-      val breakpointAfterSetting = new Breakpoint(breakpoint, "myId")
+      val breakpoint = aLineBreakpoint("file", 123).build()
+      val breakpointAfterSetting = aCopyOf(breakpoint).withBreakpointId("myId").build()
       BDDMockito.given(debuggerEngine.breakpointRemove(Matchers.anyString())).willReturn(Optional.of(breakpointAfterSetting))
 
       withinASession {
@@ -325,8 +326,8 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
 
   feature("getting breakpoint") {
     scenario("when breakpoint is retrieved the debugger engine will receive the breakpoint id and ide receive the data") {
-      val breakpoint = new Breakpoint("file", 123)
-      val breakpointAfterSetting = new Breakpoint(breakpoint, "myId")
+      val breakpoint = aLineBreakpoint("file", 123).build()
+      val breakpointAfterSetting = aCopyOf(breakpoint).withBreakpointId("myId").build()
       BDDMockito.given(debuggerEngine.breakpointGet(Matchers.anyString())).willReturn(breakpointAfterSetting)
 
       withinASession {

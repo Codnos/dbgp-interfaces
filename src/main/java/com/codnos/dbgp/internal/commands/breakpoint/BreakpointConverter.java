@@ -20,6 +20,7 @@ import com.codnos.dbgp.api.Breakpoint;
 import com.codnos.dbgp.internal.xml.XmlBuilder;
 import org.w3c.dom.Node;
 
+import static com.codnos.dbgp.api.Breakpoint.aBreakpoint;
 import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
 import static com.codnos.dbgp.internal.xml.XmlUtil.optionalIntForXPath;
 import static com.codnos.dbgp.internal.xml.XmlUtil.optionalStringForXPath;
@@ -27,20 +28,20 @@ import static com.codnos.dbgp.internal.xml.XmlUtil.stringForXPath;
 
 public class BreakpointConverter {
     public static Breakpoint breakpointFromNode(Node breakpointNode) {
-        return new Breakpoint(
-                stringForXPath(breakpointNode, "@id"),
-                !"disabled".equals(stringForXPath(breakpointNode, "@state")),
-                "1".equals(stringForXPath(breakpointNode, "@temporary")),
-                stringForXPath(breakpointNode, "@type"),
-                optionalStringForXPath(breakpointNode, "@filename"),
-                optionalIntForXPath(breakpointNode, "@lineno"),
-                optionalStringForXPath(breakpointNode, "@function"),
-                optionalStringForXPath(breakpointNode, "@exception"),
-                optionalStringForXPath(breakpointNode, "dbgp:expression/text()"),
-                optionalStringForXPath(breakpointNode, "@hit_value"),
-                optionalStringForXPath(breakpointNode, "@hit_condition"),
-                optionalIntForXPath(breakpointNode, "@hit_count")
-        );
+        return aBreakpoint()
+                .withBreakpointId(stringForXPath(breakpointNode, "@id"))
+                .withEnabled(!"disabled".equals(stringForXPath(breakpointNode, "@state")))
+                .withTemporary("1".equals(stringForXPath(breakpointNode, "@temporary")))
+                .withType(stringForXPath(breakpointNode, "@type"))
+                .withFileUri(optionalStringForXPath(breakpointNode, "@filename"))
+                .withLineNumber(optionalIntForXPath(breakpointNode, "@lineno"))
+                .withFunction(optionalStringForXPath(breakpointNode, "@function"))
+                .withException(optionalStringForXPath(breakpointNode, "@exception"))
+                .withExpression(optionalStringForXPath(breakpointNode, "dbgp:expression/text()"))
+                .withHitValue(optionalStringForXPath(breakpointNode, "@hit_value"))
+                .withHitCondition(optionalStringForXPath(breakpointNode, "@hit_condition"))
+                .withHitCount(optionalIntForXPath(breakpointNode, "@hit_count"))
+                .build();
     }
 
     public static XmlBuilder breakpointToXml(Breakpoint breakpoint) {

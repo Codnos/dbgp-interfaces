@@ -32,54 +32,32 @@ public class Breakpoint {
     private final Optional<String> hitCondition;
     private final Optional<Integer> hitCount;
 
-
-    public Breakpoint(String fileURL, int lineNumber) {
-        this(fileURL, lineNumber, false);
+    private Breakpoint(BreakpointBuilder builder) {
+        this.breakpointId = builder.breakpointId;
+        this.enabled = builder.enabled;
+        this.temporary = builder.temporary;
+        this.type = builder.type;
+        this.fileURL = builder.fileURL;
+        this.lineNumber = builder.lineNumber;
+        this.function = builder.function;
+        this.exception = builder.exception;
+        this.expression = builder.expression;
+        this.hitValue = builder.hitValue;
+        this.hitCondition = builder.hitCondition;
+        this.hitCount = builder.hitCount;
     }
 
-    public Breakpoint(String fileURL, int lineNumber, boolean temporary) {
-        this.fileURL = Optional.of(fileURL);
-        this.lineNumber = Optional.of(lineNumber);
-        this.breakpointId = null;
-        this.enabled = true;
-        this.temporary = temporary;
-        this.type = BreakpointType.LINE;
-        this.function = Optional.empty();
-        this.exception = Optional.empty();
-        this.expression = Optional.empty();
-        this.hitValue = Optional.empty();
-        this.hitCondition = Optional.empty();
-        this.hitCount = Optional.empty();
+
+    public static BreakpointBuilder aBreakpoint() {
+        return new BreakpointBuilder();
     }
 
-    public Breakpoint(String breakpointId, boolean enabled, boolean temporary, String type, Optional<String> fileURL, Optional<Integer> lineNumber, Optional<String> function, Optional<String> exception, Optional<String> expression, Optional<String> hitValue, Optional<String> hitCondition, Optional<Integer> hitCount) {
-        this.breakpointId = breakpointId;
-        this.enabled = enabled;
-        this.temporary = temporary;
-        this.type = BreakpointType.valueOf(type.toUpperCase());
-        this.fileURL = fileURL;
-        this.lineNumber = lineNumber;
-        this.function = function;
-        this.exception = exception;
-        this.expression = expression;
-        this.hitValue = hitValue;
-        this.hitCondition = hitCondition;
-        this.hitCount = hitCount;
+    public static BreakpointBuilder aCopyOf(Breakpoint breakpoint) {
+        return new BreakpointBuilder(breakpoint);
     }
 
-    public Breakpoint(Breakpoint breakpoint, String breakpointId) {
-        this.breakpointId = breakpointId;
-        this.enabled = breakpoint.enabled;
-        this.temporary = breakpoint.temporary;
-        this.type = breakpoint.type;
-        this.fileURL = breakpoint.fileURL;
-        this.lineNumber = breakpoint.lineNumber;
-        this.function = breakpoint.function;
-        this.exception = breakpoint.exception;
-        this.expression = breakpoint.expression;
-        this.hitValue = breakpoint.hitValue;
-        this.hitCondition = breakpoint.hitCondition;
-        this.hitCount = breakpoint.hitCount;
+    public static BreakpointBuilder aLineBreakpoint(String fileUri, int lineNumber) {
+        return aBreakpoint().withFileUri(fileUri).withLineNumber(lineNumber);
     }
 
     public BreakpointType getType() {
@@ -131,20 +109,117 @@ public class Breakpoint {
     }
 
     public Breakpoint update(BreakpointUpdateData breakpointUpdateData) {
-        Breakpoint breakpoint = new Breakpoint(
-                this.breakpointId,
-                breakpointUpdateData.hasState() ? breakpointUpdateData.isEnabled() : this.isEnabled(),
-                this.temporary,
-                this.type.asString(),
-                this.fileURL,
-                this.lineNumber,
-                this.function,
-                this.exception,
-                this.expression,
-                this.hitValue,
-                this.hitCondition,
-                this.hitCount
-        );
-        return breakpoint;
+        BreakpointBuilder breakpointBuilder = aCopyOf(this);
+        if (breakpointUpdateData.hasState()) {
+            breakpointBuilder.withEnabled(breakpointUpdateData.isEnabled());
+        }
+        return breakpointBuilder.build();
+    }
+
+    public static class BreakpointBuilder {
+        private String breakpointId;
+        private boolean enabled = true;
+        private boolean temporary = false;
+        private BreakpointType type = BreakpointType.LINE;
+        private Optional<String> fileURL;
+        private Optional<Integer> lineNumber;
+        private Optional<String> function;
+        private Optional<String> exception;
+        private Optional<String> expression;
+        private Optional<String> hitValue;
+        private Optional<String> hitCondition;
+        private Optional<Integer> hitCount;
+
+        BreakpointBuilder() {
+        }
+
+        BreakpointBuilder(Breakpoint breakpoint) {
+            this.breakpointId = breakpoint.breakpointId;
+            this.enabled = breakpoint.enabled;
+            this.temporary = breakpoint.temporary;
+            this.type = breakpoint.type;
+            this.fileURL = breakpoint.fileURL;
+            this.lineNumber = breakpoint.lineNumber;
+            this.function = breakpoint.function;
+            this.exception = breakpoint.exception;
+            this.expression = breakpoint.expression;
+            this.hitValue = breakpoint.hitValue;
+            this.hitCondition = breakpoint.hitCondition;
+            this.hitCount = breakpoint.hitCount;
+        }
+
+        public Breakpoint build() {
+            return new Breakpoint(this);
+        }
+
+        public BreakpointBuilder withFileUri(String fileUri) {
+            this.fileURL = Optional.of(fileUri);
+            return this;
+        }
+
+        public BreakpointBuilder withFileUri(Optional<String> fileUri) {
+            this.fileURL = fileUri;
+            return this;
+        }
+
+        public BreakpointBuilder withLineNumber(int lineNumber) {
+            this.lineNumber = Optional.of(lineNumber);
+            return this;
+        }
+
+        public BreakpointBuilder withLineNumber(Optional<Integer> lineNumber) {
+            this.lineNumber = lineNumber;
+            return this;
+        }
+
+        public BreakpointBuilder withEnabled(boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
+        public BreakpointBuilder withBreakpointId(String breakpointId) {
+            this.breakpointId = breakpointId;
+            return this;
+        }
+
+        public BreakpointBuilder withTemporary(boolean temporary) {
+            this.temporary = temporary;
+            return this;
+        }
+
+        public BreakpointBuilder withType(String type) {
+            this.type = BreakpointType.valueOf(type.toUpperCase());
+            return this;
+        }
+
+        public BreakpointBuilder withFunction(Optional<String> function) {
+            this.function = function;
+            return this;
+        }
+
+        public BreakpointBuilder withException(Optional<String> exception) {
+            this.exception = exception;
+            return this;
+        }
+
+        public BreakpointBuilder withExpression(Optional<String> expression) {
+            this.expression = expression;
+            return this;
+        }
+
+        public BreakpointBuilder withHitValue(Optional<String> hitValue) {
+            this.hitValue = hitValue;
+            return this;
+        }
+
+        public BreakpointBuilder withHitCondition(Optional<String> hitCondition) {
+            this.hitCondition = hitCondition;
+            return this;
+        }
+
+        public BreakpointBuilder withHitCount(Optional<Integer> hitCount) {
+            this.hitCount = hitCount;
+            return this;
+        }
     }
 }
