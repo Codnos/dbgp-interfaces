@@ -17,6 +17,7 @@
 package com.codnos.dbgp.internal.impl;
 
 import com.codnos.dbgp.api.Breakpoint;
+import com.codnos.dbgp.api.BreakpointUpdateData;
 import com.codnos.dbgp.api.Context;
 import com.codnos.dbgp.api.DBGpIde;
 import com.codnos.dbgp.api.DebuggerIde;
@@ -29,6 +30,7 @@ import com.codnos.dbgp.internal.commands.breakpoint.BreakpointRemoveCommand;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointRemoveResponse;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetCommand;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetResponse;
+import com.codnos.dbgp.internal.commands.breakpoint.BreakpointUpdateCommand;
 import com.codnos.dbgp.internal.commands.context.ContextGetCommand;
 import com.codnos.dbgp.internal.commands.context.ContextGetResponse;
 import com.codnos.dbgp.internal.commands.run.RunCommand;
@@ -148,6 +150,13 @@ public class DBGpIdeImpl implements DBGpIde {
         sendCommand(command);
         BreakpointGetResponse response = eventsHandler.getResponse(command);
         return response.getBreakpoint();
+    }
+
+    @Override
+    public void breakpointUpdate(String breakpointId, BreakpointUpdateData breakpointUpdateData) {
+        String transactionId = nextTransaction();
+        BreakpointUpdateCommand command = new BreakpointUpdateCommand(transactionId, breakpointId, breakpointUpdateData);
+        sendCommand(command);
     }
 
     @Override

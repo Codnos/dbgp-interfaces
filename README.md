@@ -35,6 +35,7 @@ Sonatype snapshots: https://oss.sonatype.org/content/repositories/snapshots/
  - [x] Better handling of command parameter parsing
  - [x] Better/systematic handling of xml construction
  - [x] Refactor DBGPCommandHandler to return Optional<String> and remove ctx from arguments
+ - [ ] Auto-discover (via reflection?) of MessageFactories and CommandHandlers (with priorities)
  - [ ] Add unit tests for main building blocks
  - [ ] Add missing argument/attribute handling for existing commands/responses
  - [ ] Proper configuration/parameter negotiation

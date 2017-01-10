@@ -26,11 +26,13 @@ public interface DBGpIde {
 
     boolean isConnected();
 
-    Breakpoint breakpointSet(final Breakpoint breakpoint);
+    Breakpoint breakpointSet(Breakpoint breakpoint);
 
-    Optional<Breakpoint> breakpointRemove(final String breakpointId);
+    Optional<Breakpoint> breakpointRemove(String breakpointId);
 
-    Breakpoint breakpointGet(final String breakpointId);
+    Breakpoint breakpointGet(String breakpointId);
+
+    void breakpointUpdate(String breakpointId, BreakpointUpdateData breakpointUpdateData);
 
     void run();
 

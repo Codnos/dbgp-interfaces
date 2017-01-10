@@ -58,6 +58,14 @@ public class BreakpointConverter {
     }
 
     public static String breakpointStateAsString(Breakpoint breakpoint) {
-        return breakpoint.isEnabled() ? "enabled" : "disabled";
+        return breakpointStateAsString(breakpoint.isEnabled());
+    }
+
+    public static String breakpointStateAsString(boolean enabled) {
+        return enabled ? "enabled" : "disabled";
+    }
+
+    public static boolean breakpointStateFromString(String state) {
+        return "enabled".equals(state);
     }
 }

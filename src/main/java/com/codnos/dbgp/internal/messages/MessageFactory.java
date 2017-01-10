@@ -19,6 +19,7 @@ package com.codnos.dbgp.internal.messages;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointGetResponse;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointRemoveResponse;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetResponse;
+import com.codnos.dbgp.internal.commands.breakpoint.BreakpointUpdateResponse;
 import com.codnos.dbgp.internal.commands.context.ContextGetResponse;
 import com.codnos.dbgp.internal.commands.stack.StackDepthResponse;
 import com.codnos.dbgp.internal.commands.stack.StackGetResponse;
@@ -39,6 +40,7 @@ public class MessageFactory {
             BreakpointSetResponse.class,
             BreakpointGetResponse.class,
             BreakpointRemoveResponse.class,
+            BreakpointUpdateResponse.class,
             StatusResponse.class,
             StackDepthResponse.class,
             StackGetResponse.class,

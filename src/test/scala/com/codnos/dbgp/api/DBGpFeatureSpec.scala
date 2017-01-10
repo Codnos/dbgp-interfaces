@@ -60,7 +60,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
         ctx =>
           val result = ctx.ide.breakpointSet(breakpoint)
 
-          await until { verify(debuggerEngine).breakpointSet(Matchers.any(classOf[Breakpoint])) }
+          await until {
+            verify(debuggerEngine).breakpointSet(Matchers.any(classOf[Breakpoint]))
+          }
 
           result.getFileURL shouldBe breakpointAfterSetting.getFileURL
           result.getLineNumber shouldBe breakpointAfterSetting.getLineNumber
@@ -75,8 +77,12 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           ctx.ide.run()
-          await until { verify(debuggerEngine).registerStatusChangeHandler(Matchers.any(classOf[StatusChangeHandler])) }
-          await until { verify(debuggerEngine).run() }
+          await until {
+            verify(debuggerEngine).registerStatusChangeHandler(Matchers.any(classOf[StatusChangeHandler]))
+          }
+          await until {
+            verify(debuggerEngine).run()
+          }
       }
     }
     scenario("after the code was run when the breakpoint is hit we receive notification of status change") {
@@ -89,7 +95,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           ctx.ide.run()
-          await until { assert(debuggerIde.getStatus == Status.BREAK) }
+          await until {
+            assert(debuggerIde.getStatus == Status.BREAK)
+          }
       }
     }
   }
@@ -102,7 +110,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           val status = ctx.ide.status()
-          await until { verify(debuggerEngine).getStatus }
+          await until {
+            verify(debuggerEngine).getStatus
+          }
           status shouldBe expectedStatus
       }
     }
@@ -115,7 +125,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           val stackDepth = ctx.ide.stackDepth()
-          await until { verify(debuggerEngine).getStackDepth }
+          await until {
+            verify(debuggerEngine).getStackDepth
+          }
           stackDepth shouldBe 7
       }
     }
@@ -129,7 +141,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           val result = ctx.ide.stackGet(7)
-          await until { verify(debuggerEngine).getFrame(7) }
+          await until {
+            verify(debuggerEngine).getFrame(7)
+          }
           result should have(
             'fileURL ("uri"),
             'lineNumber (88),
@@ -147,7 +161,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           val result = ctx.ide.contextGet(7)
-          await until { verify(debuggerEngine).getVariables(7) }
+          await until {
+            verify(debuggerEngine).getVariables(7)
+          }
           val variablesFound = result.getVariables.toArray()
           variablesFound should have size 1
           variablesFound(0) should have(
@@ -165,7 +181,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           val result = ctx.ide.contextGet(7)
-          await until { verify(debuggerEngine).getVariables(7) }
+          await until {
+            verify(debuggerEngine).getVariables(7)
+          }
           val variablesFound = result.getVariables.toArray()
           variablesFound should have size 1
           variablesFound(0) should have(
@@ -182,8 +200,12 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           ctx.ide.stepOver()
-          await until { verify(debuggerEngine).registerStatusChangeHandler(Matchers.any(classOf[StatusChangeHandler])) }
-          await until { verify(debuggerEngine).stepOver()}
+          await until {
+            verify(debuggerEngine).registerStatusChangeHandler(Matchers.any(classOf[StatusChangeHandler]))
+          }
+          await until {
+            verify(debuggerEngine).stepOver()
+          }
       }
     }
     scenario("after stepping over the code we get notified about any status changes") {
@@ -196,7 +218,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           ctx.ide.stepOver()
-          await until { assert(debuggerIde.getStatus == Status.BREAK) }
+          await until {
+            assert(debuggerIde.getStatus == Status.BREAK)
+          }
       }
     }
   }
@@ -206,8 +230,12 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           ctx.ide.stepInto()
-          await until { verify(debuggerEngine).registerStatusChangeHandler(Matchers.any(classOf[StatusChangeHandler])) }
-          await until { verify(debuggerEngine).stepInto() }
+          await until {
+            verify(debuggerEngine).registerStatusChangeHandler(Matchers.any(classOf[StatusChangeHandler]))
+          }
+          await until {
+            verify(debuggerEngine).stepInto()
+          }
       }
     }
     scenario("after stepping into the code we get notified about any status changes") {
@@ -220,7 +248,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           ctx.ide.stepInto()
-          await until { assert(debuggerIde.getStatus == Status.BREAK) }
+          await until {
+            assert(debuggerIde.getStatus == Status.BREAK)
+          }
       }
     }
   }
@@ -230,8 +260,12 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           ctx.ide.stepOut()
-          await until { verify(debuggerEngine).registerStatusChangeHandler(Matchers.any(classOf[StatusChangeHandler])) }
-          await until { verify(debuggerEngine).stepOut() }
+          await until {
+            verify(debuggerEngine).registerStatusChangeHandler(Matchers.any(classOf[StatusChangeHandler]))
+          }
+          await until {
+            verify(debuggerEngine).stepOut()
+          }
       }
     }
     scenario("after stepping out of the code we get notified about any status changes") {
@@ -244,7 +278,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
       withinASession {
         ctx =>
           ctx.ide.stepOut()
-          await until { assert(debuggerIde.getStatus == Status.BREAK) }
+          await until {
+            assert(debuggerIde.getStatus == Status.BREAK)
+          }
       }
     }
   }
@@ -259,7 +295,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
         ctx =>
           val resultResponse = ctx.ide.breakpointRemove("myId")
 
-          await until { verify(debuggerEngine).breakpointRemove("myId") }
+          await until {
+            verify(debuggerEngine).breakpointRemove("myId")
+          }
 
           resultResponse.isPresent shouldBe true
           val result = resultResponse.get()
@@ -276,7 +314,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
         ctx =>
           val resultResponse = ctx.ide.breakpointRemove("myId")
 
-          await until { verify(debuggerEngine).breakpointRemove("myId") }
+          await until {
+            verify(debuggerEngine).breakpointRemove("myId")
+          }
 
           resultResponse.isPresent shouldBe false
       }
@@ -293,12 +333,27 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
         ctx =>
           val result = ctx.ide.breakpointGet("myId")
 
-          await until { verify(debuggerEngine).breakpointGet("myId") }
+          await until {
+            verify(debuggerEngine).breakpointGet("myId")
+          }
 
           result.getFileURL shouldBe breakpointAfterSetting.getFileURL
           result.getLineNumber shouldBe breakpointAfterSetting.getLineNumber
           result.isEnabled shouldBe breakpointAfterSetting.isEnabled
           result.getBreakpointId shouldBe breakpointAfterSetting.getBreakpointId
+      }
+    }
+  }
+
+  feature("updating breakpoints") {
+    scenario("when breakpoint is updated the debugger engine will receive the updated state of the breakpoint") {
+      withinASession {
+        ctx =>
+          ctx.ide.breakpointUpdate("myId", new BreakpointUpdateData(false))
+
+          await until {
+            verify(debuggerEngine).breakpointUpdate("myId", new BreakpointUpdateData(false))
+          }
       }
     }
   }
@@ -329,7 +384,9 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
     val ide: DBGpIde = DBGpFactory.ide().withPort(Port).withDebuggerIde(debuggerIde).build()
     val engine: DBGpEngine = DBGpFactory.engine.withPort(Port).withDebuggerEngine(debuggerEngine).withStatusChangeHandlerFactory(statusChangeHandlerFactory).build()
     ide.startListening()
-    await until { ide.isConnected }
+    await until {
+      ide.isConnected
+    }
     engine.connect()
     try {
       f(DebuggingContext(ide, engine))

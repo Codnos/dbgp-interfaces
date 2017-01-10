@@ -23,6 +23,7 @@ import com.codnos.dbgp.internal.commands.Init;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointGetCommandHandler;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointRemoveCommandHandler;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetCommandHandler;
+import com.codnos.dbgp.internal.commands.breakpoint.BreakpointUpdateCommandHandler;
 import com.codnos.dbgp.internal.commands.context.ContextGetCommandHandler;
 import com.codnos.dbgp.internal.commands.run.RunCommandHandler;
 import com.codnos.dbgp.internal.commands.stack.StackDepthCommandHandler;
@@ -55,6 +56,7 @@ public class DBGpEngineImpl implements DBGpEngine {
             .withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n"), bool("r"))
             .withCommand("breakpoint_remove", numeric("i"), string("d"))
             .withCommand("breakpoint_get", numeric("i"), string("d"))
+            .withCommand("breakpoint_update", numeric("i"), string("d"), string("s"))
             .withCommand("run", numeric("i"))
             .withCommand("context_get", numeric("i"), numeric("d"))
             .withCommand("stack_depth", numeric("i"))
@@ -93,6 +95,7 @@ public class DBGpEngineImpl implements DBGpEngine {
                         new BreakpointSetCommandHandler(debuggerEngine, argumentConfiguration),
                         new BreakpointGetCommandHandler(debuggerEngine, argumentConfiguration),
                         new BreakpointRemoveCommandHandler(debuggerEngine, argumentConfiguration),
+                        new BreakpointUpdateCommandHandler(debuggerEngine, argumentConfiguration),
                         new StackDepthCommandHandler(debuggerEngine, argumentConfiguration),
                         new RunCommandHandler(debuggerEngine, statusChangeHandlerFactory, argumentConfiguration),
                         new StepOverCommandHandler(debuggerEngine, statusChangeHandlerFactory, argumentConfiguration),

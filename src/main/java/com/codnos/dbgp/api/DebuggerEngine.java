@@ -46,6 +46,8 @@ public interface DebuggerEngine {
 
     Breakpoint breakpointGet(String breakpointId);
 
+    void breakpointUpdate(String breakpointId, BreakpointUpdateData breakpointUpdateData);
+
     void registerStatusChangeHandler(StatusChangeHandler statusChangeHandler);
 
     int getStackDepth();
