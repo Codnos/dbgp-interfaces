@@ -129,4 +129,22 @@ public class Breakpoint {
     public Optional<Integer> getHitCount() {
         return hitCount;
     }
+
+    public Breakpoint update(BreakpointUpdateData breakpointUpdateData) {
+        Breakpoint breakpoint = new Breakpoint(
+                this.breakpointId,
+                breakpointUpdateData.hasState() ? breakpointUpdateData.isEnabled() : this.isEnabled(),
+                this.temporary,
+                this.type.asString(),
+                this.fileURL,
+                this.lineNumber,
+                this.function,
+                this.exception,
+                this.expression,
+                this.hitValue,
+                this.hitCondition,
+                this.hitCount
+        );
+        return breakpoint;
+    }
 }

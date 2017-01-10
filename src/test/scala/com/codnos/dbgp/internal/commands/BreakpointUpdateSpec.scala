@@ -16,11 +16,13 @@
 
 package com.codnos.dbgp.internal.commands
 
-import com.codnos.dbgp.api.BreakpointUpdateData
+import com.codnos.dbgp.api.{Breakpoint, BreakpointUpdateData}
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
 import com.codnos.dbgp.internal.arguments.ArgumentFormat._
 import com.codnos.dbgp.internal.commands.breakpoint.{BreakpointUpdateCommand, BreakpointUpdateCommandHandler, BreakpointUpdateResponse}
 import com.codnos.dbgp.internal.xml.XmlUtil._
+import org.mockito.BDDMockito.given
+import org.mockito.Matchers.any
 import org.mockito.Mockito
 
 class BreakpointUpdateSpec extends CommandSpec {
@@ -71,5 +73,17 @@ class BreakpointUpdateSpec extends CommandSpec {
     </response>
     assertReceived(expectedResponse)
     Mockito.verify(engine).breakpointUpdate(breakpointId, new BreakpointUpdateData(false))
+  }
+
+  "Breakpoint" should "be updated with BreakpointUpdateData" in {
+    val lineNumber = 555
+    val fileUri = "file:///home/user/file.xq"
+    val originalBreakpoint: Breakpoint = new Breakpoint(fileUri, lineNumber)
+    val breakpointId = "myId"
+    val breakpointToUpdate = new Breakpoint(originalBreakpoint, breakpointId)
+
+    val updatedBreakpoint = breakpointToUpdate.update(new BreakpointUpdateData(false))
+
+    updatedBreakpoint.isEnabled shouldBe false
   }
 }
