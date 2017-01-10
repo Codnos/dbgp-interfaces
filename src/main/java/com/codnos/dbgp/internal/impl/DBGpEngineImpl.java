@@ -25,6 +25,7 @@ import com.codnos.dbgp.internal.commands.breakpoint.BreakpointRemoveCommandHandl
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetCommandHandler;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointUpdateCommandHandler;
 import com.codnos.dbgp.internal.commands.context.ContextGetCommandHandler;
+import com.codnos.dbgp.internal.commands.run.BreakNowCommandHandler;
 import com.codnos.dbgp.internal.commands.run.RunCommandHandler;
 import com.codnos.dbgp.internal.commands.stack.StackDepthCommandHandler;
 import com.codnos.dbgp.internal.commands.stack.StackGetCommandHandler;
@@ -65,6 +66,7 @@ public class DBGpEngineImpl implements DBGpEngine {
             .withCommand("step_over", numeric("i"))
             .withCommand("step_into", numeric("i"))
             .withCommand("step_out", numeric("i"))
+            .withCommand("break", numeric("i"))
             .build();
     private EventLoopGroup workerGroup;
 
@@ -103,7 +105,8 @@ public class DBGpEngineImpl implements DBGpEngine {
                         new StepOutCommandHandler(debuggerEngine, statusChangeHandlerFactory, argumentConfiguration),
                         new StackGetCommandHandler(debuggerEngine, argumentConfiguration),
                         new ContextGetCommandHandler(debuggerEngine, argumentConfiguration),
-                        new StatusCommandHandler(debuggerEngine, argumentConfiguration)
+                        new StatusCommandHandler(debuggerEngine, argumentConfiguration),
+                        new BreakNowCommandHandler(debuggerEngine, argumentConfiguration)
                 );
             }
         });

@@ -33,6 +33,8 @@ import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetResponse;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointUpdateCommand;
 import com.codnos.dbgp.internal.commands.context.ContextGetCommand;
 import com.codnos.dbgp.internal.commands.context.ContextGetResponse;
+import com.codnos.dbgp.internal.commands.run.BreakNowCommand;
+import com.codnos.dbgp.internal.commands.run.BreakNowResponse;
 import com.codnos.dbgp.internal.commands.run.RunCommand;
 import com.codnos.dbgp.internal.commands.stack.StackDepthCommand;
 import com.codnos.dbgp.internal.commands.stack.StackDepthResponse;
@@ -255,6 +257,15 @@ public class DBGpIdeImpl implements DBGpIde {
         sendCommand(command);
         StatusResponse response = eventsHandler.getResponse(command);
         return response.getStatus();
+    }
+
+    @Override
+    public boolean breakNow() {
+        String transactionId = nextTransaction();
+        BreakNowCommand command = new BreakNowCommand(transactionId);
+        sendCommand(command);
+        BreakNowResponse response = eventsHandler.getResponse(command);
+        return response.isSuccessful();
     }
 
     private String nextTransaction() {

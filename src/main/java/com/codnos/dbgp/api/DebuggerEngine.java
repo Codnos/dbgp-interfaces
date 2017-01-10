@@ -57,4 +57,6 @@ public interface DebuggerEngine {
     Collection<PropertyValue> getVariables(int depth);
 
     Status getStatus();
+
+    boolean breakNow();
 }

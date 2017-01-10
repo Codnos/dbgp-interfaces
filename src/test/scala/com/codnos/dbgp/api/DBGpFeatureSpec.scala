@@ -359,6 +359,22 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
     }
   }
 
+  feature("breaking") {
+    scenario("when break is sent the debugger engine will receive a notification that it should break") {
+      BDDMockito.given(debuggerEngine.breakNow()).willReturn(true)
+
+      withinASession {
+        ctx =>
+          val result = ctx.ide.breakNow()
+
+          await until {
+            verify(debuggerEngine).breakNow()
+          }
+          result shouldBe true
+      }
+    }
+  }
+
   private class FakeDebuggerIde extends DebuggerIde {
     private var message: SystemInfo = _
     private var status: Status = _

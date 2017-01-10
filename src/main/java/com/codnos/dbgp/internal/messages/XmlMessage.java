@@ -19,6 +19,7 @@ package com.codnos.dbgp.internal.messages;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import static com.codnos.dbgp.internal.xml.XmlUtil.boolForXPath;
 import static com.codnos.dbgp.internal.xml.XmlUtil.intForXPath;
 import static com.codnos.dbgp.internal.xml.XmlUtil.nodeForXPath;
 import static com.codnos.dbgp.internal.xml.XmlUtil.stringForXPath;
@@ -36,6 +37,10 @@ public abstract class XmlMessage implements Message {
 
     protected Integer intXpath(String xpath) {
         return intForXPath(parsedMessage, xpath);
+    }
+
+    protected boolean boolXpath(String xpath) {
+        return boolForXPath(parsedMessage, xpath);
     }
 
     protected NodeList nodeXpath(String xpath) {

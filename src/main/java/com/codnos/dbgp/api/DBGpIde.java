@@ -49,4 +49,6 @@ public interface DBGpIde {
     StackFrame stackGet(int depth);
 
     Status status();
+
+    boolean breakNow();
 }
