@@ -59,4 +59,6 @@ public interface DebuggerEngine {
     Status getStatus();
 
     boolean breakNow();
+
+    Optional<PropertyValue> eval(int depth, String expression);
 }

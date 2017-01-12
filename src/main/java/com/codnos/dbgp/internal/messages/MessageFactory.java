@@ -21,6 +21,7 @@ import com.codnos.dbgp.internal.commands.breakpoint.BreakpointRemoveResponse;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetResponse;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointUpdateResponse;
 import com.codnos.dbgp.internal.commands.context.ContextGetResponse;
+import com.codnos.dbgp.internal.commands.eval.EvalResponse;
 import com.codnos.dbgp.internal.commands.run.BreakNowResponse;
 import com.codnos.dbgp.internal.commands.stack.StackDepthResponse;
 import com.codnos.dbgp.internal.commands.stack.StackGetResponse;
@@ -46,7 +47,8 @@ public class MessageFactory {
             StackDepthResponse.class,
             StackGetResponse.class,
             ContextGetResponse.class,
-            BreakNowResponse.class
+            BreakNowResponse.class,
+            EvalResponse.class
             );
 
     public static Message getMessage(String message) {

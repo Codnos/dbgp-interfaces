@@ -45,7 +45,7 @@ Sonatype snapshots: https://oss.sonatype.org/content/repositories/snapshots/
      - [ ] breakpoint_list
      - [x] breakpoint_update
      - [x] break
-     - [ ] eval
+     - [x] eval
      - [ ] feature_get
      - [ ] feature_set
      - [ ] stop

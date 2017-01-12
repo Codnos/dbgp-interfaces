@@ -21,6 +21,7 @@ import com.codnos.dbgp.api.BreakpointUpdateData;
 import com.codnos.dbgp.api.Context;
 import com.codnos.dbgp.api.DBGpIde;
 import com.codnos.dbgp.api.DebuggerIde;
+import com.codnos.dbgp.api.PropertyValue;
 import com.codnos.dbgp.api.StackFrame;
 import com.codnos.dbgp.api.Status;
 import com.codnos.dbgp.internal.commands.Command;
@@ -33,6 +34,8 @@ import com.codnos.dbgp.internal.commands.breakpoint.BreakpointSetResponse;
 import com.codnos.dbgp.internal.commands.breakpoint.BreakpointUpdateCommand;
 import com.codnos.dbgp.internal.commands.context.ContextGetCommand;
 import com.codnos.dbgp.internal.commands.context.ContextGetResponse;
+import com.codnos.dbgp.internal.commands.eval.EvalCommand;
+import com.codnos.dbgp.internal.commands.eval.EvalResponse;
 import com.codnos.dbgp.internal.commands.run.BreakNowCommand;
 import com.codnos.dbgp.internal.commands.run.BreakNowResponse;
 import com.codnos.dbgp.internal.commands.run.RunCommand;
@@ -233,9 +236,9 @@ public class DBGpIdeImpl implements DBGpIde {
     }
 
     @Override
-    public Context contextGet(int stackDepth) {
+    public Context contextGet(int depth) {
         String transactionId = nextTransaction();
-        ContextGetCommand command = new ContextGetCommand(transactionId, stackDepth);
+        ContextGetCommand command = new ContextGetCommand(transactionId, depth);
         sendCommand(command);
         ContextGetResponse response = eventsHandler.getResponse(command);
         return new Context(response.getVariables());
@@ -266,6 +269,15 @@ public class DBGpIdeImpl implements DBGpIde {
         sendCommand(command);
         BreakNowResponse response = eventsHandler.getResponse(command);
         return response.isSuccessful();
+    }
+
+    @Override
+    public Optional<PropertyValue> eval(int depth, String expression) {
+        String transactionId = nextTransaction();
+        EvalCommand command = new EvalCommand(transactionId, depth, expression);
+        sendCommand(command);
+        EvalResponse response = eventsHandler.getResponse(command);
+        return response.getPropertyValue();
     }
 
     private String nextTransaction() {

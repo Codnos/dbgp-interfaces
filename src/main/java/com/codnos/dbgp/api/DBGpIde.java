@@ -44,11 +44,13 @@ public interface DBGpIde {
 
     int stackDepth();
 
-    Context contextGet(int stackDepth);
+    Context contextGet(int depth);
 
     StackFrame stackGet(int depth);
 
     Status status();
 
     boolean breakNow();
+
+    Optional<PropertyValue> eval(int depth, String expression);
 }

@@ -375,6 +375,28 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
     }
   }
 
+  feature("evaluation") {
+    scenario("when eval is sent the debugger engine will call eval result for given stack depth") {
+      val propertyValue = new PropertyValue("a", "b", "c")
+      BDDMockito.given(debuggerEngine.eval(Matchers.anyInt(), Matchers.anyString())).willReturn(Optional.of(propertyValue))
+
+      withinASession {
+        ctx =>
+          val result = ctx.ide.eval(1, "$var1/@attribute")
+
+          await until {
+            verify(debuggerEngine).eval(1, "$var1/@attribute")
+          }
+
+          result.isPresent shouldBe true
+          val resultingValue = result.get()
+          resultingValue.getName shouldBe propertyValue.getName
+          resultingValue.getType shouldBe propertyValue.getType
+          resultingValue.getValue shouldBe propertyValue.getValue
+      }
+    }
+  }
+
   private class FakeDebuggerIde extends DebuggerIde {
     private var message: SystemInfo = _
     private var status: Status = _
