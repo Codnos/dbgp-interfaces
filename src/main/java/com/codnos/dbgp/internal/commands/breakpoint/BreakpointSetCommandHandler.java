@@ -22,11 +22,16 @@ import com.codnos.dbgp.internal.arguments.ArgumentConfiguration;
 import com.codnos.dbgp.internal.arguments.Arguments;
 import com.codnos.dbgp.internal.handlers.DBGpRegularCommandHandler;
 
+import java.util.Base64;
+import java.util.Optional;
+
 import static com.codnos.dbgp.api.Breakpoint.aLineBreakpoint;
 import static com.codnos.dbgp.internal.commands.breakpoint.BreakpointConverter.breakpointStateAsString;
 import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
 
 public class BreakpointSetCommandHandler extends DBGpRegularCommandHandler {
+
+    private final Base64.Decoder base64 = Base64.getDecoder();
 
     public BreakpointSetCommandHandler(DebuggerEngine debuggerEngine, ArgumentConfiguration argumentConfiguration) {
         super(debuggerEngine, argumentConfiguration);
@@ -55,6 +60,10 @@ public class BreakpointSetCommandHandler extends DBGpRegularCommandHandler {
                 aLineBreakpoint(arguments.getString("f"), arguments.getInteger("n"));
         if (arguments.hasValueFor("r")) {
             builder.withTemporary(arguments.getBoolean("r"));
+        }
+        if (arguments.hasValueFor("-")) {
+            String encodedExpression = arguments.getString("-");
+            builder.withExpression(Optional.of(new String(base64.decode(encodedExpression.getBytes()))));
         }
         return builder.build();
     }

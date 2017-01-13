@@ -19,7 +19,10 @@ package com.codnos.dbgp.internal.commands.breakpoint;
 import com.codnos.dbgp.api.Breakpoint;
 import com.codnos.dbgp.internal.commands.Command;
 
+import java.util.Base64;
+
 public class BreakpointSetCommand implements Command<BreakpointSetResponse> {
+    private final Base64.Encoder base64 = Base64.getEncoder();
     private final String transactionId;
     private final Breakpoint breakpoint;
 
@@ -43,6 +46,10 @@ public class BreakpointSetCommand implements Command<BreakpointSetResponse> {
                 .append(" -n ").append(breakpoint.getLineNumber().get());
         if (breakpoint.isTemporary()) {
             command.append(" -r 1");
+        }
+        if (breakpoint.getExpression().isPresent()) {
+            String plainExpression = breakpoint.getExpression().get();
+            command.append(" -- ").append(base64.encodeToString(plainExpression.getBytes()));
         }
         return command.toString();
     }

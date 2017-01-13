@@ -16,8 +16,10 @@
 
 package com.codnos.dbgp.internal.commands
 
+import java.util.Optional
+
 import com.codnos.dbgp.api.Breakpoint
-import com.codnos.dbgp.api.Breakpoint.{aCopyOf, aLineBreakpoint}
+import com.codnos.dbgp.api.Breakpoint.{aConditionalBreakpoint, aCopyOf, aLineBreakpoint}
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
 import com.codnos.dbgp.internal.arguments.ArgumentFormat._
 import com.codnos.dbgp.internal.commands.breakpoint.{BreakpointSetCommand, BreakpointSetCommandHandler, BreakpointSetResponse}
@@ -40,14 +42,25 @@ class BreakpointSetSpec extends CommandSpec {
   val breakpointId = "myId"
   val originalBreakpoint: Breakpoint = aLineBreakpoint(fileUri, lineNumber).build()
   val breakpointThatWasSet: Breakpoint = aCopyOf(originalBreakpoint).withBreakpointId(breakpointId).build()
-  val argumentConfiguration = configuration.withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n"), bool("r")).build
+  val argumentConfiguration = configuration.withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n"), bool("r"), string("-")).build
 
-  "Command" should "have message constructed from the parameters" in {
+  "Command" should "have message constructed from the parameters for line breakpoint" in {
     val command = new BreakpointSetCommand("432", originalBreakpoint)
 
     command should have (
       'name ("breakpoint_set"),
       'message ("breakpoint_set -i 432 -t line -f file:///home/user/file.xq -n 555"),
+      'handlerKey ("breakpoint_set:432")
+    )
+  }
+
+  it should "have message constructed from the parameters for conditional breakpoint" in {
+    val conditionalBreakpoint = aConditionalBreakpoint(fileUri, lineNumber, "expr").build()
+    val command = new BreakpointSetCommand("432", conditionalBreakpoint)
+
+    command should have (
+      'name ("breakpoint_set"),
+      'message ("breakpoint_set -i 432 -t conditional -f file:///home/user/file.xq -n 555 -- ZXhwcg=="),
       'handlerKey ("breakpoint_set:432")
     )
   }
@@ -105,5 +118,19 @@ class BreakpointSetSpec extends CommandSpec {
     verify(engine).breakpointSet(captor.capture())
     val sentBreakpoint = captor.getValue
     sentBreakpoint.isTemporary shouldBe true
+  }
+
+  it  should "send conditional breakpoint" in {
+    val handler = new BreakpointSetCommandHandler(engine, argumentConfiguration)
+    given(engine.breakpointSet(any())).willReturn(breakpointThatWasSet)
+
+    handler.channelRead(ctx, "breakpoint_set -i 123 -t line -f " + fileUri + " -n " + lineNumber + " -- ZXhwcg==")
+
+    val captor = ArgumentCaptor.forClass(classOf[Breakpoint])
+    verify(engine).breakpointSet(captor.capture())
+    val sentBreakpoint = captor.getValue
+    sentBreakpoint.getLineNumber shouldBe Optional.of(lineNumber)
+    sentBreakpoint.getFileURL shouldBe Optional.of(fileUri)
+    sentBreakpoint.getExpression shouldBe Optional.of("expr")
   }
 }

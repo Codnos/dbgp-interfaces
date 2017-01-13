@@ -60,6 +60,10 @@ public class Breakpoint {
         return aBreakpoint().withFileUri(fileUri).withLineNumber(lineNumber);
     }
 
+    public static BreakpointBuilder aConditionalBreakpoint(String fileUri, int lineNumber, String expression) {
+        return aBreakpoint().withFileUri(fileUri).withLineNumber(lineNumber).withExpression(Optional.of(expression)).withType("conditional");
+    }
+
     public BreakpointType getType() {
         return type;
     }
@@ -121,14 +125,14 @@ public class Breakpoint {
         private boolean enabled = true;
         private boolean temporary = false;
         private BreakpointType type = BreakpointType.LINE;
-        private Optional<String> fileURL;
-        private Optional<Integer> lineNumber;
-        private Optional<String> function;
-        private Optional<String> exception;
-        private Optional<String> expression;
-        private Optional<String> hitValue;
-        private Optional<String> hitCondition;
-        private Optional<Integer> hitCount;
+        private Optional<String> fileURL = Optional.empty();
+        private Optional<Integer> lineNumber = Optional.empty();
+        private Optional<String> function = Optional.empty();
+        private Optional<String> exception = Optional.empty();
+        private Optional<String> expression = Optional.empty();
+        private Optional<String> hitValue = Optional.empty();
+        private Optional<String> hitCondition = Optional.empty();
+        private Optional<Integer> hitCount = Optional.empty();
 
         BreakpointBuilder() {
         }
