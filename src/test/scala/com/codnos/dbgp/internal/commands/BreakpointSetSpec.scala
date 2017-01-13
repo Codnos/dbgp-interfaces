@@ -18,7 +18,7 @@ package com.codnos.dbgp.internal.commands
 
 import java.util.Optional
 
-import com.codnos.dbgp.api.Breakpoint
+import com.codnos.dbgp.api.{Breakpoint, BreakpointType}
 import com.codnos.dbgp.api.Breakpoint.{aConditionalBreakpoint, aCopyOf, aLineBreakpoint}
 import com.codnos.dbgp.internal.arguments.ArgumentConfiguration.Builder._
 import com.codnos.dbgp.internal.arguments.ArgumentFormat._
@@ -124,11 +124,12 @@ class BreakpointSetSpec extends CommandSpec {
     val handler = new BreakpointSetCommandHandler(engine, argumentConfiguration)
     given(engine.breakpointSet(any())).willReturn(breakpointThatWasSet)
 
-    handler.channelRead(ctx, "breakpoint_set -i 123 -t line -f " + fileUri + " -n " + lineNumber + " -- ZXhwcg==")
+    handler.channelRead(ctx, "breakpoint_set -i 123 -t conditional -f " + fileUri + " -n " + lineNumber + " -- ZXhwcg==")
 
     val captor = ArgumentCaptor.forClass(classOf[Breakpoint])
     verify(engine).breakpointSet(captor.capture())
     val sentBreakpoint = captor.getValue
+    sentBreakpoint.getType shouldBe BreakpointType.CONDITIONAL
     sentBreakpoint.getLineNumber shouldBe Optional.of(lineNumber)
     sentBreakpoint.getFileURL shouldBe Optional.of(fileUri)
     sentBreakpoint.getExpression shouldBe Optional.of("expr")

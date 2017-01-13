@@ -25,6 +25,7 @@ import com.codnos.dbgp.internal.handlers.DBGpRegularCommandHandler;
 import java.util.Base64;
 import java.util.Optional;
 
+import static com.codnos.dbgp.api.Breakpoint.aBreakpoint;
 import static com.codnos.dbgp.api.Breakpoint.aLineBreakpoint;
 import static com.codnos.dbgp.internal.commands.breakpoint.BreakpointConverter.breakpointStateAsString;
 import static com.codnos.dbgp.internal.xml.XmlBuilder.e;
@@ -56,8 +57,14 @@ public class BreakpointSetCommandHandler extends DBGpRegularCommandHandler {
     }
 
     private Breakpoint breakpointFrom(Arguments arguments) {
-        Breakpoint.BreakpointBuilder builder =
-                aLineBreakpoint(arguments.getString("f"), arguments.getInteger("n"));
+        Breakpoint.BreakpointBuilder builder = aBreakpoint();
+        builder.withType(arguments.getString("t"));
+        if (arguments.hasValueFor("f")) {
+            builder.withFileUri(arguments.getString("f"));
+        }
+        if (arguments.hasValueFor("n")) {
+            builder.withLineNumber(arguments.getInteger("n"));
+        }
         if (arguments.hasValueFor("r")) {
             builder.withTemporary(arguments.getBoolean("r"));
         }
