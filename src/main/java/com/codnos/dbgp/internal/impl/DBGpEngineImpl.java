@@ -55,7 +55,7 @@ public class DBGpEngineImpl implements DBGpEngine {
     private final DebuggerEngine debuggerEngine;
     private final StatusChangeHandlerFactory statusChangeHandlerFactory;
     private final ArgumentConfiguration argumentConfiguration = configuration()
-            .withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n"), bool("r"))
+            .withCommand("breakpoint_set", numeric("i"), string("t"), string("f"), numeric("n"), bool("r"), string("-"))
             .withCommand("breakpoint_remove", numeric("i"), string("d"))
             .withCommand("breakpoint_get", numeric("i"), string("d"))
             .withCommand("breakpoint_update", numeric("i"), string("d"), string("s"))

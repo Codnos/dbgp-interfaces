@@ -20,7 +20,7 @@ import java.util
 import java.util.Optional
 
 import com.codnos.dbgp.AwaitilitySupport
-import com.codnos.dbgp.api.Breakpoint.{aCopyOf, aLineBreakpoint}
+import com.codnos.dbgp.api.Breakpoint.{aConditionalBreakpoint, aCopyOf, aLineBreakpoint}
 import com.codnos.dbgp.internal.handlers.ResponseSender
 import com.codnos.dbgp.internal.impl.StatusChangeHandlerFactory
 import com.jayway.awaitility.Awaitility._
@@ -28,7 +28,7 @@ import org.hamcrest.Matchers._
 import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
-import org.mockito.{BDDMockito, Matchers, Mockito}
+import org.mockito.{ArgumentCaptor, BDDMockito, Matchers, Mockito}
 import org.scalatest.{BeforeAndAfter, FeatureSpec}
 
 class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalatest.Matchers with BeforeAndAfter {
@@ -69,6 +69,28 @@ class DBGpFeatureSpec extends FeatureSpec with AwaitilitySupport with org.scalat
           result.getLineNumber shouldBe breakpointAfterSetting.getLineNumber
           result.isEnabled shouldBe breakpointAfterSetting.isEnabled
           result.getBreakpointId shouldBe breakpointAfterSetting.getBreakpointId
+      }
+    }
+    scenario("when conditional breakpoint is set the debugger engine will receive the breakpoint with expression") {
+      val breakpoint = aConditionalBreakpoint("file", 123, "expression").build()
+      val breakpointAfterSetting = aCopyOf(breakpoint).withBreakpointId("id").build()
+      BDDMockito.given(debuggerEngine.breakpointSet(Matchers.any(classOf[Breakpoint]))).willReturn(breakpointAfterSetting)
+      val captor = ArgumentCaptor.forClass(classOf[Breakpoint])
+
+      withinASession {
+        ctx =>
+          ctx.ide.breakpointSet(breakpoint)
+
+          await until {
+            verify(debuggerEngine).breakpointSet(captor.capture())
+          }
+
+          val captured = captor.getValue
+          captured.getFileURL shouldBe breakpointAfterSetting.getFileURL
+          captured.getLineNumber shouldBe breakpointAfterSetting.getLineNumber
+          captured.isEnabled shouldBe breakpointAfterSetting.isEnabled
+          captured.getExpression shouldBe Optional.of("expression")
+          captured.getType shouldBe BreakpointType.CONDITIONAL
       }
     }
   }
