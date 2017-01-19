@@ -8,7 +8,7 @@ Maven Central
 <dependency>
     <groupId>com.codnos</groupId>
     <artifactId>dbgp-interfaces</artifactId>
-    <version>0.0.1</version>
+    <version>x.x.x</version>
 </dependency>
 ```
 
@@ -18,7 +18,7 @@ Sonatype snapshots: https://oss.sonatype.org/content/repositories/snapshots/
 <dependency>
     <groupId>com.codnos</groupId>
     <artifactId>dbgp-interfaces</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>x.x.x-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -35,6 +35,8 @@ Sonatype snapshots: https://oss.sonatype.org/content/repositories/snapshots/
  - [x] Better handling of command parameter parsing
  - [x] Better/systematic handling of xml construction
  - [x] Refactor DBGPCommandHandler to return Optional<String> and remove ctx from arguments
+ - [x] Release to Maven Central (https://maven.apache.org/guides/mini/guide-central-repository-upload.html)
+ - [ ] Use proper release plugin
  - [ ] Add default base64 encoding everywhere where needed
  - [ ] Auto-discover (via reflection?) of MessageFactories and CommandHandlers (with priorities)
  - [ ] Add unit tests for main building blocks
@@ -72,7 +74,6 @@ Sonatype snapshots: https://oss.sonatype.org/content/repositories/snapshots/
  - [ ] Add proper JavaDoc and examples
  - [ ] Functional tests using PHP
  - [ ] Functional tests using eXistDB
- - [ ] Release to Maven Central (https://maven.apache.org/guides/mini/guide-central-repository-upload.html)
  - [ ] Exception/error support
  - [ ] Support for proxies
  - [ ] Multi-process/multi-thread support
