@@ -109,6 +109,7 @@ public class DBGpIdeImpl implements DBGpIde {
                     }
                 })
                 .option(ChannelOption.SO_BACKLOG, 128)
+                .option(ChannelOption.SO_REUSEADDR, true)
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
         bindPort(b);
     }
